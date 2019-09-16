@@ -121,6 +121,17 @@
                                             <i class="fa fa-ticket"></i>
                                         </a>
                                     @endif
+                                        @if($game instanceof \App\Models\Contracts\Shareable
+                                                && $game->isShareable())
+                                            <a class="btn shareable" data-shareable-type="game" href="{!! $game->getShareableUrl() !!}" title="@lang('misc.shareable')"  target="_blank">
+                                                <i class="fa fa-share-alt-square"></i>
+                                            </a>
+                                        @endif
+                                        @if(auth()->check())
+                                            <a class="btn" href="@route('game.stats.edit', ['id'=>$event->scheduled->id])" title="@lang('misc.edit')">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        @endif
                                 </div>
                             </td>
                         </tr>
