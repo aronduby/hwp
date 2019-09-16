@@ -70,4 +70,9 @@ class Tournament extends Model
     {
         return $this->belongsTo('App\Models\Season');
     }
+
+    public function album()
+    {
+        return $this->belongsTo('App\Models\PhotoAlbum');
+    }
 }

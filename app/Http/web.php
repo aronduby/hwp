@@ -61,6 +61,8 @@ Route::get('photos/{album}', ['uses' => 'AlbumController@photos', 'as' => 'album
 
 Route::get('tournaments/{tournament}', ['uses' => 'TournamentController@tournament', 'as' => 'tournament']);
 
+Route::get('tournaments/{tournament}/photos', ['uses' => 'TournamentController@photos', 'as' => 'tournament.photos']);
+
 
 
 Route::get('notes/{note}', ['uses' => 'NotesController@note', 'as' => 'notes']);

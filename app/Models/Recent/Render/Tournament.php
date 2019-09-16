@@ -23,11 +23,20 @@ class Tournament extends Renderer
     {
         $ids = json_decode($content);
         $id = array_pop($ids);
+        $bg = null;
 
-        $tournament = TournamentModel::with('games')->find($id);
+        $tournament = TournamentModel::withCount(['album'])
+            ->with('games')
+            ->find($id);
+
+        if ($tournament->album_count) {
+            $bg = isset($tournament->album->cover) ? $tournament->album->cover->photo : null;
+        }
+
         $this->data = [
             'tournament' => $tournament,
-            'recent' => $this->recent
+            'recent' => $this->recent,
+            'bg' => $bg
         ];
     }
 

@@ -18,7 +18,7 @@ VIEW `schedule` AS
     NULL AS `score_them`,
     'App\\Models\\Tournament' AS `scheduled_type`,
     `tournaments`.`id` AS `scheduled_id`,
-    NULL AS `album_id`,
+    `tournaments`.`album_id` AS `album_id`,
     NULL AS `join_id`
   FROM
     `tournaments`

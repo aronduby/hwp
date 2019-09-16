@@ -32,6 +32,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->where('id', $value)->first();
         });
 
+        Route::bind('tournament', function ($value) {
+            return \App\Models\Tournament::withCount(['album'])
+                ->where('id', $value)->first();
+        });
+
         parent::boot();
     }
 

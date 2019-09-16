@@ -20,6 +20,26 @@ class TournamentController extends Controller
         $upcoming = $games->where('end', '>=', Carbon::create())
             ->groupByDate('start', 'Ymd');
 
-        return view('tournament', compact('tournament', 'games', 'upcoming'));
+        $headerPhoto = $this->getCover($tournament);
+
+        return view('partials.tournament.events', compact('tournament', 'games', 'upcoming', 'headerPhoto'));
+    }
+
+    public function photos(Tournament $tournament)
+    {
+        $headerPhoto = $this->getCover($tournament);
+
+        return view('partials.tournament.photos', compact('tournament', 'headerPhoto'));
+    }
+
+    protected function getCover(Tournament $tournament)
+    {
+        try {
+            $headerPhoto = $tournament->album->cover->photo;
+        } catch(\Exception $e) {
+            $headerPhoto = null;
+        }
+
+        return $headerPhoto;
     }
 }
