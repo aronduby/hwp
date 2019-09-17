@@ -13,6 +13,13 @@
 
         <nav class="game-nav sub-nav">
             <ul>
+                @if($game->tournament_id)
+                    <li>
+                        <a href="@route('tournament', ['tournament' => $game->tournament_id])"
+                           title="@lang('schedule.tournament')"
+                        ><i class="fa fa-sitemap fa-rotate-90"></i> @lang('schedule.tournament')</a>
+                    </li>
+                @endif
                 @if($game->box_stats_count)
                     <li class="@active('game.stats')">
                         <a href="@route('game.stats', ['game' => $game->id])"
