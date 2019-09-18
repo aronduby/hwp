@@ -20,7 +20,7 @@
                         ><i class="fa fa-sitemap fa-rotate-90"></i> @lang('schedule.tournament')</a>
                     </li>
                 @endif
-                @if($game->box_stats_count)
+                @if($game->stats_count)
                     <li class="@active('game.stats')">
                         <a href="@route('game.stats', ['game' => $game->id])"
                            title="@lang('game.stats')"

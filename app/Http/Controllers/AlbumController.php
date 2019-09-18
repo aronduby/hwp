@@ -35,7 +35,7 @@ class AlbumController extends Controller
     {
         // $photos = $album->photos()->paginate(48);
         $games = $album->games()
-            ->withCount(['album', 'updates', 'boxStats'])
+            ->withCount(['album', 'updates', 'stats'])
             ->get();
 
         // dd($games);

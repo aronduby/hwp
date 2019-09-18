@@ -28,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::pattern('ext', '(\.svg)?');
 
         Route::bind('game', function ($value) {
-            return \App\Models\Game::withCount(['album', 'boxStats', 'updates'])
+            return \App\Models\Game::withCount(['album', 'stats', 'updates'])
                 ->where('id', $value)->first();
         });
 

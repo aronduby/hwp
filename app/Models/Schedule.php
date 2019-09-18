@@ -46,6 +46,10 @@ class Schedule extends Model
         return $this->hasOne('App\Models\GameUpdateDump', 'game_id', 'join_id');
     }
 
+    /**
+     * @deprecated use stats()
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function boxStats()
     {
         return $this->hasOne('App\Models\GameStatDump', 'game_id', 'join_id');

@@ -46,7 +46,7 @@ class ScheduleController extends Controller
     public function subscribe(Request $request)
     {
         $schedule = Schedule::with(['location', 'scheduled'])
-            ->withCount(['album', 'updates', 'boxStats'])
+            ->withCount(['album', 'updates', 'stats'])
             ->orderBy('start', 'asc')
             ->get();
 
@@ -95,7 +95,7 @@ class ScheduleController extends Controller
                 $desc[] = trans('vcal.score') . ' ' . $item->score_us . ' - ' . $item->score_them;
             }
             if ($item->type === Schedule::GAME) {
-                if ($item->box_stats_count) {
+                if ($item->stats_count) {
                     $desc[] = trans('vcal.stats') . ' ' . route('game.stats', ['id' => $item->scheduled->id]);
                 }
                 if ($item->album_count) {

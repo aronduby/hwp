@@ -94,7 +94,7 @@
                     </td>
                     <td class="schedule-btns action-btns">
                         <div class="btn-group btn-group--end">
-                            @if($game->box_stats_count)
+                            @if($game->stats_count)
                                 <a class="btn" href="@route('game.stats', ['id'=>$game->id])" title="@lang('misc.stats')">
                                     <i class="fa fa-line-chart"></i>
                                 </a>

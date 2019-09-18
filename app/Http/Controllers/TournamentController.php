@@ -13,7 +13,7 @@ class TournamentController extends Controller
     public function tournament(Tournament $tournament)
     {
         $games = $tournament->games()
-            ->withCount(['album', 'boxStats', 'updates'])
+            ->withCount(['album', 'stats', 'updates'])
             ->orderBy('start', 'asc')
             ->get();
 
