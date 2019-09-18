@@ -148,7 +148,7 @@
                             @endif
                             <td class="schedule-btns action-btns">
                                 <div class="btn-group btn-group--end">
-                                    @if($event->scheduled instanceof App\Models\Tournament)
+                                    @if($event->scheduled instanceof App\Models\Tournament && $event->scheduled->start <= Carbon\Carbon::today())
                                         <a class="btn" href="@route('tournament', ['id'=>$event->scheduled->id])" title="@lang('tournament.games')">
                                             <i class="fa fa-sitemap fa-rotate-90"></i>
                                         </a>

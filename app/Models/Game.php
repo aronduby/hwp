@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\IPersistTo;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\Event;
 use App\Models\Traits\UsesCustomCollection;
 use HipsterJazzbo\Landlord\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
-class Game extends Model implements Shareable
+class Game extends Model implements Shareable, IPersistTo
 {
 
     use BelongsToTenant, Event, UsesCustomCollection;
@@ -16,6 +17,8 @@ class Game extends Model implements Shareable
     const WIN = 'win';
     const LOSS = 'loss';
     const TIE = 'tie';
+
+    protected $table = 'game_with_album_fallback';
 
     /**
      * Force start an end to be datetimes/carbon
@@ -26,6 +29,22 @@ class Game extends Model implements Shareable
         'start' => 'datetime',
         'end' => 'datetime'
     ];
+
+    /**
+     * @return string - the name of the table to read from (should be the same as the default $table)
+     */
+    public function getReadTable()
+    {
+        return 'game_with_album_fallback';
+    }
+
+    /**
+     * @return string - the name of the table to write to
+     */
+    public function getWriteTable()
+    {
+        return 'games';
+    }
 
     public function getResultAttribute()
     {

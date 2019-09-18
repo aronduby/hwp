@@ -1,8 +1,4 @@
-CREATE OR REPLACE
-  ALGORITHM = UNDEFINED
-  DEFINER = `hwp`@`localhost`
-  SQL SECURITY DEFINER
-VIEW `schedule` AS
+CREATE OR REPLACE VIEW `schedule` AS
   SELECT
     'tournament' AS `type`,
     `tournaments`.`id` AS `id`,

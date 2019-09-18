@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Stat;
+use App\Models\Game;
+use App\Models\Observers\PersistToObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Game::Observe(PersistToObserver::class);
     }
 
     /**

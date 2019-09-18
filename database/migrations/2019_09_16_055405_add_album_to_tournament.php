@@ -23,7 +23,7 @@ class AddAlbumToTournament extends Migration
                 ->onUpdate('cascade');
         });
 
-        $createStatement = file_get_contents('./database/migrations/create_schedule_view_tournament_albums.sql');
+        $createStatement = file_get_contents('./database/migrations/2019_09_16_055405_create_schedule_view_tournament_albums.sql');
         DB::statement($createStatement);
     }
 
@@ -39,7 +39,7 @@ class AddAlbumToTournament extends Migration
             $table->dropColumn('album_id');
         });
 
-        $createStatement = file_get_contents('./database/migrations/create_schedule_view.sql');
+        $createStatement = file_get_contents('./database/migrations/2016_08_13_165633_create_schedule_view.sql');
         DB::statement($createStatement);
     }
 }

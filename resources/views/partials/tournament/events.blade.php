@@ -116,7 +116,7 @@
                                 </a>
                             @endif
                             @if(auth()->check())
-                                <a class="btn" href="@route('game.stats.edit', ['id'=>$event->scheduled->id])" title="@lang('misc.edit')">
+                                <a class="btn" href="@route('game.stats.edit', ['id'=>$game->id])" title="@lang('misc.edit')">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                             @endif

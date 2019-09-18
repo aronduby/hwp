@@ -12,7 +12,7 @@ class CreateScheduleView extends Migration
      */
     public function up()
     {
-        $createStatement = file_get_contents('./database/migrations/create_schedule_view.sql');
+        $createStatement = file_get_contents('./database/migrations/2016_08_13_165633_create_schedule_view.sql');
         DB::statement($createStatement);
     }
 
