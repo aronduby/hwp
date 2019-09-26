@@ -25,6 +25,9 @@
 
 		data.moment = moment.unix(data.ts);
 
+		// catch old and new ways
+		data.msg = data.body || data.msg;
+
 		// trigger different events based on the update
 		// TODO - this should eventually be based on control messages from the live scoring panel
 
