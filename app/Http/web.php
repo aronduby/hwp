@@ -133,3 +133,20 @@ Route::get('poltergeist', function() {
 Route::get('111100011', function() {
    return view('partials.scavenger.final');
 });
+
+/**
+ * Twilio Calls
+ */
+Route::group([
+    'prefix' => 'twilio/incoming/',
+    // 'middleware' => 'twilio',
+    'namespace' => 'Twilio'
+], function() {
+
+    Route::get('welcome', ['uses' => 'TwilioController@welcome', 'as' => 'twilio.welcome']);
+
+    Route::get('user/lookup', ['uses' => 'TwilioController@userLookup', 'as' => 'twilio.user.lookup']);
+
+    Route::get('user/stats', ['uses' => 'TwilioController@userStats', 'as' => 'twilio.user.stats']);
+
+});
