@@ -6,13 +6,13 @@ use App\Models\Contracts\IPersistTo;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\Event;
 use App\Models\Traits\UsesCustomCollection;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model implements Shareable, IPersistTo
 {
 
-    use BelongsToTenant, Event, UsesCustomCollection;
+    use BelongsToTenants, Event, UsesCustomCollection;
 
     const WIN = 'win';
     const LOSS = 'loss';

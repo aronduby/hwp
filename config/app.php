@@ -97,23 +97,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logging Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure the log settings for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
-    | you a variety of powerful log handlers / formatters to utilize.
-    |
-    | Available Settings: "single", "daily", "syslog", "errorlog"
-    |
-    */
-
-    'log' => env('APP_LOG', 'single'),
-
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -154,7 +137,7 @@ return [
         /*
          * Package Service Providers...
          */
-        HipsterJazzbo\Landlord\LandlordServiceProvider::class,
+        Torzer\Awesome\Landlord\LandlordServiceProvider::class,
         Thetispro\Setting\SettingServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         NotificationChannels\Twitter\TwitterServiceProvider::class,
@@ -173,6 +156,7 @@ return [
         App\Providers\DateDirectiveServiceProvider::class,
         App\Providers\RouteDirectiveServiceProvider::class,
         App\Providers\MiscDirectiveServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
     ],
 
@@ -219,7 +203,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Landlord'   => HipsterJazzbo\Landlord\Facades\LandlordFacade::class,
+        'Landlord' => Torzer\Awesome\Landlord\Facades\Landlord::class,
         'Setting' => Thetispro\Setting\Facades\Setting::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,

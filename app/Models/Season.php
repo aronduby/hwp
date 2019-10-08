@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Models\Traits\HasStats;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Season extends Model
 {
-    use BelongsToTenant, HasStats;
+    use BelongsToTenants, HasStats;
 
     /**
      * Specify the tenant columns to use for this model

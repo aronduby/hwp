@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Traits\HasTotal;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 class Recent extends Model
 {
-    use BelongsToTenant, HasTotal;
+    use BelongsToTenants, HasTotal;
 
     /**
      * How long should titles be?

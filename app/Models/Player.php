@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\HasStats;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Player extends Model implements Shareable
 {
-    use BelongsToTenant, HasStats;
+    use BelongsToTenants, HasStats;
 
     /**
      * Specify the tenant columns to use for this model
@@ -18,7 +18,7 @@ class Player extends Model implements Shareable
      *
      * @var array
      */
-    protected $tenantColumns = ['site_id'];
+    public $tenantColumns = ['site_id'];
 
     public function getNameAttribute()
     {

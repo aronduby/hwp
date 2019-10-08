@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use BelongsToTenant, Notifiable;
+    use BelongsToTenants, Notifiable;
 
     /**
      * Specify the tenant columns to use for this model

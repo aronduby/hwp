@@ -5,12 +5,12 @@ namespace App\Models;
 use App\Collections\StatCollection;
 use App\Models\Contracts\Shareable;
 use App\Services\PlayerListService;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Stat extends Model implements Shareable
 {
-    use BelongsToTenant;
+    use BelongsToTenants;
 
     /**
      * List of the fields from the database

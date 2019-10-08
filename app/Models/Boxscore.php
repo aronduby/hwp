@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Services\PlayerListService;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Boxscore extends Model
 {
-    use BelongsToTenant;
+    use BelongsToTenants;
 
     /**
      * @var PlayerListService

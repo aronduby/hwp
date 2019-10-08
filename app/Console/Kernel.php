@@ -24,8 +24,13 @@ class Kernel extends ConsoleKernel
         MWPARankingCommand::class,
         HudsonvilleAthleticsParser::class,
         // MLiveParser::class,
-        SaveScoringStats::class
+        SaveScoringStats::class,
     ];
+
+    protected function commands()
+    {
+        $this->load(__DIR__.'/Commands');
+    }
 
     /**
      * Define the application's command schedule.

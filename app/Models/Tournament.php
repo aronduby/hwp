@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Traits\Event;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Tournament extends Model
 {
-    use BelongsToTenant, Event;
+    use BelongsToTenants, Event;
 
     /**
      * Force start an end to be datetimes/carbon

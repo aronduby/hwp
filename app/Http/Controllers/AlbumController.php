@@ -33,7 +33,7 @@ class AlbumController extends Controller
 
     public function photos(PhotoAlbum $album)
     {
-        // $photos = $album->photos()->paginate(48);
+        $photos = $album->photos()->paginate(48);
         $games = $album->games()
             ->withCount(['album', 'updates', 'stats'])
             ->get();

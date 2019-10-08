@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Traits\Event;
 use App\Models\Traits\UsesCustomCollection;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Schedule extends Model
 {
-    use BelongsToTenant, Event, UsesCustomCollection;
+    use BelongsToTenants, Event, UsesCustomCollection;
 
     const GAME = 'game';
     const TOURNAMENT = 'tournament';

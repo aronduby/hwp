@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Rank extends Model
 {
-    use BelongsToTenant;
+    use BelongsToTenants;
     
     protected $fillable = ['rank', 'team', 'tied', 'self'];
     

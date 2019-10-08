@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
 
-class LoggedCommand extends Command
+abstract class LoggedCommand extends Command
 {
     use Loggable;
 

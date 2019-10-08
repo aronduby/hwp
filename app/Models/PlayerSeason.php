@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Traits\HasStats;
 use App\Models\Traits\UsesCustomCollection;
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class PlayerSeason extends Model
 {
-    use BelongsToTenant, UsesCustomCollection, HasStats;
+    use BelongsToTenants, UsesCustomCollection, HasStats;
 
     const FIELD = 'FIELD';
     const GOALIE = 'GOALIE';

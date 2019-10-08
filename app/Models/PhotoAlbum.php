@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use HipsterJazzbo\Landlord\BelongsToTenant;
+use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class PhotoAlbum extends Model
 {
-    use BelongsToTenant;
+    use BelongsToTenants;
     
     protected $table = 'albums';
 

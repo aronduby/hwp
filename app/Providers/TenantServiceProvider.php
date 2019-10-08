@@ -5,11 +5,12 @@ namespace App\Providers;
 use App\Models\ActiveSeason;
 use App\Models\ActiveSite;
 use App\Models\Site;
-use HipsterJazzbo\Landlord\Facades\LandlordFacade;
+
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Torzer\Awesome\Landlord\Facades\Landlord;
 
 class TenantServiceProvider extends ServiceProvider
 {
@@ -37,8 +38,8 @@ class TenantServiceProvider extends ServiceProvider
 
         // Setup the site
         $site = ActiveSite::domain($domain)->firstOrFail();
-        LandlordFacade::addTenant('site_id', $site->id);
-        $this->app->instance('App\Models\ActiveSite', $site);
+        Landlord::addTenant('site_id', $site->id);
+        $this->app->instance(ActiveSite::class, $site);
 
         // Setup the season
         if (isset($season_id)) {
@@ -47,8 +48,8 @@ class TenantServiceProvider extends ServiceProvider
             $season = ActiveSeason::current()->firstOrFail();
         }
 
-        LandlordFacade::addTenant('season_id', $season->id);
-        $this->app->instance('App\Models\ActiveSeason', $season);
+        Landlord::addTenant('season_id', $season->id);
+        $this->app->instance(ActiveSeason::class, $season);
     }
 
     /**
