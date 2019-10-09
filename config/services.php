@@ -44,5 +44,9 @@ return [
         'consumer_secret' => getenv('TWITTER_CONSUMER_SECRET'),
         'access_token'    => getenv('TWITTER_ACCESS_TOKEN'),
         'access_secret'   => getenv('TWITTER_ACCESS_SECRET')
+    ],
+
+    'twilio' => [
+        'token' => env('TWILIO_TOKEN')
     ]
 ];

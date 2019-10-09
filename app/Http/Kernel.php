@@ -54,6 +54,8 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cors' => \App\Http\Middleware\Cors::class,
 
-        'grounded' => \App\Http\Middleware\Grounded::class
+        'grounded' => \App\Http\Middleware\Grounded::class,
+        'twilio' => \App\Http\Middleware\TwilioVerification::class
+
     ];
 }

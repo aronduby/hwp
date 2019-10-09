@@ -21,6 +21,7 @@
         "laravel-notification-channels/twitter": "^1.0",
         "doctrine/dbal": "^2.5",
         "p3k/emoji-detector": "^0.2.1",
+        "twilio/sdk": "^5.36",
         "torzer/awesome-landlord": "^3.0",
         "laravel/tinker": "^1.0",
         "monolog/monolog": "1.23"
