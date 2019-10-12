@@ -24,7 +24,9 @@
         "twilio/sdk": "^5.36",
         "torzer/awesome-landlord": "^3.0",
         "laravel/tinker": "^1.0",
-        "monolog/monolog": "1.23"
+        "monolog/monolog": "1.23",
+        "laravel/passport": "^7.5",
+        "benbjurstrom/passport-custom-jwt-claims": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -57,7 +59,11 @@
             "@php artisan package:discover"
         ]
     },
-    "config": {
-
-    }
+    "config": {},
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/aronduby/passport-custom-jwt-claims"
+        }
+    ]
 }

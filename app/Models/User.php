@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use BelongsToTenants, Notifiable;
+    use BelongsToTenants, Notifiable, HasApiTokens;
 
     /**
      * Specify the tenant columns to use for this model
@@ -35,4 +36,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'root'
     ];
+
+    /**
+     * Used in token generation, if they have a login right now they are an admin
+     *
+     * @return bool
+     */
+    public function getAdminAttribute()
+    {
+        return true;
+    }
 }

@@ -13,6 +13,8 @@ Homestead.yaml
 Homestead.json
 .env
 *.map
+*.rnd
 storage/sites/
 !storage/sites/domain.json
+storage/*.key
 *scratch.*
