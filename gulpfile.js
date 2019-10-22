@@ -49,7 +49,7 @@ elixir(function (mix) {
     [
       'main.js', 'home.js', 'schedule.js', 'player.js', 'recap.js', 'statEdit.js',
       'scavenger/step3.js', 'scavenger/step4.js', 'scavenger/step6.js', 'scavenger/step8.js',
-      'porter.js'
+      'porter.js', 'declan.js',
     ],
     'public/js/components.js'
   );
@@ -67,7 +67,8 @@ elixir(function (mix) {
     'js/scavenger/step4.js',
     'js/scavenger/step6.js',
     'js/scavenger/step8.js',
-    'js/porter.js'
+    'js/porter.js',
+    'js/declan.js',
   ];
   if (inProduction) {
     versionedFiles.push('css/main.css');
