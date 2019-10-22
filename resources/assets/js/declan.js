@@ -11,8 +11,10 @@
         toggleTwirl(twirl);
     }
 
-    let twirl = window.localStorage.getItem('twirl') || false;
-    toggleTwirl(twirl);
+    let twirl = JSON.parse(window.localStorage.getItem('twirl') || 'false');
+    if (twirl) {
+        toggleTwirl(twirl);
+    }
 
     const header = document.querySelector('.page-header');
 

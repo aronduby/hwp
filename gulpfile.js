@@ -29,7 +29,8 @@ elixir.config.js.browserify.plugins.push(
         'public/js/scavenger/step4.js',
         'public/js/scavenger/step6.js',
         'public/js/scavenger/step8.js',
-        'public/js/porter.js'
+        'public/js/porter.js',
+        'public/js/declan.js'
       ]
     }
   }
