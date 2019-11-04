@@ -16,3 +16,4 @@ Homestead.json
 storage/sites/
 !storage/sites/domain.json
 *scratch.*
+*.key
