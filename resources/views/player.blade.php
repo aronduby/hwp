@@ -133,4 +133,7 @@
     @if($player->name_key == 'NathanPorter')
         <script src="{{elixir('js/porter.js')}}"></script>
     @endif
+    @if($player->name_key == 'DeclanEdema')
+        <script src="{{elixir('js/declan.js')}}"></script>
+    @endif
 @endpush

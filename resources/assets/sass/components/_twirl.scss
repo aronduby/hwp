@@ -1,0 +1,44 @@
+@keyframes twirl {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+
+body.twirl {
+  .scroller-inner {
+    background: #eee;
+  }
+
+  article.page--player,
+  img.pswp__img {
+    animation-name: twirl;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+    transform-style: preserve-3d;
+    box-shadow: 0 0 8px rgba(0,0,0,.2);
+    perspective: 2000;
+  }
+
+  article.page--player {
+    background: #fff;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: grey;
+      opacity: .6;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: rotateY(180deg);
+    }
+  }
+
+}
