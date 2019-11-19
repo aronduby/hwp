@@ -84,13 +84,22 @@
 
       // Badges
       if (data.badges && data.badges.length) {
+        var maxPerRow = 6;
+        var countPerRow = 0;
+
         data.badges.forEach(function(badgeData, i) {
           var badgeGroup = badge(badgeData, false, defs);
-          var x = padding + (i * 95);
+          var x = (padding / 2) + (countPerRow * 105);
           badgeGroup.set({
             transformMatrix: [1, 0, 0, 1, x, badgeY]
           });
           canvas.add(badgeGroup);
+
+          countPerRow++;
+          if (countPerRow > maxPerRow) {
+            countPerRow = 0;
+            badgeY += 125;
+          }
         });
       }
 
