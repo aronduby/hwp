@@ -83,8 +83,8 @@
     var valueText = new fabric.Text(stat.value + '', {
       fontFamily: 'League Gothic',
       fontSize: stat.value.length > 3 ? 76 : 95,
-      top: 88,
-      left: 104,
+      top: 100,
+      left: 98,
       fill: '#fff',
       textAlign: 'center',
       originX: 'center',
@@ -113,7 +113,7 @@
         fontSize: 41,
         fill: '#fff',
         top: bounding.top + 15,
-        left: bounding.left + bounding.width + 5,
+        left: bounding.left + bounding.width,
         originX: 'left',
         originY: 'top'
       }));
@@ -124,8 +124,8 @@
         fontFamily: 'League Gothic',
         fontSize: 24,
         fill: '#fff',
-        top: bounding.top + 88,
-        left: 104,
+        top: bounding.top + 95,
+        left: 98,
         originX: 'center',
         originY: 'top'
       }));
@@ -148,7 +148,7 @@
       fill: '#fff',
       lineHeight: .8,
       textAlign: 'center',
-      top: baseBounding.top + baseBounding.height,
+      top: baseBounding.top + baseBounding.height + 10,
       left: baseBounding.width / 2,
       originX: 'center',
       originY: 'top',
