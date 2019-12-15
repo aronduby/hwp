@@ -1,7 +1,9 @@
 {
   "name": "hwp-site",
-  "dependencies": {
-    "source": "git@github.com:aronduby/hwp-bridge.git#multiple-live-games",
-    "installTo": "../hwp-bridge"
-  }
+  "dependencies": [
+    {
+      "source": "git@github.com:aronduby/hwp-bridge.git#multiple-live-games",
+      "installTo": "../hwp-bridge"
+    }
+  ]
 }
