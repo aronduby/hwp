@@ -19,49 +19,22 @@
     }
   }
 
-  .note {
-    header {
-      padding: $gap-extra-large;
+  header {
+    padding: $gap-extra-large;
 
-      h1 {
-        font-size: 3em;
-        line-height: 1em;
-      }
-
-      time {
-        font-size: .9em;
-        color: $color-white-darker;
-      }
+    h1 {
+      font-size: 3em;
+      line-height: 1em;
     }
 
-    .body {
-      padding: $gap-extra-large;
-
-      .flex-middle {
-        @include responsive(sm) {
-          display: flex;
-          align-items: center;
-
-          p {
-            margin-left: $gap-large;
-            margin-top: 0;
-          }
-        }
-
-        & + .flex-middle {
-          margin-top: 1em;
-        }
-
-        img {
-          z-index: 1;
-
-          & + img {
-            margin-left: -2.5em;
-            z-index: 0;
-            transform: scale(.85);
-          }
-        }
-      }
+    time {
+      font-size: .9em;
+      color: $color-white-darker;
     }
   }
+
+  .body {
+    padding: $gap-extra-large;
+  }
+
 }

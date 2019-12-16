@@ -1,0 +1,35 @@
+.note {
+
+  .flex-middle {
+    @include responsive(sm) {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin-left: $gap-large;
+        margin-top: 0;
+      }
+    }
+
+    & + .flex-middle {
+      margin-top: 1em;
+    }
+
+    img + img {
+      margin-left: -2.5em;
+      transform: scale(.85);
+    }
+
+    $depth: 5;
+    @for $i from 1 through 4 {
+       img:nth-child(#{$i}n) {
+         z-index: $depth - $i;
+       }
+    }
+
+    .badgeHolder {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+}
