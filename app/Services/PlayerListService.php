@@ -25,6 +25,7 @@ class PlayerListService
      * PlayerListService constructor.
      *
      * @param PlayerSeason $players
+     * @param ActiveSeason $activeSeason
      */
     public function __construct(PlayerSeason $players, ActiveSeason $activeSeason)
     {
@@ -79,5 +80,9 @@ class PlayerListService
         });
     }
 
-
+    public function getPlayerSeasonById($id) {
+        return $this->playerList->flatten()->first(function($playerSeason) use ($id) {
+            return $playerSeason->id == $id;
+        });
+    }
 }
