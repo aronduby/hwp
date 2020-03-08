@@ -67,4 +67,23 @@ class ShutterflyController extends Controller
 
         return response()->json($rsp);
     }
+
+    public function saveTags(Request $request) {
+        $tags = $request->json()->all();
+
+        $success = file_put_contents(config('bridge.tags_path'), json_encode($tags, JSON_PRETTY_PRINT));
+        if ($success === false) {
+            $rsp = [
+                'succes' => false,
+                'message' => 'Tags could not write to file.'
+            ];
+        } else {
+            $rsp = [
+                'success' => true,
+                'message' => 'Tags written to file. Do things to trigger import.'
+            ];
+        }
+
+        return response()->json($rsp);
+    }
 }

@@ -14,4 +14,6 @@ Route::group([
 
     Route::post('sync', ['uses' => 'ShutterflyController@syncPlayers', 'as' => 'shutterfly.players.sync']);
 
+    Route::post('saveTags', ['uses' => 'ShutterflyController@saveTags', 'as' => 'shutterfly.tags.save']);
+
 });
