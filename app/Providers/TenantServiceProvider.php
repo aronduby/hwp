@@ -33,6 +33,14 @@ class TenantServiceProvider extends ServiceProvider
             $host = $_SERVER['HTTP_HOST'];
             $host = explode('.', $host);
             $domain = $host[ count($host) - 2];
+
+            if (count($host) >= 3) {
+                $sub = $host[ count($host) - 3];
+                if ($sub !== 'www') {
+                    $domain = $sub .'.'. $domain;
+                }
+            }
+
             if ($domain === 'ngrok') {
                 $domain = 'hudsonvillewaterpolo';
             }
