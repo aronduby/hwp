@@ -71,7 +71,7 @@ class ShutterflyController extends Controller
     public function saveTags(Request $request) {
         $tags = $request->json()->all();
 
-        $success = file_put_contents(config('bridge.tags_path') . $this->activeSite->domain . '.tags.json', json_encode($tags, JSON_PRETTY_PRINT));
+        $success = file_put_contents(config('bridge.tags_path') . '/' . $this->activeSite->domain . '.tags.json', json_encode($tags, JSON_PRETTY_PRINT));
         if ($success === false) {
             $rsp = [
                 'succes' => false,
