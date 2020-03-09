@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Game::Observe(PersistToObserver::class);
+        // Game::Observe(PersistToObserver::class);
     }
 
     /**
