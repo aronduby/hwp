@@ -25,7 +25,9 @@
 
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
+                    <p>We don't currently allow self-registration. Talk to your people if you want an account.</p>
 
+                    {{--
                     <form role="form" method="POST" action="{{ url('/register') }}">
                         {{ csrf_field() }}
 
@@ -73,7 +75,7 @@
                             <button type="submit" class="btn btn--submit">@lang('auth.register')</button>
                         </footer>
                     </form>
-
+                    --}}
                 </div>
             </div>
         </div>

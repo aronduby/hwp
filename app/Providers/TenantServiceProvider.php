@@ -52,6 +52,8 @@ class TenantServiceProvider extends ServiceProvider
         Landlord::addTenant('site_id', $site->id);
         $this->app->instance(ActiveSite::class, $site);
 
+        $this->updateSiteBasedConfig($site);
+
         // Setup the season
         if (isset($season_id)) {
             $season = ActiveSeason::findOrFail($season_id);
@@ -70,11 +72,16 @@ class TenantServiceProvider extends ServiceProvider
      * @return array|mixed|null
      */
     protected function getFromCLI($option) {
-        $searchFor = '--' . $option . '=';
+        $searchFor = '--' . $option;
 
+        // new ones use --arg value
+        // old scripts require --arg=value
         $args = $_SERVER['argv'];
-        foreach($args as $arg) {
-            if(starts_with($arg, $searchFor)) {
+        foreach($args as $i => $arg) {
+            if ($arg === $searchFor) {
+                return $args[$i + 1];
+
+            } elseif (starts_with($arg, $searchFor.'=')) {
                 $value = explode('=', $arg);
                 $value = array_pop($value);
                 return $value;
@@ -82,6 +89,31 @@ class TenantServiceProvider extends ServiceProvider
         }
 
         return null;
+    }
+
+    /**
+     * Updates any config values with values from the active site
+     *
+     * @param ActiveSite $site
+     */
+    protected function updateSiteBasedConfig(ActiveSite $site) {
+        // DEFAULT_DOMAIN=hudsonvillewaterpolo
+        // APP_URL=https://www.hudsonvillewaterpolo.local
+        // PHOTOS_URL=https://photos.hudsonvillewaterpolo.com
+        // ADMIN_URL=https://admin.hudsonvillewaterpolo.local
+
+        $defaultDomain = env('DEFAULT_DOMAIN');
+        $orgAppUrl = env('APP_URL');
+        $orgAdminUrl = env('ADMIN_URL');
+
+        $newAppUrl = str_replace('www.'.$defaultDomain, $site->domain, $orgAppUrl);
+        $newAdminUrl = str_replace($defaultDomain, $site->domain, $orgAdminUrl);
+
+        config([
+            'app.url' => $newAppUrl,
+            'urls.app' => $newAppUrl,
+            'urls.admin' => $newAdminUrl
+        ]);
     }
 
 
@@ -94,4 +126,6 @@ class TenantServiceProvider extends ServiceProvider
     {
 
     }
+
+
 }
