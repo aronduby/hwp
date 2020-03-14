@@ -19,48 +19,52 @@
             </div>
         </header>
 
-        <section class="page-section bg--light">
-            <div class="bg-elements">
-                <div class="bg--light"></div>
-                <div class="bg--inner-shadow"></div>
-                <div class="bg--grid"></div>
-            </div>
-            <div class="container">
-                <header class="divider--bottom text-align--center">
-                    <h1>@lang('misc.V')</h1>
-                </header>
+        @if ($playerList->team('V'))
+            <section class="page-section bg--light">
+                <div class="bg-elements">
+                    <div class="bg--light"></div>
+                    <div class="bg--inner-shadow"></div>
+                    <div class="bg--grid"></div>
+                </div>
+                <div class="container">
+                    <header class="divider--bottom text-align--center">
+                        <h1>@lang('misc.V')</h1>
+                    </header>
 
-                <ul class="player-list team--varsity">
-                    @foreach($playerList->team('V')->sortBy('number') as $player)
-                        <li>
-                            <a href="@route('players', ['nameKey' => $player->nameKey])">
-                                <span class="player--number">{{$player->number}}</span>
-                                <span class="player--name">{{$player->name}}</span>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </section>
+                    <ul class="player-list team--varsity">
+                        @foreach($playerList->team('V')->sortBy('number') as $player)
+                            <li>
+                                <a href="@route('players', ['nameKey' => $player->nameKey])">
+                                    <span class="player--number">{{$player->number}}</span>
+                                    <span class="player--name">{{$player->name}}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </section>
+        @endif
 
-        <section class="page-section bg--smoke">
-            <div class="container">
-                <header class="divider--bottom text-align--center">
-                    <h1>@lang('misc.JV')</h1>
-                </header>
+        @if ($playerList->team('JV'))
+            <section class="page-section bg--smoke">
+                <div class="container">
+                    <header class="divider--bottom text-align--center">
+                        <h1>@lang('misc.JV')</h1>
+                    </header>
 
-                <ul class="player-list team--jv">
-                    @foreach($playerList->team('JV')->sortBy('number') as $player)
-                        <li>
-                            <a href="@route('players', ['nameKey' => $player->nameKey])">
-                                <span class="player--number">{{$player->number}}</span>
-                                <span class="player--name">{{$player->name}}</span>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </section>
+                    <ul class="player-list team--jv">
+                        @foreach($playerList->team('JV')->sortBy('number') as $player)
+                            <li>
+                                <a href="@route('players', ['nameKey' => $player->nameKey])">
+                                    <span class="player--number">{{$player->number}}</span>
+                                    <span class="player--name">{{$player->name}}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </section>
+        @endif
 
         @if($playerList->team('STAFF'))
         <section class="page-section container">

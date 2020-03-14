@@ -3,7 +3,7 @@
         <div class="bg-elements bg--grid blend--overlay"></div>
 
         <div class="container text-align--center">
-            <h1>Follow us <a href="https://twitter.com/intent/follow?screen_name=HHSWaterPolo">@HHSWaterPolo</a> for live scoring updates</h1>
+            <h1>Follow us <a href="https://twitter.com/intent/follow?screen_name={{config('site.twitter.screenName')}}">{{'@'.config('site.twitter.screenName')}}</a> for live scoring updates</h1>
         </div>
     </section>
 
@@ -13,13 +13,13 @@
                 <div class="col-xs-12 col-md-4">
                     <section class="twitter-embed">
                         <a class="twitter-timeline"
-                           href="https://twitter.com/HHSWaterPolo?ref_src=twsrc%5Etfw"
+                           href="https://twitter.com/{{config('site.twitter.screenName')}}?ref_src=twsrc%5Etfw"
                            data-dnt="true"
                            data-link-color="#6ba3d0"
                            data-chrome="noheader nofooter noborders transparent"
                            data-tweet-limit="1"
                            data-theme="dark"
-                       >Tweets by HHSWaterPolo</a>
+                       >Tweets by {{config('site.twitter.screenName')}}</a>
                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                     </section>
                 </div>
@@ -31,7 +31,7 @@
     </section>
 
     <section class="footer-section sub text-align--center">
-        <p>Special thanks to Mrs. Grandy for taking great pictures &amp; <a href="{{route('players', ['nameKey' => 'EzraDejonge'])}}" title="Ezra Dejonge">Ezra Dejonge</a> for making the sweet 3d polo ball!</p>
+        <p>{!! config('site.thanks') !!}</p>
     </section>
 
 </footer>
