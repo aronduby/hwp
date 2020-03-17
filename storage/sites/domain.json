@@ -27,6 +27,7 @@
   },
   "twitter": {
     "screenName": "HHSWaterPolo",
+    "profileImage": "profile_image_url_https",
     "accessToken": "ASDF",
     "accessTokenSecret": "ASDF"
   },
