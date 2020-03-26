@@ -11,9 +11,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Twitter\TwitterChannel;
 use NotificationChannels\Twitter\TwitterStatusUpdate;
 
-class Test extends Notification
+class Test extends Notification implements ShouldQueue
 {
-    use Loggable;
+    use Loggable, Queueable;
 
     /**
      * @var string
@@ -61,6 +61,7 @@ class Test extends Notification
      *
      * @param $notifiable
      * @return TwitterStatusUpdate
+     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
      */
     public function toTwitter($notifiable)
     {

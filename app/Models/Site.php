@@ -9,7 +9,6 @@ use Thetispro\Setting\Facades\Setting;
 class Site extends Model
 {
     use Notifiable;
-
     
     /**
      * @var \Thetispro\Setting\Setting
@@ -41,5 +40,21 @@ class Site extends Model
     public function seasons()
     {
         return $this->hasMany('App\Models\Season', 'site_id');
+    }
+
+    /**
+     * Pull the twitter authorization from the site settings file
+     *
+     * @param $notification
+     * @return array
+     */
+    public function routeNotificationForTwitter($notification)
+    {
+        return [
+            config('services.twitter.consumer_key'), // TWITTER_CONSUMER_KEY
+            config('services.twitter.consumer_secret'), // TWITTER_CONSUMER_SECRET
+            $this->getSettingsAttribute()->get('twitter.accessToken'), // TWITTER_ACCESS_TOKEN
+            $this->getSettingsAttribute()->get('twitter.accessTokenSecret') // TWITTER_ACCESS_SECRET
+        ];
     }
 }

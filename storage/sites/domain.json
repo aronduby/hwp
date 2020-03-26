@@ -25,7 +25,14 @@
       "id": "asdf-qwert"
     }
   },
+  "twilio": {
+    "enabled": false,
+    "sid": "SID",
+    "token": "TOKEN",
+    "from": "+1NUMBER"
+  },
   "twitter": {
+    "enabled": false,
     "screenName": "HHSWaterPolo",
     "profileImage": "profile_image_url_https",
     "accessToken": "ASDF",

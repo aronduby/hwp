@@ -47,7 +47,7 @@ class ArticleImported extends Notification implements ShouldQueue
      * Get the log representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return array
      */
     public function toLog($notifiable)
     {
@@ -62,6 +62,7 @@ class ArticleImported extends Notification implements ShouldQueue
      *
      * @param $notifiable
      * @return TwitterStatusUpdate
+     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
      */
     public function toTwitter($notifiable)
     {

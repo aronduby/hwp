@@ -73,6 +73,7 @@ class RankingsUpdated extends Notification implements ShouldQueue
      *
      * @param $notifiable
      * @return TwitterStatusUpdate
+     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
      */
     public function toTwitter($notifiable)
     {
