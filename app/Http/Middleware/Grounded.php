@@ -6,6 +6,11 @@ use Closure;
 
 class Grounded
 {
+
+    protected $configKey = 'grounded';
+    protected $viewName = 'grounded';
+    protected $requestKey = 'please';
+
     /**
      * Handle an incoming request.
      *
@@ -16,10 +21,10 @@ class Grounded
     public function handle($request, Closure $next)
     {
         if (
-            $request->query('please', false) === false
-            && in_array($request->player->name_key, config('grounded'))
+            $request->query($this->requestKey, false) === false
+            && in_array($request->player->name_key, config($this->configKey))
         ) {
-            return response(view('grounded', ['player' => $request->player]));
+            return response(view($this->viewName, ['player' => $request->player]));
         } else {
             return $next($request);
         }

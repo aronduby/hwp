@@ -57,6 +57,7 @@ class Kernel extends HttpKernel
         'cors' => \App\Http\Middleware\Cors::class,
 
         'grounded' => \App\Http\Middleware\Grounded::class,
+        'notTopBanana' => \App\Http\Middleware\NotTopBanana::class,
         'twilio' => \App\Http\Middleware\TwilioVerification::class
 
     ];

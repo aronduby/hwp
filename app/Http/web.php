@@ -27,7 +27,7 @@ Route::get('/rankings', ['uses' => 'HomeController@rankings', 'as' => 'rankings'
 Route::get('/players', ['uses' => 'PlayerController@playerList', 'as' => 'playerlist']);
 
 Route::get('players/{player}', ['uses' => 'PlayerController@player', 'as' => 'players'])
-    ->middleware(App\Http\Middleware\Grounded::class);
+    ->middleware(App\Http\Middleware\Grounded::class, App\Http\Middleware\NotTopBanana::class);
 
 
 
