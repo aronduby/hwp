@@ -54,15 +54,22 @@ class TenantServiceProvider extends ServiceProvider
 
         $this->updateSiteBasedConfig($site);
 
-        // Setup the season
-        if (isset($season_id)) {
-            $season = ActiveSeason::findOrFail($season_id);
-        } else {
-            $season = ActiveSeason::current()->firstOrFail();
-        }
+        // Setup the season, if its a picker site we don't need one
+        if (!$site->is_picker) {
+            if (isset($season_id)) {
+                $season = ActiveSeason::findOrFail($season_id);
+            } else {
+                $season = ActiveSeason::current()->firstOrFail();
+            }
 
-        Landlord::addTenant('season_id', $season->id);
-        $this->app->instance(ActiveSeason::class, $season);
+            Landlord::addTenant('season_id', $season->id);
+            $this->app->instance(ActiveSeason::class, $season);
+        } else {
+            $fakeSeason = new ActiveSeason();
+            $fakeSeason->id = 0;
+            $fakeSeason->site_id = $site;
+            $this->app->instance(ActiveSeason::class, $fakeSeason);
+        }
     }
 
     /**

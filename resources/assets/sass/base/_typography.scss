@@ -42,6 +42,12 @@ h1, h2, h3, h4, h5, h6 {
 .text--shadow {
   @include text-shadow();
 }
+$sizes: small, default, large;
+@each $size in $sizes {
+  .text--shadow-#{$size} {
+    @include text-shadow($size);
+  }
+}
 
 .text--muted {
   color: lighten($color-black-text, 15);

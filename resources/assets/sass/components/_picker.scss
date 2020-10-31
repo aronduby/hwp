@@ -1,0 +1,94 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+
+  > header {
+    position: fixed;
+    top: 50%;
+    width: 100vw;
+    font-size: 5.2rem;
+    text-align: center;
+    padding: .1em 0;
+    z-index: 999;
+    transform: translateY(-50%);
+    backdrop-filter: blur(10px);
+    pointer-events: none;
+
+    h1 {
+      font-size: 1em;
+      line-height: .8em;
+    }
+  }
+
+  &-site {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+
+    a {
+      @include pinned;
+      display: flex;
+      color: $color-white;
+      transition: all .25s ease-in-out;
+
+      @include on-event() {
+        transform: scale(1.1);
+      }
+
+      .picker-content {
+        margin: auto;
+        transition: all .4s ease-out;
+
+        h2 {
+          display: inline-block;
+          position: relative;
+          padding: 0.35em 1em;
+          font-size: 2.3rem;
+
+          &::before {
+            content: '';
+            @include pinned;
+            background: adjust-color($color-accent, $alpha: -.25);
+            z-index: 1;
+            transform: skew(-14deg);
+          }
+
+          span {
+            position: relative;
+            z-index: 2;
+          }
+        }
+      }
+    }
+  }
+
+
+  @media (min-width: map-get($breakpoints, 'md')) {
+    flex-direction: row;
+
+    > header {
+      font-size: 9rem;
+      backdrop-filter: none;
+      margin-top: -1em;
+    }
+
+    &-site {
+      &:first-of-type a .picker-content {
+        margin-right: 20%;
+      }
+      &:last-of-type a .picker-content {
+        margin-left: 20%;
+      }
+
+      a:hover {
+        .picker-content {
+          transform: scale(1.5);
+        }
+      }
+    }
+
+  }
+
+}

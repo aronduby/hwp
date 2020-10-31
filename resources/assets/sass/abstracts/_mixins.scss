@@ -68,8 +68,13 @@
   box-shadow: 0 2px 5px rgba(0,0,0,.75);
 }
 
-@mixin text-shadow() {
-  text-shadow: 0 2px 5px rgba(0,0,0,.75);
+@mixin text-shadow($size: 'default') {
+  $sizes: (
+    'small': 0 2px 2px rgba(0,0,0,.5),
+    'default': 0 2px 5px rgba(0,0,0,.75),
+    'large': 0 5px 5px rgba(0,0,0,.9)
+  );
+  text-shadow: map_get($sizes, $size);
 }
 
 @mixin heading() {

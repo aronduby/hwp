@@ -42,7 +42,9 @@ elixir.config.js.browserify.paths = [
 ];
 
 elixir(function (mix) {
-  mix.sass('main.scss');
+  mix
+      .sass('main.scss')
+      .sass('picker.scss');
   // mix.browserify('main.js');
 
   mix.browserify(

@@ -9,6 +9,14 @@ use Thetispro\Setting\Facades\Setting;
 class Site extends Model
 {
     use Notifiable;
+
+    /**
+     * properties that should get type casted
+     * @var string[]
+     */
+    protected $casts = [
+        'is_picker' => 'boolean'
+    ];
     
     /**
      * @var \Thetispro\Setting\Setting
@@ -40,6 +48,21 @@ class Site extends Model
     public function seasons()
     {
         return $this->hasMany('App\Models\Season', 'site_id');
+    }
+
+    public function picker() {
+        return $this->belongsTo('App\Models\Site', 'parent_id');
+    }
+
+    public function sites() {
+        return $this->hasMany('App\Models\Site', 'parent_id');
+    }
+
+    public function featuredPhotos() {
+        return $this->hasMany('App\Models\Photo', 'site_id')
+            ->withoutGlobalScopes(['season_id', 'site_id'])
+            ->where('featured', '=', true)
+            ->orderBy('season_id', 'desc');
     }
 
     /**
