@@ -39,7 +39,5 @@
     "accessTokenSecret": "ASDF"
   },
   "thanks": "Message in the very bottom footer, used to give small shout outs.",
-  "title": {
-    "suffix": "GUYS"
-  }
+  "defaultPronouns": "they"
 }

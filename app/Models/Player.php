@@ -4,10 +4,19 @@ namespace App\Models;
 
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\HasStats;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Player
+ * @package App\Models
+ * @property string name_key
+ * @property string first_name
+ * @property string last_name
+ * @property mixed pronouns
+ */
 class Player extends Model implements Shareable
 {
     use BelongsToTenants, HasStats;
@@ -19,6 +28,8 @@ class Player extends Model implements Shareable
      * @var array
      */
     public $tenantColumns = ['site_id'];
+
+    protected $_pronouns;
 
     public function getNameAttribute()
     {
@@ -35,6 +46,22 @@ class Player extends Model implements Shareable
         return 'name_key';
     }
 
+    public function getPronouns($type = null) {
+        if ($type) {
+            return __('pronouns.' . $this->pronouns . '.' . $type);
+        } else {
+            return __('pronouns.' . $this->pronouns);
+        }
+    }
+
+    public function pn() {
+        if (!$this->_pronouns) {
+            $this->_pronouns = (object) $this->getPronouns();
+        }
+
+        return $this->_pronouns;
+    }
+
     public function articles()
     {
         return $this->belongsToMany('App\Models\Article')
@@ -45,7 +72,7 @@ class Player extends Model implements Shareable
      * Gets the badge relationship.
      * NOTE - this is not tenanted to the season, this get's everything
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function badges()
     {
