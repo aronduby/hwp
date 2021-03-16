@@ -9,7 +9,7 @@ use App\Models\Site;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-class GenerateJSPlayerList extends Command
+class GenerateJSPlayerListCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -56,7 +56,7 @@ class GenerateJSPlayerList extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param ActiveSite $site
      */
     public function __construct(ActiveSite $site)
     {

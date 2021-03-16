@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\HasOGPhoto;
 
-class HudsonvilleAthleticsParser extends ArticleImporter
+class HudsonvilleAthleticsArticlesCommand extends ArticleImporter
 {
     use HasOGPhoto;
 
@@ -13,10 +13,7 @@ class HudsonvilleAthleticsParser extends ArticleImporter
      *
      * @var string
      */
-    protected $signature = 'parsers:articles:hudsonvilleathletics
-        {--domain= : The domain name of the site to use} 
-        {--season= : The season_id to use, defaults to the current}
-        ';
+    protected $signature = 'parsers:articles:hudsonvilleathletics  {instanceId : The ID of the JobInstance to use }';
 
     /**
      * The console command description.
@@ -31,21 +28,15 @@ class HudsonvilleAthleticsParser extends ArticleImporter
     protected $url = "http://feeds.feedburner.com/hudsonvilleathletics?format=xml";
 
     /**
-     * The key in the settings file for the site
-     *
-     * @var string
-     */
-    protected $settingKey = 'hudsonvilleathletics';
-
-    /**
      * Gets the last ran timestamp and does all the hard work
      *
-     * @param $lastRan
+     * @param int $lastRan
      * @return array [[article ids], # of tags]
      */
-    protected function parse($lastRan)
+    protected function parse(int $lastRan): array
     {
         $this->logDebug('Last Ran', [$lastRan]);
+        $this->info('Importing from ' . $this->url);
 
         $feed = new \SimpleXMLElement($this->url, null, true);
         $imported_articles = [];

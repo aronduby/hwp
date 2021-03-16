@@ -8,6 +8,91 @@ use App\Services\PlayerListService;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Stat
+ *
+ * @property int $id
+ * @property int $site_id
+ * @property int $player_id
+ * @property int $season_id
+ * @property int|null $game_id
+ * @property int|null $goals
+ * @property int|null $shots
+ * @property int|null $assists
+ * @property int|null $steals
+ * @property int|null $turnovers
+ * @property int|null $blocks
+ * @property int|null $kickouts_drawn
+ * @property int|null $kickouts
+ * @property int|null $saves
+ * @property int|null $goals_allowed
+ * @property int|null $sprints_taken
+ * @property int|null $sprints_won
+ * @property int|null $five_meters_drawn
+ * @property int|null $five_meters_taken
+ * @property int|null $five_meters_made
+ * @property int|null $five_meters_called
+ * @property int|null $five_meters_taken_on
+ * @property int|null $five_meters_blocked
+ * @property int|null $five_meters_allowed
+ * @property int|null $shoot_out_taken
+ * @property int|null $shoot_out_made
+ * @property int|null $shoot_out_taken_on
+ * @property int|null $shoot_out_blocked
+ * @property int|null $shoot_out_allowed
+ * @property int|null $advantage_goals
+ * @property int|null $advantage_goals_allowed
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Game|null $game
+ * @property-read mixed $five_meters_missed
+ * @property-read mixed $five_meters_percent
+ * @property-read mixed $five_meters_save_percent
+ * @property-read mixed $kickouts_drawn_to_called
+ * @property mixed $player
+ * @property-read mixed $save_percent
+ * @property-read mixed $shoot_out_missed
+ * @property-read mixed $shoot_out_percent
+ * @property-read mixed $shoot_out_save_percent
+ * @property-read mixed $shooting_percent
+ * @property-read mixed $sprints_percent
+ * @property-read mixed $steals_to_turnovers
+ * @property-read \App\Models\Season $season
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAdvantageGoals($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAdvantageGoalsAllowed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAssists($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereBlocks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersAllowed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersBlocked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersCalled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersDrawn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersMade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersTaken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersTakenOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGameId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGoals($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGoalsAllowed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereKickouts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereKickoutsDrawn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat wherePlayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSaves($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSeasonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutAllowed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutBlocked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutMade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutTaken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutTakenOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShots($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSiteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSprintsTaken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSprintsWon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSteals($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereTurnovers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Stat extends Model implements Shareable
 {
     use BelongsToTenants;

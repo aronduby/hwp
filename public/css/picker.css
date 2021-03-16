@@ -2694,6 +2694,18 @@ h1, h2, h3, h4, h5, h6 {
 .text--dark-gray {
   color: greyscale(29) !important; }
 
+.text--success {
+  color: #92db00 !important; }
+
+.text--warn, .text--warning {
+  color: #f5d100 !important; }
+
+.text--danger {
+  color: #f20000 !important; }
+
+.text--error {
+  color: #f20000 !important; }
+
 .text--white-darker {
   color: #bfbfbf; }
 
@@ -2789,6 +2801,30 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg--bottom-third-dark-gray {
   background-image: linear-gradient(to top, greyscale(29) 0, transparent 66%); }
+
+.bg--success {
+  background-color: #92db00 !important; }
+
+.bg--bottom-third-success {
+  background-image: linear-gradient(to top, #92db00 0, transparent 66%); }
+
+.bg--warn {
+  background-color: #f5d100 !important; }
+
+.bg--bottom-third-warn {
+  background-image: linear-gradient(to top, #f5d100 0, transparent 66%); }
+
+.bg--danger {
+  background-color: #f20000 !important; }
+
+.bg--bottom-third-danger {
+  background-image: linear-gradient(to top, #f20000 0, transparent 66%); }
+
+.bg--error {
+  background-color: #f20000 !important; }
+
+.bg--bottom-third-error {
+  background-image: linear-gradient(to top, #f20000 0, transparent 66%); }
 
 .bg--gradient {
   background-image: linear-gradient(to right, #030745 10%, #937d00 50%, #030745 90%); }

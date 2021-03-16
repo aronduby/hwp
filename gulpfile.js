@@ -25,6 +25,7 @@ elixir.config.js.browserify.plugins.push(
         'public/js/player.js',
         'public/js/recap.js',
         'public/js/statEdit.js',
+        'public/js/jobs.js',
         'public/js/scavenger/step3.js',
         'public/js/scavenger/step4.js',
         'public/js/scavenger/step6.js',
@@ -50,9 +51,9 @@ elixir(function (mix) {
   mix.browserify(
     // Entry points need to be in the same order as the factor bundle outputs
     [
-      'main.js', 'home.js', 'schedule.js', 'player.js', 'recap.js', 'statEdit.js',
+      'main.js', 'home.js', 'schedule.js', 'player.js', 'recap.js', 'statEdit.js', 'jobs.js',
       'scavenger/step3.js', 'scavenger/step4.js', 'scavenger/step6.js', 'scavenger/step8.js',
-      'porter.js', 'declan.js',
+      'porter.js', 'declan.js'
     ],
     'public/js/components.js'
   );
@@ -66,6 +67,7 @@ elixir(function (mix) {
     'js/components.js',
     'js/recap.js',
     'js/statEdit.js',
+    'js/jobs.js',
     'js/scavenger/step3.js',
     'js/scavenger/step4.js',
     'js/scavenger/step6.js',

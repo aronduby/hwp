@@ -9,7 +9,7 @@ use App\Models\Stat;
 use App\Services\PlayerListService;
 use Monolog\Logger;
 
-class SaveScoringStats extends LoggedCommand
+class SaveScoringStatsCommand extends LoggedCommand
 {
     /**
      * The name and signature of the console command.

@@ -11,11 +11,37 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Player
+ *
  * @package App\Models
  * @property string name_key
  * @property string first_name
  * @property string last_name
  * @property mixed pronouns
+ * @property int $id
+ * @property int $site_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $pronouns
+ * @property string $name_key
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\PlayerSeason $activeSeason
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Badge[] $badges
+ * @property-read mixed $name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Photo[] $photos
+ * @property-read \App\Collections\CustomCollection|\App\Models\PlayerSeason[] $seasons
+ * @property-read \App\Collections\StatCollection|\App\Models\Stat[] $stats
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player nameKey($nameKey)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereNameKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player wherePronouns($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereSiteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Player whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Player extends Model implements Shareable
 {

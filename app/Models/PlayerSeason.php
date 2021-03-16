@@ -7,6 +7,39 @@ use App\Models\Traits\UsesCustomCollection;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\PlayerSeason
+ *
+ * @property int $id
+ * @property int $site_id
+ * @property int $player_id
+ * @property int $season_id
+ * @property string|null $title
+ * @property mixed $team
+ * @property mixed $position
+ * @property string|null $number
+ * @property string|null $shutterfly_tag
+ * @property int|null $sort
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read string $name
+ * @property-read mixed $name_key
+ * @property-read \App\Models\Player $player
+ * @property-read \App\Models\Season $season
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason wherePlayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason wherePosition($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSeasonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereShutterflyTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSiteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereTeam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class PlayerSeason extends Model
 {
     use BelongsToTenants, UsesCustomCollection, HasStats;

@@ -2,7 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Traits\Loggable;
+use App\Models\JobInstance;
 use Illuminate\Bus\Queueable;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 abstract class Job
 {
@@ -17,5 +22,8 @@ abstract class Job
     |
     */
 
-    use Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels,
+        Loggable;
+
+
 }

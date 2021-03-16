@@ -5,6 +5,7 @@
     <base href="@route('home')" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=69k3Ao4nqq">
     <link rel="icon" type="image/png" href="/icons/favicon-32x32.png?v=69k3Ao4nqq" sizes="32x32">

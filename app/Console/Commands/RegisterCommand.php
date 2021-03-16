@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Password;
 
-class Register extends Command
+class RegisterCommand extends Command
 {
     /**
      * The name and signature of the console command.

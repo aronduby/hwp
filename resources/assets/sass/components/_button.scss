@@ -8,6 +8,7 @@ a.btn {
   font-family: $heading-font-stack;
   font-size: 1.25em;
   text-transform: uppercase;
+  text-decoration: none;
   line-height: 1.2em;
   color: $color-black-lighter;
   background: $color-smoke;
@@ -18,11 +19,17 @@ a.btn {
   i {
     font-size: 1.1em;
     line-height: 1.2em;
+    margin-right: .25em;
+
+    &:first-child:last-child {
+      margin-right: 0;
+    }
   }
 
   &:hover {
     background: lighten($color-smoke, 10);
     color: lighten($color-bright-lighter, 10);
+    text-decoration: none;
   }
 
   &.disabled,
@@ -84,8 +91,45 @@ table .action-btns {
 
   .btn {
     font-size: 1em;
-    padding: $gap;
+    padding: $gap-small;
     border: none !important;
     background: none;
+  }
+}
+
+
+@mixin _btnColor($bg, $hover, $active, $text) {
+  background: $bg !important;
+  color: $text !important;
+
+  &:hover {
+    background: $hover !important;
+    color: $text !important;
+  }
+
+  &:active {
+    background: $active !important;
+    color: $text !important;
+  }
+}
+
+$_success: map-get($colors, 'success');
+$_warn: map-get($colors, 'warn');
+$_danger: map-get($colors, 'danger');
+
+$variants: (
+  primary: $color-primary $color-primary-lighter $color-primary-darker $color-white-lighter,
+  accent:  $color-accent $color-accent-darker $color-accent-darker $color-white-lighter,
+  bright: $color-bright $color-bright-lighter $color-bright-darker $color-white-lighter,
+  bright-accent: $color-bright-accent $color-bright-accent-darker $color-bright-accent-darker $color-white-lighter,
+  bright-accent-alt: $color-bright-accent-alt $color-bright-accent-alt-lighter $color-bright-accent-alt-darker $color-white-lighter,
+  success: $_success darken($_success, 10) darken($_success, 10) $color-white-lighter,
+  warn: $_warn darken($_warn, 10) darken($_warn, 10) $color-white-lighter,
+  danger: $_danger darken($_danger, 10) darken($_danger, 10) $color-white-lighter,
+);
+
+@each $name, $params in $variants {
+  .btn.btn--#{$name} {
+    @include _btnColor($params...);
   }
 }

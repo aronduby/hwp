@@ -34,6 +34,9 @@ h1, h2, h3, h4, h5, h6 {
     color: $color !important;
   }
 }
+.text--warning {
+  @extend .text--warn;
+}
 
 .text--white-darker {
   color: $color-white-darker;

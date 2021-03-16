@@ -77,7 +77,7 @@
                 </button>
             </p>
 
-            <table class="table table--striped table--collapse schedule">
+            <table class="table table--striped table--collapse table--fancyHeader schedule">
                 <thead class="bg--grid bg--dark">
                     <tr>
                         <th class="schedule-type">@lang('schedule.type')</th>

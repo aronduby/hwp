@@ -3,50 +3,8 @@ $_edge-padding: 20px;
 table.schedule {
   table-layout: fixed;
 
-  // fake border radius for the table
-  & > thead > tr:first-child {
-    & > th:first-child {
-      border-radius: 4px 0 0 0;
-    }
-
-    & > th:last-child {
-      border-radius: 0 4px 0 0;
-    }
-  }
-
-  & > tbody > tr:last-child {
-    & > td:first-child {
-      border-radius: 0 0 0 4px;
-    }
-
-    & > td:last-child {
-      border-radius: 0 0 4px 0;
-    }
-  }
-
-  & > thead {
-
-    & > tr > th {
-      font-size: em(24);
-      padding: $gap-bigger;
-    }
-
-    .schedule-type {
-      width: 100px;
-    }
-  }
-
-  tbody {
-    letter-spacing: -.04em;
-
-    td {
-      padding: $gap-large;
-    }
-  }
-
-  tr > th:first-child,
-  tr > td:first-child {
-    padding-left: $_edge-padding;
+  & > thead .schedule-type {
+    width: 100px;
   }
 
   tr.in-tournament > td:first-child {
@@ -117,8 +75,9 @@ table.schedule {
       }
     }
 
-
-
-
+    // make the button groups align start
+    .schedule-btns.action-btns .btn-group.btn-group--end {
+      justify-content: flex-start;
+    }
   }
 }

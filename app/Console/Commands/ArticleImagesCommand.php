@@ -6,7 +6,7 @@ use App\Models\Article;
 use Illuminate\Console\Command;
 use Fusonic\OpenGraph\Consumer;
 
-class ArticleImages extends Command
+class ArticleImagesCommand extends Command
 {
     /**
      * The name and signature of the console command.

@@ -2,12 +2,15 @@
 
 namespace App\Console;
 
-use App\Console\Commands\ArticleImages;
-use App\Console\Commands\GenerateJSPlayerList;
-use App\Console\Commands\HudsonvilleAthleticsParser;
+use App\Console\Commands\ArticleImagesCommand;
+use App\Console\Commands\GenerateJSPlayerListCommand;
+use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
 use App\Console\Commands\MLiveParser;
-use App\Console\Commands\MWPARankingCommand;
-use App\Console\Commands\SaveScoringStats;
+use App\Console\Commands\MWPARankingsCommand;
+use App\Console\Commands\RegisterCommand;
+use App\Console\Commands\SaveScoringStatsCommand;
+use App\Jobs\JobGroups;
+use App\Models\JobInstance;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,12 +22,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        GenerateJSPlayerList::class,
-        ArticleImages::class,
-        MWPARankingCommand::class,
-        HudsonvilleAthleticsParser::class,
-        // MLiveParser::class,
-        SaveScoringStats::class,
+        ArticleImagesCommand::class,
+        GenerateJSPlayerListCommand::class,
+        HudsonvilleAthleticsArticlesCommand::class,
+        MWPARankingsCommand::class,
+        RegisterCommand::class,
+        SaveScoringStatsCommand::class,
     ];
 
     protected function commands()
@@ -35,13 +38,36 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('parsers:articles:hudsonvilleathletics --domain=hudsonvillewaterpolo')->hourly();
-        // $schedule->command('parsers:articles:mlive --domain=hudsonvillewaterpolo')->hourly();
-        $schedule->command('parsers:mwpa:rankings --domain=hudsonvillewaterpolo')->hourly();
+        $schedule->call(function () {
+
+            $this->runGroupJobs(JobGroups::Hourly);
+
+        })->everyMinute();
+    }
+
+    protected function runGroupJobs(string $group)
+    {
+        $groupJobs = [];
+        $jobData = config('jobs');
+        foreach($jobData as $data) {
+            if ($data['group'] === $group) {
+                $groupJobs[] = $data['job'];
+            }
+        }
+
+        \Landlord::disable();
+
+        $groupInstances = JobInstance::whereIn('job', $groupJobs)->get();
+
+        foreach($groupInstances as $instance) {
+            call_user_func([$instance->job, 'dispatch'], $instance);
+        }
+
+        \Landlord::enable();
     }
 }
