@@ -34,6 +34,9 @@ h1, h2, h3, h4, h5, h6 {
     color: $color !important;
   }
 }
+.text--warning {
+  @extend .text--warn;
+}
 
 .text--white-darker {
   color: $color-white-darker;
@@ -41,6 +44,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .text--shadow {
   @include text-shadow();
+}
+$sizes: small, default, large;
+@each $size in $sizes {
+  .text--shadow-#{$size} {
+    @include text-shadow($size);
+  }
 }
 
 .text--muted {

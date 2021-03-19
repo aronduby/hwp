@@ -5,6 +5,28 @@ namespace App\Models;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Advantage
+ *
+ * @property int $id
+ * @property int $site_id
+ * @property int $game_id
+ * @property string $team
+ * @property int $drawn
+ * @property int $converted
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Game $game
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereConverted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereDrawn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereGameId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereSiteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereTeam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Advantage extends Model
 {
     use BelongsToTenants;

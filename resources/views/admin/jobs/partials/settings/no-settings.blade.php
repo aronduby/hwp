@@ -1,0 +1,1 @@
+<p>@lang('jobs.noAdditionalSettings')</p>

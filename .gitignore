@@ -19,3 +19,4 @@ storage/sites/
 storage/*.key
 *scratch.*
 *.key
+/_ide_helper.php

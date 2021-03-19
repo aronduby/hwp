@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\ActiveSite;
+use DebugBar\DebugBar;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -43,14 +45,19 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param Router $router
      * @return void
      */
     public function map(Router $router)
     {
-        $this->mapWebRoutes($router);
-        $this->mapApiRoutes($router);
-        //
+        $site = $this->app->make(ActiveSite::class);
+
+        if ($site->is_picker) {
+            $this->mapPickerRoutes($router);
+        } else {
+            $this->mapWebRoutes($router);
+            $this->mapApiRoutes($router);
+        }
     }
 
     /**
@@ -58,7 +65,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param Router $router
      * @return void
      */
     protected function mapWebRoutes(Router $router)
@@ -71,11 +78,28 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * Define the "picker" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @param Router $router
+     * @return void
+     */
+    protected function mapPickerRoutes(Router $router)
+    {
+        $router->group([
+            'namespace' => $this->namespace, 'middleware' => 'web',
+        ], function ($router) {
+            require app_path('Http/picker.php');
+        });
+    }
+
+    /**
      * Define the "api" routes for the application.
      *
      * These routes all receive the api middleware by default
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param Router $router
      * @return void
      */
     protected function mapApiRoutes(Router $router)

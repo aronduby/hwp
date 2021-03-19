@@ -51,4 +51,15 @@ input.toggler {
   &:checked + label:after {
     margin-left: 50%;
   }
+
+  &[disabled] + label {
+    pointer-events: none;
+    opacity: .5;
+  }
+}
+
+@each $name, $color in $colors {
+  input.toggler.toggler--#{$name}:checked + label:before {
+    background-color: $color;
+  }
 }

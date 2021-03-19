@@ -41,6 +41,21 @@
   }
 }
 
+/* list items with split can have two links  */
+.mp-menu li.split {
+  display: flex;
+  align-items: stretch;
+
+  a {
+    padding-left:.5em;
+    padding-right: .5em;
+
+    & + a {
+      border-left: 1px solid darken($color-primary-bg, 5);
+    }
+  }
+}
+
 .mp-menu li.mp-has-subs > a::before {
   @include fa-icon();
   content: $fa-var-angle-left;
@@ -70,6 +85,18 @@
     top: 50%;
     margin-top: -.5em;
   }
+}
+
+/**
+ *  Team Picker Home Split
+ */
+.mp-menu a.team-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  font-size: .75em;
+  color: white;
 }
 
 /**

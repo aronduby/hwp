@@ -32,8 +32,16 @@
     }
   }
 
+  .team-picker {
+    display: none;
+  }
+
   @include responsive('lg') {
     padding: 0 $gap-large;
+
+    .team-picker {
+      display: block;
+    }
   }
 }
 

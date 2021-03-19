@@ -10,7 +10,10 @@
         </header>
         <div class="icon"><i class="fa fa-home"></i></div>
         <ul>
-            <li>
+            <li class="@if($site->picker) split @endif">
+                @if ($site->picker)
+                    <a href="//{{$site->picker->domain}}.{{app('App\Http\Requests\Request')->getTLD()}}" class="team-picker" title="team picker"><i class="fa fa-th-large"></i></a>
+                @endif
                 <a href="@route('home')">@lang('menu.home')</a>
             </li>
 

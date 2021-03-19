@@ -1,11 +1,13 @@
-<?php
+<?php /** @noinspection SqlResolve */
 
 namespace App\Console\Commands;
 
+use App\Console\Commands\Traits\HasJobInstance;
 use App\Events\ArticleImported;
 use App\Models\ActiveSeason;
-use App\Models\ActiveSite;
+use App\Models\JobLog;
 use App\Models\Player;
+use App\Models\PlayerSeason;
 use App\Models\Season;
 use App\Models\Site;
 use App\Services\PlayerListService;
@@ -16,13 +18,15 @@ use Illuminate\Support\Facades\DB;
 abstract class ArticleImporter extends LoggedCommand
 {
 
+    use HasJobInstance;
+
     /**
      * Gets the last ran timestamp and does all the hard work
      *
      * @param int $lastRan
      * @return array [[article ids], # of tags]
      */
-    abstract protected function parse($lastRan);
+    abstract protected function parse(int $lastRan): array;
 
     /**
      * @var Site
@@ -69,39 +73,59 @@ abstract class ArticleImporter extends LoggedCommand
     protected $playerToArticleInsertStmt;
 
     /**
-     * Create a new command instance.
-     *
-     * @param ActiveSite $site
-     * @param ActiveSeason $season
-     * @param PlayerListService $playerListService
-     */
-    public function __construct(ActiveSite $site, ActiveSeason $season, PlayerListService $playerListService)
-    {
-        parent::__construct();
-
-        $this->site = $site;
-        $this->season = $season;
-        $this->playerlist = $playerListService->all()->flatten();
-
-        $this->preparePdo();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        $lastRan = $this->site->settings->get($this->settingKey.'.lastRun');
+        \Landlord::disable();
 
-        list($imported_articles, $imported_tags) = $this->parse($lastRan);
+        $jobInstance = $this->getJobInstance();
+        $jobLog = $this->getJobLog();
 
-        $this->site->settings->set($this->settingKey.'.lastRun', time());
-        foreach($imported_articles as $articleId) {
-            $event = new ArticleImported($this->site, $this->season, $articleId);
-            event($event);    
+        /**
+         * @var Season $season
+         */
+        $site = $jobInstance->site;
+        $season = $site->seasons()->where('current', '=', true)->firstOrFail();
+        $activeSeason = new ActiveSeason($season->toArray());
+
+        $playerListService = new PlayerListService(new PlayerSeason(), $activeSeason);
+
+        $this->site = $site;
+        $this->season = $season;
+        $this->playerlist = $playerListService->all()->flatten();
+
+        $this->preparePdo();
+
+        try {
+            $lastRan = $jobInstance->last_ran;
+            $this->info('Last ran: '. (isset($lastRan) ? $lastRan->toDayDateTimeString() : 'never'));
+
+            list($imported_articles, $imported_tags) = $this->parse(isset($lastRan) ? $lastRan->timestamp : 0);
+
+            $this->info('Parsed '. count($imported_articles).' new articles');
+            $this->info('Articles included '. $imported_tags .' tags');
+
+            foreach($imported_articles as $articleId) {
+                $event = new ArticleImported($this->site, $this->season, $articleId);
+                event($event);
+            }
+
+            $jobInstance->last_ran = now();
+            $jobLog->state = JobLog::SUCCESS;
+
+        } catch (\Throwable $exception) {
+            $this->error('Caught exception: ' . $exception->getMessage());
+            $jobLog->state = JobLog::ERROR;
         }
+
+        $this->info('saving instance and log');
+        $jobInstance->save();
+        $jobInstance->logs()->save($jobLog);
+
+        \Landlord::enable();
     }
 
     /**

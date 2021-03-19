@@ -5,6 +5,36 @@ namespace App\Models;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Location
+ *
+ * @property int $id
+ * @property int $site_id
+ * @property string $title
+ * @property string $title_short
+ * @property string|null $street
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zipcode
+ * @property string|null $notes
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Collections\CustomCollection|\App\Models\Game[] $games
+ * @property-read string $full_address
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tournament[] $tournaments
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereSiteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereStreet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereTitleShort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereZipcode($value)
+ * @mixin \Eloquent
+ */
 class Location extends Model
 {
     use BelongsToTenants;

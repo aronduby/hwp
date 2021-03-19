@@ -19,8 +19,8 @@
                     <h1><span class="text--muted">Sorry,</span> {{$player->first_name}}'s Grounded</h1>
                 </header>
 
-                <p>{{$player->first_name}} can't come out to play right now, he's currently grounded. He knows what
-                    he did. Once he's learned how to behave properly he can come out again.</p>
+                <p>{{$player->first_name}} can't come out to play right now, they're currently grounded. They know what
+                    they did. Once they've learned how to behave properly, they can come out again.</p>
 
                 <p><a href="@route('players', ['nameKey' => $player->name_key])?please">awww, pretty please?</a></p>
             </div>

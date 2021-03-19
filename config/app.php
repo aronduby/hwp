@@ -133,6 +133,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -141,6 +142,7 @@ return [
         Thetispro\Setting\SettingServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         NotificationChannels\Twitter\TwitterServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
 
 
@@ -151,12 +153,12 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
         App\Providers\TenantServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
         App\Providers\DateDirectiveServiceProvider::class,
         App\Providers\RouteDirectiveServiceProvider::class,
         App\Providers\MiscDirectiveServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class,
+        App\Providers\JobServiceProvider::class,
 
     ],
 
@@ -167,6 +169,7 @@ return [
     |
     | This array of class aliases will be registered when this application
     | is started. However, feel free to register as many as you wish as
+
     | the aliases are "lazy" loaded so they don't hinder performance.
     |
     */

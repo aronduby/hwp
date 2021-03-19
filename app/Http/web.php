@@ -150,3 +150,19 @@ Route::group([
     Route::get('user/stats', ['uses' => 'TwilioController@userStats', 'as' => 'twilio.user.stats']);
 
 });
+
+/**
+ * Admin Pages
+ */
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => 'auth'
+], function() {
+
+    Route::get('jobs/{jobInstance}/run', ['uses' => 'JobsController@run', 'as' => 'jobs.run']);
+
+    Route::resource('jobs', 'JobsController', ['parameters' => ['jobs' => 'jobInstance']])->only([
+        'index', 'store', 'update', 'destroy'
+    ]);
+
+});
