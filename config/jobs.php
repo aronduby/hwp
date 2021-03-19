@@ -31,14 +31,5 @@ return [
         'allowAutoRun' => true,
         'settings' => 'mwpa-rankings',
         'disabled' => true
-    ],
-    'Fake' => [
-        'key' => 'Fake',
-        'job' => MWPARankingsJob::class,
-        'group' => JobGroups::Hourly,
-        'allowMultiple' => true,
-        'allowAutoRun' => true,
-        'settings' => 'mwpa-rankings',
-        'disabled' => false
     ]
 ];
