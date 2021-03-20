@@ -1,0 +1,9 @@
+.scroller-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  > article {
+    flex: 1;
+  }
+}
