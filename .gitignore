@@ -20,3 +20,5 @@ storage/*.key
 *scratch.*
 *.key
 /_ide_helper.php
+/public/badges/2x/
+/public/badges/4x/
