@@ -18,7 +18,7 @@
     "jquery.loadtemplate": "^1.5.0",
     "js-cookie": "^2.2.0",
     "litepicker": "^2.0.11",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "photoswipe": "^4.1.1",
     "signals": "^1.0.0",
