@@ -1,0 +1,22 @@
+.section--empty {
+  display: flex;
+  color: var(--color-doge);
+  text-align: center;
+  font-family: $heading-font-stack;
+  padding: 8rem 0;
+
+  > div {
+    margin: auto;
+
+    h1 {
+      font-size: 4rem;
+      margin: .5em 0 0 0;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin: 0;
+      font-weight: 100;
+    }
+  }
+}

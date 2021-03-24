@@ -1,0 +1,17 @@
+.table--fancyCaption {
+
+  caption {
+    @include grid();
+
+    font-family: $heading-font-stack;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: white;
+    background-color: $color-dark;
+    border-radius: 5px 5px 0 0;
+    padding: .3em;
+    border-bottom: 2px solid $color-white-darker;
+  }
+
+}

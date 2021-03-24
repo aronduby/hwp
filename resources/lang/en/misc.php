@@ -43,5 +43,7 @@ return [
     'add' => 'Add',
     'remove', 'Remove',
     'saveSuccessful' => 'Save Successful!',
-    'shareable' => 'Shareable'
+    'shareable' => 'Shareable',
+
+    'wowSuchEmpty' => 'Wow, such empty',
 ];

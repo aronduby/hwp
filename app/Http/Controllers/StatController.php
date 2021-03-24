@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Collections\BoxscoreQuarterIterator;
 use App\Http\Requests\StatsRequest;
+use App\Models\ActiveSeason;
 use App\Models\Advantage;
 use App\Models\Boxscore;
 use App\Models\Game;
@@ -12,6 +13,7 @@ use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Services\PlayerListService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class StatController extends Controller
 {
@@ -203,6 +205,36 @@ class StatController extends Controller
         return redirect()
             ->route('game.stats', ['game' => $game->id])
             ->with('status', trans('misc.saveSuccessful'));
+    }
+
+    public function aggregateView(ActiveSeason $season)
+    {
+        $players = $this->playerListService->all();
+
+        // get start and end of the dates from schedule
+        $dates = DB::table('games')
+            ->select(DB::raw('UNIX_TIMESTAMP(DATE(MIN(start))) AS start, UNIX_TIMESTAMP(DATE(MAX(end))) AS end'))
+            ->where('season_id', $season->id)
+            ->first();
+
+        $start = $dates->start * 1000;
+        $end = $dates->end * 1000;
+
+        // get all of the stats for this season
+        // don't use models, we will break the memory limit
+        $stats = DB::table('stats')
+            ->leftJoin('games', 'stats.game_id', '=', 'games.id')
+            ->where('stats.season_id', '=', $season->id)
+            ->select(DB::raw('stats.*, games.team, UNIX_TIMESTAMP(DATE(games.start)) * 1000 AS start'))
+            ->get();
+
+        $data = [
+            'start' => $start,
+            'end' => $end,
+            'stats' => $stats
+        ];
+
+        return view('stats', compact('players','data'));
     }
 
     private function getCover(Game $game)

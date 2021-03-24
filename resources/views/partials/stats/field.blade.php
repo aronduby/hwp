@@ -3,6 +3,6 @@
 @include('partials.stats.kickouts', ['stats' => $stats])
 @include('partials.stats.goals-assists', ['stats' => $stats])
 
-@if(isset($for) && $for === 'PLAYER' && $stats->sprints_taken > 2)
+@if((isset($drawSprints) && $drawSprints === true) || (isset($for) && $for === 'PLAYER' && $stats->sprints_taken > 2))
     @include('partials.stats.sprints', ['stats' => $stats])
 @endif

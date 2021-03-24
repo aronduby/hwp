@@ -51,6 +51,7 @@ return [
     'advantage_goals' => 'Kickout Goals',
     'advantage_goals_allowed' => 'Kickout Goals Allowed',
 
+    'aggregate' => 'Aggregate',
     'stat' => 'Stat',
     'stats' => 'Stats',
     'value' => 'Value',
@@ -92,5 +93,13 @@ return [
 
     'thirstsQuenched' => 'Thirsts Quenched',
     'thirsts' => 'Thirsts',
-    'quenched' => 'Quenched'
+    'quenched' => 'Quenched',
+
+    'date' => 'Date',
+    'range' => 'Range',
+    'allSeason' => 'All Season',
+    'thisWeek' => 'This Week',
+    'lastWeek' => 'Last Week',
+
+    'noStatsInRange' => "There's no stats in your selected date range",
 ];

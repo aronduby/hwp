@@ -52,6 +52,8 @@ Route::get('game/{game}/stats/edit', ['uses' => 'StatController@edit', 'as' => '
 
 Route::post('game/{game}/stats/edit', ['uses' => 'StatController@save', 'as' => 'game.stats.edit'])->middleware('auth');
 
+Route::get('stats', ['uses' => 'StatController@aggregateView', 'as' => 'stats']);
+
 
 Route::get('photos', ['uses' => 'AlbumController@index', 'as' => 'albumlist']);
 

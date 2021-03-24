@@ -1,0 +1,81 @@
+$_spacing: 3em;
+
+.page--stats {
+
+  .section--dateRange {
+
+    .dateRange-buttons {
+      margin: ($_spacing / 2) 0;
+    }
+
+    .dateRange-picker {
+      margin-bottom: $_spacing;
+    }
+
+    // override litepicker styles
+    // highlighted days use a little marker instead of hideous color
+    // but that means a bunch of tweaks to different states of highlighted
+    .litepicker .container__days .day-item {
+
+      &.is-highlighted {
+        background-color: transparent;
+
+        &.is-in-range {
+          background-color: var(--litepicker-is-in-range-color);
+        }
+
+        &.is-start-date {
+          color: var(--litepicker-is-start-color);
+          background-color: var(--litepicker-is-start-color-bg);
+        }
+
+        &.is-end-date {
+          color: var(--litepicker-is-end-color);
+          background-color: var(--litepicker-is-end-color-bg);
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          width: 3px;
+          height: 3px;
+          background-color: var(--color-bright-accent-alt);
+          border-radius: 50%;
+          margin: auto;
+        }
+      }
+    }
+
+  }
+
+  .charts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: $_spacing 0;
+  }
+
+  .stats-table {
+    margin: $_spacing 0;
+  }
+
+  textarea.template {
+    display: none;
+  }
+
+  .section--empty {
+    display: none;
+  }
+
+  &.empty {
+    .page-section {
+      display: none;
+    }
+
+    .page-section.section--dateRange,
+    .page-section.section--empty {
+      display: flex;
+    }
+  }
+
+}

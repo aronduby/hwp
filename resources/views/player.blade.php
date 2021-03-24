@@ -72,11 +72,12 @@
                     </div>
                 </div>
             </section>
-        @else
-            <script>
-                var stats = window.stats || {};
-            </script>
         @endif
+
+        <script>
+            var stats = window.stats || {};
+            stats = @json($stats)
+        </script>
 
         @if($badges->count())
             <section class="page-section badges bg--smoke">

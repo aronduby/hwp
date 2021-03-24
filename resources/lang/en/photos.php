@@ -16,6 +16,6 @@ return [
     'photos' => 'Photos',
     'photo' => 'Photo',
     'albums' => 'Albums',
-    'noPhotosFound' => "Sorry, but we couldn't find any photos for this gallery. Please check back again in a day or two."
+    'noPhotosFound' => "We couldn't find any photos for this gallery. Please check back again in a day or two."
 
 ];

@@ -22,5 +22,6 @@ return [
     'scoring' => 'Scoring',
     'photos' => 'Photos',
     'mainMenu' => 'Main Menu',
-    'parents' => 'Parents'
+    'parents' => 'Parents',
+    'stats' => 'Stats',
 ];

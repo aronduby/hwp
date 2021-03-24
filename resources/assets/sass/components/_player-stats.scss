@@ -85,7 +85,8 @@
 }
 
 // specific overwrites
-.stats .stat--assists .stat-header h1 {
+.stats .stat--assists .stat-header h1,
+.charts .stat--assists .stat-header h1 {
   margin-top: 0; // no p so no center tweak
   font-size: 3.25em;
   letter-spacing: -.02em;

@@ -62,6 +62,10 @@
             </li>
 
             <li>
+                <a href="@route('stats')" title="@lang('menu.stats')">@lang('menu.stats')</a>
+            </li>
+
+            <li>
                 <a href="@route('parents')" title="@lang('menu.parents')">@lang('menu.parents')</a>
             </li>
 

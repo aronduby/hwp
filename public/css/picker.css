@@ -411,6 +411,27 @@ td,
 th {
   padding: 0; }
 
+:root {
+  --color-primary: #32345d;
+  --color-accent: #f5d100;
+  --color-bright: #2a82c9;
+  --color-bright-accent: #92db00;
+  --color-bright-accent-alt: #f29800;
+  --color-dark: #32345d;
+  --color-win: #92db00;
+  --color-loss: #ea4d0f;
+  --color-tie: #f29800;
+  --color-white: #fff;
+  --color-smoke: #ececec;
+  --color-grey: #bcbcbc;
+  --color-doge: #bcbcbc;
+  --color-black: #000;
+  --color-dark-gray: greyscale(29);
+  --color-success: #92db00;
+  --color-warn: #f5d100;
+  --color-danger: #f20000;
+  --color-error: #f20000; }
+
 /**
  * Set up a decent box model on the root element
  */
@@ -2688,6 +2709,12 @@ h1, h2, h3, h4, h5, h6 {
 .text--smoke {
   color: #ececec !important; }
 
+.text--grey {
+  color: #bcbcbc !important; }
+
+.text--doge {
+  color: #bcbcbc !important; }
+
 .text--black {
   color: #000 !important; }
 
@@ -2789,6 +2816,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg--bottom-third-smoke {
   background-image: linear-gradient(to top, #ececec 0, transparent 66%); }
+
+.bg--grey {
+  background-color: #bcbcbc !important; }
+
+.bg--bottom-third-grey {
+  background-image: linear-gradient(to top, #bcbcbc 0, transparent 66%); }
+
+.bg--doge {
+  background-color: #bcbcbc !important; }
+
+.bg--bottom-third-doge {
+  background-image: linear-gradient(to top, #bcbcbc 0, transparent 66%); }
 
 .bg--black {
   background-color: #000 !important; }

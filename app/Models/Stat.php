@@ -328,6 +328,35 @@ class Stat extends Model implements Shareable
      */
     protected $guarded = ['site_id'];
 
+    protected $casts = [
+        'goals' => 'real',
+        'shots' => 'real',
+        'assists' => 'real',
+        'steals' => 'real',
+        'turnovers' => 'real',
+        'blocks' => 'real',
+        'kickouts_drawn' => 'real',
+        'kickouts' => 'real',
+        'saves' => 'real',
+        'goals_allowed' => 'real',
+        'sprints_taken' => 'real',
+        'sprints_won' => 'real',
+        'five_meters_drawn' => 'real',
+        'five_meters_taken' => 'real',
+        'five_meters_made' => 'real',
+        'five_meters_called' => 'real',
+        'five_meters_taken_on' => 'real',
+        'five_meters_blocked' => 'real',
+        'five_meters_allowed' => 'real',
+        'shoot_out_taken' => 'real',
+        'shoot_out_made' => 'real',
+        'shoot_out_taken_on' => 'real',
+        'shoot_out_blocked' => 'real',
+        'shoot_out_allowed' => 'real',
+        'advantage_goals' => 'real',
+        'advantage_goals_allowed' => 'real'
+    ];
+
     /**
      * The player for this stat
      * 

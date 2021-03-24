@@ -16,6 +16,9 @@
         <li class="photos">
             <a href="@route('albumlist')" title="@lang('menu.photos')">@lang('menu.photos')</a>
         </li>
+        <li class="stats">
+            <a href="@route('stats')" title="@lang('menu.stats')">@lang('menu.stats')</a>
+        </li>
         <li class="parents">
             <a href="@route('parents')" title="@lang('menu.parents')">@lang('menu.parents')</a>
         </li>
