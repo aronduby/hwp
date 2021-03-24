@@ -212,7 +212,7 @@ class StatController extends Controller
         $players = $this->playerListService->all();
 
         // get start and end of the dates from schedule
-        $dates = DB::table('games')
+        $dates = DB::table('schedule')
             ->select(DB::raw('UNIX_TIMESTAMP(DATE(MIN(start))) AS start, UNIX_TIMESTAMP(DATE(MAX(end))) AS end'))
             ->where('season_id', $season->id)
             ->first();
