@@ -326,7 +326,7 @@ class Stat extends Model implements Shareable
      *
      * @var array
      */
-    protected $guarded = ['site_id'];
+    protected $guarded = [];
 
     protected $casts = [
         'goals' => 'real',

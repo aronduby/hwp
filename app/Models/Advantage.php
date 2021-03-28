@@ -44,7 +44,7 @@ class Advantage extends Model
      *
      * @var array
      */
-    protected $guarded = ['site_id'];
+    protected $guarded = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

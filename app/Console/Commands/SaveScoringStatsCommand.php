@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ActiveSeason;
 use App\Models\Advantage;
 use App\Models\Boxscore;
 use App\Models\GameStatDump;
+use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Services\PlayerListService;
 use Monolog\Logger;
@@ -32,27 +34,20 @@ class SaveScoringStatsCommand extends LoggedCommand
     protected $playerList;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(PlayerListService $playerList)
-    {
-        parent::__construct();
-
-        $this->playerList = $playerList;
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
+        \Landlord::disable();
+
         $game_id = $this->argument('game_id');
-        $dump = GameStatDump::with('game')->where('game_id', $game_id)->firstOrFail();
+        $dump = GameStatDump::with('game.season')->where('game_id', $game_id)->firstOrFail();
         $data = $dump->json;
+
+        $activeSeason = new ActiveSeason($dump->game->season->toArray());
+        $this->playerList = new PlayerListService(new PlayerSeason(), $activeSeason);
 
         # STATS
         $fields = array_flip(Stat::FIELDS);
@@ -75,6 +70,7 @@ class SaveScoringStatsCommand extends LoggedCommand
             
             Stat::updateOrCreate(
                 [
+                    'site_id' => $dump->site_id,
                     'game_id' => $dump->game_id,
                     'player_id' => $player_id
                 ],
@@ -134,6 +130,7 @@ class SaveScoringStatsCommand extends LoggedCommand
             }
         }
 
+        \Landlord::enable();
     }
 
 

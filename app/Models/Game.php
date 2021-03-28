@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Contracts\IPersistTo;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\Event;
+use App\Models\Traits\HasSiteAndSeason;
 use App\Models\Traits\UsesCustomCollection;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
@@ -65,7 +66,7 @@ use Illuminate\Database\Eloquent\Model;
 class Game extends Model implements Shareable, IPersistTo
 {
 
-    use BelongsToTenants, Event, UsesCustomCollection;
+    use BelongsToTenants, Event, UsesCustomCollection, HasSiteAndSeason;
 
     const WIN = 'win';
     const LOSS = 'loss';

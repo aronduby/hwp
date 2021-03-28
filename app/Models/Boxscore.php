@@ -61,7 +61,7 @@ class Boxscore extends Model
      *
      * @var array
      */
-    protected $guarded = ['site_id'];
+    protected $guarded = [];
 
     /**
      * Boxscore constructor.
