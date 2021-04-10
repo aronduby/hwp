@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'DoNotReply@hudsonvillewaterpolo.com', 'name' => 'Do Not Reply'],
+    'from' => ['address' => 'info@hhswp.com', 'name' => 'Aron Duby'],
 
     /*
     |--------------------------------------------------------------------------

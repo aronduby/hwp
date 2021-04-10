@@ -5,9 +5,9 @@ namespace App\Console;
 use App\Console\Commands\ArticleImagesCommand;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
-use App\Console\Commands\MLiveParser;
 use App\Console\Commands\MWPARankingsCommand;
 use App\Console\Commands\RegisterCommand;
+use App\Console\Commands\ResetPasswordCommand;
 use App\Console\Commands\SaveScoringStatsCommand;
 use App\Jobs\JobGroups;
 use App\Models\JobInstance;
@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         HudsonvilleAthleticsArticlesCommand::class,
         MWPARankingsCommand::class,
         RegisterCommand::class,
+        ResetPasswordCommand::class,
         SaveScoringStatsCommand::class,
     ];
 
