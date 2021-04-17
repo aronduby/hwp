@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasSiteAndSeason;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,7 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Article extends Model
 {
-    use BelongsToTenants;
+    use BelongsToTenants, HasSiteAndSeason;
 
     protected $casts = [
         'published' => 'datetime'

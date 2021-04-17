@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\ArticleImagesCommand;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
+use App\Console\Commands\ManualArticleImportCommand;
 use App\Console\Commands\MWPARankingsCommand;
 use App\Console\Commands\RegisterCommand;
 use App\Console\Commands\ResetPasswordCommand;
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
         ArticleImagesCommand::class,
         GenerateJSPlayerListCommand::class,
         HudsonvilleAthleticsArticlesCommand::class,
+        ManualArticleImportCommand::class,
         MWPARankingsCommand::class,
         RegisterCommand::class,
         ResetPasswordCommand::class,
