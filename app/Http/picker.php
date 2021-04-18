@@ -11,3 +11,13 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', ['uses' => 'PickerController@index', 'as' => 'picker']);
+
+Route::get('schedule/subscribe', function() {
+    $tld = config('app.env') === 'local' ? 'local' : 'com';
+    return redirect()->away('https://guys.hudsonvillewaterpolo.'.$tld.'/schedule/subscribe');
+});
+
+Route::get('ical.ics', function() {
+    $tld = config('app.env') === 'local' ? 'local' : 'com';
+    return redirect()->away('https://guys.hudsonvillewaterpolo.'.$tld.'/ical.ics');
+});
