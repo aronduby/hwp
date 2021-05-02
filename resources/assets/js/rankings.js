@@ -61,11 +61,18 @@
 			}
 
 			$('<th></th>')
+				.addClass('rank-rank')
 				.text(rank.rank)
 				.appendTo(tr);
 
 			$('<td></td>')
+				.addClass('rank-team')
 				.text(rank.team + (rank.tied ? '(tied)' : ''))
+				.appendTo(tr);
+
+			$('<td></td>')
+				.addClass('rank-points')
+				.text(rank.points ? rank.points.toLocaleString() : '')
 				.appendTo(tr);
 
 			body.append(tr);

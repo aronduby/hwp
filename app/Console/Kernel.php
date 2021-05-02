@@ -6,6 +6,7 @@ use App\Console\Commands\ArticleImagesCommand;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
 use App\Console\Commands\ManualArticleImportCommand;
+use App\Console\Commands\ManualRankingNotificationCommand;
 use App\Console\Commands\MWPARankingsCommand;
 use App\Console\Commands\RegisterCommand;
 use App\Console\Commands\ResetPasswordCommand;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         GenerateJSPlayerListCommand::class,
         HudsonvilleAthleticsArticlesCommand::class,
         ManualArticleImportCommand::class,
+        ManualRankingNotificationCommand::class,
         MWPARankingsCommand::class,
         RegisterCommand::class,
         ResetPasswordCommand::class,

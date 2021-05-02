@@ -28,7 +28,7 @@ return [
         'job' => MWPARankingsJob::class,
         'group' => JobGroups::Hourly,
         'allowMultiple' => false,
-        'allowAutoRun' => true,
+        'allowAutoRun' => false,
         'settings' => 'mwpa-rankings',
         'disabled' => true
     ]

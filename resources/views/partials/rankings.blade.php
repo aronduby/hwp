@@ -14,21 +14,22 @@
 
     <table class="body rankings table table--striped">
         @if($rankings->count() >= 1)
-        <tbody>
-            @forelse($rankings->first()->ranks as $rank)
-                <tr class="rank {{$rank->self ? 'rank--self' : ''}}">
-                    <th>{{$rank->rank}}</th>
-                    <td>{{$rank->team}} {{$rank->tied ? '('.trans('misc.tied').')' : ''}}</td>
+            <tbody>
+                @forelse($rankings->first()->ranks as $rank)
+                    <tr class="rank {{$rank->self ? 'rank--self' : ''}}">
+                        <th class="rank-rank">{{$rank->rank}}</th>
+                        <td class="rank-team">{{$rank->team}} {{$rank->tied ? '('.trans('misc.tied').')' : ''}}</td>
+                        <td class="rank-points">{{$rank->points ? number_Format($rank->points, 0) : ''}}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="2">@include('partials.nothing-here-yet')</td></tr>
+                @endforelse
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">@dateSpan($rankings->first()->start, $rankings->first()->end)</td>
                 </tr>
-            @empty
-                <tr><td colspan="2">@include('partials.nothing-here-yet')</td></tr>
-            @endforelse
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="2">@dateSpan($rankings->first()->start, $rankings->first()->end)</td>
-            </tr>
-        </tfoot>
+            </tfoot>
         @else
             <tbody>
                 <tr><td>@include('partials.nothing-here-yet')</td></tr>

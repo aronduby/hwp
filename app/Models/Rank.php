@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $ranking_id
  * @property int $rank
  * @property string $team
+ * @property int $points
  * @property bool $tied
  * @property bool $self
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereId($value)
@@ -30,7 +31,7 @@ class Rank extends Model
 {
     use BelongsToTenants;
     
-    protected $fillable = ['rank', 'team', 'tied', 'self'];
+    protected $fillable = ['rank', 'team', 'rank', 'tied', 'self', 'points'];
     
     protected $casts = [
         'site_id' => 'integer',
@@ -39,6 +40,7 @@ class Rank extends Model
         'rank' => 'integer',
         'self' => 'boolean',
         'tied' => 'boolean',
+        'points' => 'integer'
     ];
 
     public $timestamps = false;

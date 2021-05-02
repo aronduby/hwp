@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\RankingScope;
+use App\Models\Traits\HasSiteAndSeason;
 use App\Models\Traits\HasTotal;
 use Carbon\Carbon;
 use Eloquent;
@@ -38,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Ranking extends Model
 {
-    use HasTotal, BelongsToTenants;
+    use HasTotal, BelongsToTenants, HasSiteAndSeason;
 
     protected $casts = [
         'start' => 'datetime',
