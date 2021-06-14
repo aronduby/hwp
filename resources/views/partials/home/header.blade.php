@@ -21,7 +21,9 @@
     <section class="container text-align--center text--shadow">
         <div>
             <header>
-                @if($ranking)
+                @if($rankingTitle)
+                    <h2 class="ranking text--white-darker">{{$rankingTitle}}</h2>
+                @elseif($ranking)
                     <h2 class="ranking text--white-darker">@ordinal($ranking) @lang('misc.ranked')</h2>
                 @endif
                 <h1 class="site-name">Hudsonville<wbr><span class="text--accent">Water</span><wbr>Polo</h1>

@@ -58,11 +58,12 @@ class HomeController extends Controller
         // $photos = Photo::inRandomOrder()->take(5)->get();
         $photo = Photo::inRandomOrder()->first();
         $ranking = $this->season->ranking;
+        $rankingTitle = $this->season->ranking_title;
         $varsity = Game::team('v')->upcoming()->first();
         $jv = Game::team('jv')->upcoming()->first();
         $upcoming = isset($varsity) || isset($jv);
 
-        return view('partials.home.header', compact('photo', 'ranking', 'upcoming', 'varsity', 'jv'));
+        return view('partials.home.header', compact('photo', 'ranking', 'rankingTitle', 'upcoming', 'varsity', 'jv'));
     }
 
     /**

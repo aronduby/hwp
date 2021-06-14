@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $ranking
  * @property string $ranking_updated
  * @property int $ranking_tie
+ * @property string $ranking_title
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Badge[] $badges
