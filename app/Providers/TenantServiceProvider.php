@@ -41,9 +41,16 @@ class TenantServiceProvider extends ServiceProvider
                 }
             }
 
-            if ($domain === 'ngrok') {
-                $domain = 'hudsonvillewaterpolo';
+            // special cases
+            switch ($domain) {
+                // using ngrok, go to main
+                // since girls aren't using it guys has gone back to the normal domain
+                case 'ngrok':
+                case 'guys.hudsonvillewaterpolo':
+                    $domain = 'hudsonvillewaterpolo';
+                    break;
             }
+
             $season_id = Cookie::get('season_id');
         }
 

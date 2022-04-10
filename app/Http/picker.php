@@ -14,10 +14,10 @@ Route::get('/', ['uses' => 'PickerController@index', 'as' => 'picker']);
 
 Route::get('schedule/subscribe', function() {
     $tld = config('app.env') === 'local' ? 'local' : 'com';
-    return redirect()->away('https://guys.hudsonvillewaterpolo.'.$tld.'/schedule/subscribe');
+    return redirect()->away('https://hudsonvillewaterpolo.'.$tld.'/schedule/subscribe');
 });
 
 Route::get('ical.ics', function() {
     $tld = config('app.env') === 'local' ? 'local' : 'com';
-    return redirect()->away('https://guys.hudsonvillewaterpolo.'.$tld.'/ical.ics');
+    return redirect()->away('https://hudsonvillewaterpolo.'.$tld.'/ical.ics');
 });
