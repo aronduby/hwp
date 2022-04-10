@@ -79,12 +79,12 @@ Route::get('gallery/player/{player}', ['uses' => 'GalleryController@playerCareer
 
 Route::get('gallery/player/{player}/season/{season}', ['uses' => 'GalleryController@playerSeason', 'as' => 'gallery.playerSeason']);
 
-
-Route::get('parents', ['as' => 'parents', function() {
-    return view('parents', [
+Route::get('files', ['as' => 'files', function() {
+    return view('files', [
         'googleFolderID' => resolve('App\Models\ActiveSite')->settings->get('google.folder.id')
     ]);
 }]);
+Route::redirect('/parents', '/files', 301);
 
 
 Route::group(['middleware' => 'cors'], function() {

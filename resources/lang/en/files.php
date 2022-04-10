@@ -4,15 +4,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Parents Language Lines
+    | Files Language Lines
     |--------------------------------------------------------------------------
     |
-    | Strings related to the parents page
+    | Strings related to the files page
     |
     */
 
-    'parents' => 'Parents',
-    'parent' => 'Parent',
-    'docs' => 'Docs',
-    'parentDocs' => 'Parent Docs'
+    'files' => 'Files',
+    'useful' => 'Useful',
 ];

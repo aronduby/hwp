@@ -66,7 +66,7 @@
             </li>
 
             <li>
-                <a href="@route('parents')" title="@lang('menu.parents')">@lang('menu.parents')</a>
+                <a href="@route('files')" title="@lang('menu.files')">@lang('menu.files')</a>
             </li>
 
             <li class="mp-has-subs seasons">

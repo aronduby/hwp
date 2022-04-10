@@ -20,7 +20,7 @@
             <a href="@route('stats')" title="@lang('menu.stats')">@lang('menu.stats')</a>
         </li>
         <li class="parents">
-            <a href="@route('parents')" title="@lang('menu.parents')">@lang('menu.parents')</a>
+            <a href="@route('files')" title="@lang('menu.files')">@lang('menu.files')</a>
         </li>
         @if($site->seasons->count())
         <li class="seasons has-subs subs--right {{!$activeSeason->current ? 'seasons--not-current' : ''}}">

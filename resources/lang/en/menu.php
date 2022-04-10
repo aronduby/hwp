@@ -24,4 +24,5 @@ return [
     'mainMenu' => 'Main Menu',
     'parents' => 'Parents',
     'stats' => 'Stats',
+    'files' => 'Files',
 ];

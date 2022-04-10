@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    @lang('parents.parentDocs') -
+    @lang('files.files') -
 @endsection
 
 @section('content')
@@ -13,7 +13,7 @@
                 <div class="bg--img"></div>
             </div>
             <div class="container">
-                <h1>@lang('parents.parent') <span class="text--muted">@lang('parents.docs')</span></h1>
+                <h1>@lang('files.useful') <span class="text--muted">@lang('files.files')</span></h1>
             </div>
         </header>
 
