@@ -47,6 +47,7 @@ class TwilioController extends Controller
             $digits = [$request->get('Digits')];
             if ($digits[0] == 1) {
                 $digits[] = '1a';
+                $digits[] = '1A';
             }
 
             $players = $this->playerList->all()->flatten()->filter(function($player) use ($digits) {
