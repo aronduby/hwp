@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests;
 use Twilio\TwiML\VoiceResponse;
 
-class TwilioController extends Controller
+class CallController extends Controller
 {
 
     /**
@@ -31,7 +31,7 @@ class TwilioController extends Controller
         $rsp
             ->gather([
                 'method' => 'GET',
-                'action' => route('twilio.user.lookup')
+                'action' => route('twilio.call.user.lookup')
             ])
                 ->say('Welcome to Hudsonville Water Polo. To hear a players stats enter their cap number followed by the pound sign');
 
@@ -61,10 +61,10 @@ class TwilioController extends Controller
                 $rsp
                     ->gather([
                         'method' => 'GET',
-                        'action' => route('twilio.user.lookup')
+                        'action' => route('twilio.call.user.lookup')
                     ])
                     ->say('Sorry, but we couldn\'t find anyone with that number, please try again');
-                $rsp->redirect(url('twilio.welcome'));
+                $rsp->redirect(url('twilio.call.welcome'));
 
             } elseif($found === 1) {
                 $player = $players->first();
@@ -72,12 +72,12 @@ class TwilioController extends Controller
 
             } else {
                 $rsp = new VoiceResponse();
-                $gather = $rsp->gather(['method' => 'GET', 'action' => route('twilio.user.stats')]);
+                $gather = $rsp->gather(['method' => 'GET', 'action' => route('twilio.call.user.stats')]);
                 $players->each(function (PlayerSeason $player) use ($gather) {
                    $gather->say('For ' . $player->name . ' enter ' . $player->player_id .' followed by the pound sign.');
                 });
 
-                $rsp->redirect(route('twilio.welcome'));
+                $rsp->redirect(route('twilio.call.welcome'));
             }
 
             return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
@@ -109,14 +109,14 @@ class TwilioController extends Controller
             $rsp
                 ->gather([
                     'method' => 'GET',
-                    'action' => route('twilio.user.lookup')
+                    'action' => route('twilio.call.user.lookup')
                 ])
                 ->say('To hear another players stats enter their cap number followed by the pound sign, otherwise just hang up');
             $rsp->say('Goodbye');
         } else {
             $rsp = new VoiceResponse();
             $rsp->say('Sorry, we couldnt find that player');
-            $rsp->redirect(route('twilio.welcome'));
+            $rsp->redirect(route('twilio.call.welcome'));
         }
 
         return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
