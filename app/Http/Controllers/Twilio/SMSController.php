@@ -22,6 +22,9 @@ class SMSController extends Controller
                 case 'STOP':
                     $this->unsubscribe($request->get('From'));
                     return $this->basicResponse();
+
+                case 'HELP':
+                    return $this->basicResponse();
             }
         }
 
