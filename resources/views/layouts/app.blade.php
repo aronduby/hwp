@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
     <title>@yield('title')Hudsonville Water Polo</title>

@@ -1,3 +1,9 @@
+{{--
+
+I DON'T THINK THIS IS USED ANYWHERE
+
+--}}
+<!doctype html>
 <html>
 <head>
     <title>@yield('title')Hudsonville Water Polo</title>
