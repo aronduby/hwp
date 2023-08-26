@@ -145,11 +145,18 @@ Route::group([
     'namespace' => 'Twilio'
 ], function() {
 
-    Route::get('welcome', ['uses' => 'TwilioController@welcome', 'as' => 'twilio.welcome']);
+    Route::group([
+        'prefix' => 'call/'
+    ], function() {
 
-    Route::get('user/lookup', ['uses' => 'TwilioController@userLookup', 'as' => 'twilio.user.lookup']);
+        Route::get('welcome', ['uses' => 'CallController@welcome', 'as' => 'twilio.call.welcome']);
 
-    Route::get('user/stats', ['uses' => 'TwilioController@userStats', 'as' => 'twilio.user.stats']);
+        Route::get('user/lookup', ['uses' => 'CallController@userLookup', 'as' => 'twilio.call.user.lookup']);
+
+        Route::get('user/stats', ['uses' => 'CallController@userStats', 'as' => 'twilio.call.user.stats']);
+    });
+
+    Route::post('sms', ['uses' => 'SMSController@incoming', 'as' => 'twilio.sms.incoming']);
 
 });
 

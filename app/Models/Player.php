@@ -19,10 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed pronouns
  * @property int $id
  * @property int $site_id
- * @property string $first_name
- * @property string $last_name
- * @property string $pronouns
- * @property string $name_key
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Models\PlayerSeason $activeSeason

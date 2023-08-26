@@ -1,17 +1,15 @@
 .note {
 
-  .flex-middle {
+  .flex-middle,
+  .flex-top {
     @include responsive(sm) {
       display: flex;
       align-items: center;
-
-      p {
-        margin-left: $gap-large;
-        margin-top: 0;
-      }
+      gap: $gap-large;
     }
 
-    & + .flex-middle {
+    & + .flex-middle,
+    & + .flex-top {
       margin-top: 1em;
     }
 
@@ -31,5 +29,9 @@
       display: flex;
       justify-content: space-evenly;
     }
+  }
+
+  .flex-top {
+    align-items: flex-start;
   }
 }
