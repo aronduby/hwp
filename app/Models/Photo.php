@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $site_id
  * @property int|null $season_id
  * @property int $featured
- * @property string|null $shutterfly_id
+ * @property string|null $media_id
  * @property string $file
  * @property int $width
  * @property int $height
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereHeight($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereShutterflyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereMediaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereSiteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereWidth($value)

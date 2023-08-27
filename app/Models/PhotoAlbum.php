@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $site_id
  * @property int $season_id
- * @property string|null $shutterfly_id
+ * @property string|null $media_id
  * @property int|null $cover_id
  * @property string $title
  * @property \Carbon\Carbon|null $created_at
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereShutterflyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereMediaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereSiteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PhotoAlbum whereUpdatedAt($value)

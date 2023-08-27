@@ -14,7 +14,11 @@ use App\Models\Badge;
 use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
+use App\Models\Stat;
+use App\Services\MediaServices\MediaService;
 use App\Services\PlayerData\Contracts\DataProvider;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class SeasonProvider implements DataProvider
 {
@@ -99,43 +103,39 @@ class SeasonProvider implements DataProvider
         return $this->playerSeason->season_id;
     }
 
-    protected function getPhotoQuery()
-    {
-        return Photo::allTenants()
-            ->select('photos.*')
-            ->join('photo_player', 'photos.id', '=', 'photo_player.photo_id')
-            ->where('photo_player.season_id', '=', $this->playerSeason->season_id)
-            ->where('photo_player.player_id', '=', $this->player->id)
-            ->orderBy('photos.created_at', 'desc');
-    }
-
     /**
-     * Get ALL of the player's photos without any pagination
+     * Get ALL the player's photos without any pagination
      *
      * @return mixed
      */
     public function getAllPhotos()
     {
-        return $this->getPhotoQuery()
-            ->get();
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        return $mediaService->forPlayerSeason($this->playerSeason, true);
     }
 
 
     /**
      * Get the player's photos
      *
-     * @return \Illuminate\Contracts\Pagination\Paginator|\App\Models\Photo[]
+     * @return Paginator|Photo[]
      */
     public function getPhotos()
     {
-        return $this->getPhotoQuery()
-            ->paginate(48);
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        return $mediaService->forPlayerSeason($this->playerSeason, false);
     }
 
     /**
      * Get the player's badges
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Badge[]
+     * @return Collection|Badge[]
      */
     public function getBadges()
     {
@@ -148,9 +148,9 @@ class SeasonProvider implements DataProvider
     }
 
     /**
-     * Get's the player's articles
+     * Gets the player's articles
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Article[]
+     * @return Collection|Article[]
      */
     public function getArticles()
     {
@@ -164,9 +164,9 @@ class SeasonProvider implements DataProvider
     }
 
     /**
-     * Get's the player's stats
+     * Gets the player's stats
      *
-     * @return \App\Models\Stat
+     * @return Stat
      */
     public function getStats()
     {
@@ -175,9 +175,9 @@ class SeasonProvider implements DataProvider
 
 
     /**
-     * Get's all of the player's seasons
+     * Gets all the player's seasons
      *
-     * @return \Illuminate\Support\Collection|\App\Models\PlayerSeason[]
+     * @return Collection|PlayerSeason[]
      */
     public function getSeasons()
     {

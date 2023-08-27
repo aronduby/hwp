@@ -2,7 +2,7 @@
   "name": "hwp-site",
   "dependencies": [
     {
-      "source": "git@github.com:aronduby/hwp-bridge.git#twilio",
+      "source": "git@github.com:aronduby/hwp-bridge.git#coudinary",
       "installTo": "../hwp-bridge"
     }
   ]

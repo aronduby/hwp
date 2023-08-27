@@ -10,10 +10,15 @@ namespace App\Services\PlayerData\Providers;
 
 
 use App\Models\Article;
+use App\Models\Badge;
 use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
+use App\Models\Stat;
+use App\Services\MediaServices\MediaService;
 use App\Services\PlayerData\Contracts\DataProvider;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class CareerProvider implements DataProvider
 {
@@ -68,7 +73,7 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the player's team
+     * Gets the player's team
      *
      * @return string V, JV, or STAFF
      */
@@ -78,7 +83,7 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the player's position
+     * Gets the player's position
      *
      * @return string FIELD or GOALIE
      */
@@ -88,7 +93,7 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the season id
+     * Gets the season id
      *
      * @return Integer
      */
@@ -98,47 +103,39 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the query for getting the photos
-     *
-     * @return mixed
-     */
-    protected function getPhotoQuery()
-    {
-        return Photo::allTenants()
-            ->select('photos.*')
-            ->join('photo_player', 'photos.id', '=', 'photo_player.photo_id')
-            ->where('photo_player.player_id', '=', $this->player->id)
-            ->orderBy('photos.created_at', 'desc');
-    }
-
-    /**
-     * Get ALL of the player's photos without any pagination
+     * Get ALL the player's photos without any pagination
      *
      * @return mixed
      */
     public function getAllPhotos()
     {
-        return $this->getPhotoQuery()
-            ->get();
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        return $mediaService->forPlayerCareer($this->player, true);
     }
 
 
     /**
      * Get the player's photos
      *
-     * @return \Illuminate\Contracts\Pagination\Paginator|\App\Models\Photo[]
+     * @return Paginator|Photo[]
      */
     public function getPhotos()
     {
-        return $this->getPhotoQuery()
-            ->paginate(48);
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        return $mediaService->forPlayerCareer($this->player, false);
     }
 
     /**
      * Get the player's badges.
      * NOTE - this takes advantage of the fact that badges aren't tenated to the season
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Badge[]
+     * @return Collection|Badge[]
      */
     public function getBadges()
     {
@@ -146,9 +143,9 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the player's articles
+     * Gets the player's articles
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Article[]
+     * @return Collection|Article[]
      */
     public function getArticles()
     {
@@ -161,9 +158,9 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get's the player's stats
+     * Gets the player's stats
      *
-     * @return \App\Models\Stat
+     * @return Stat
      */
     public function getStats()
     {
@@ -172,9 +169,9 @@ class CareerProvider implements DataProvider
 
 
     /**
-     * Get's all of the player's seasons
+     * Gets all the player's seasons
      *
-     * @return \Illuminate\Support\Collection|\App\Models\PlayerSeason[]
+     * @return Collection|PlayerSeason[]
      */
     public function getSeasons()
     {

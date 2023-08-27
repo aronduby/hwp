@@ -40,8 +40,8 @@
             getImageURLForShare: function (btn) {
                 var item = gallery.currItem;
 
-                if (btn.download && item.shutterfly_id) {
-                    return idToDownload(item.shutterfly_id);
+                if (btn.download && item.media_id) {
+                    return idToDownload(item.media_id);
                 } else {
                     return item.src;
                 }

@@ -11,14 +11,22 @@ namespace App\Http\Controllers;
 
 use App\Models\ActiveSeason;
 use App\Models\Game;
-use App\Models\Photo;
 use App\Models\Ranking;
-use App\Models\Recent;
 use App\Models\Schedule;
+use App\Services\MediaServices\MediaService;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Pagination\Paginator;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
+
+    /**
+     * The injected media service to use
+     *
+     * @var MediaService
+     */
+    protected $mediaService;
 
     /**
      * The currently active season
@@ -28,17 +36,24 @@ class HomeController extends Controller
     protected $season;
 
     /**
+     * @param MediaService $mediaService
+     * @param ActiveSeason $season
+     */
+    public function __construct(MediaService $mediaService, ActiveSeason $season)
+    {
+        $this->mediaService = $mediaService;
+        $this->season = $season;
+    }
+
+    /**
      * Handle the entire homepage. Mostly just calls other protected functions
      *
-     * @param ActiveSeason $season
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      * @throws \Exception
      * @throws \Throwable
      */
-    public function index(ActiveSeason $season)
+    public function index()
     {
-        $this->season = $season;
-
         $header = $this->header()->render();
         $results = $this->latestResults()->render();
         $badges = $this->badges()->render();
@@ -50,13 +65,12 @@ class HomeController extends Controller
     /**
      * Render the header section
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function header()
     {
         // TODO - add site name?
-        // $photos = Photo::inRandomOrder()->take(5)->get();
-        $photo = Photo::inRandomOrder()->first();
+        $photo = $this->mediaService->forHome();
         $ranking = $this->season->ranking;
         $rankingTitle = $this->season->ranking_title;
         $varsity = Game::team('v')->upcoming()->first();
@@ -69,7 +83,7 @@ class HomeController extends Controller
     /**
      * Render the latest results section
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function latestResults()
     {
@@ -85,7 +99,7 @@ class HomeController extends Controller
     /**
      * Render the badges section
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function badges()
     {
@@ -98,7 +112,7 @@ class HomeController extends Controller
     /**
      * Render the first page of the content
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function content()
     {
@@ -115,7 +129,7 @@ class HomeController extends Controller
     /**
      * Handles the calls for paginating the recent content
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function recent()
     {
@@ -126,7 +140,7 @@ class HomeController extends Controller
     /**
      * Handles the calls for paginating the rankings
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function rankings()
     {

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $team
  * @property mixed $position
  * @property string|null $number
- * @property string|null $shutterfly_tag
+ * @property string|null $media_tag
  * @property int|null $sort
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason wherePlayerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason wherePosition($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereShutterflyTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereMediaTag($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSiteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereSort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlayerSeason whereTeam($value)
