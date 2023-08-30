@@ -10,7 +10,7 @@
     <?php if (getenv('APP_ENV') == 'local'): ?>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <?php else: ?>
-    <link rel="stylesheet" href="{{ elixir('css/main.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/main.css') }}">
     <?php endif ?>
 
     <style type="text/css">
@@ -159,8 +159,8 @@
 
     @include('partials.ga')
 
-    <script src="{{ elixir('js/components.js') }}"></script>
-    <script src="{{ elixir('js/scavenger/step4.js') }}"></script>
+    <script src="{{ mix('js/components.js') }}"></script>
+    <script src="{{ mix('js/scavenger/step4.js') }}"></script>
 
 </head>
 <body>

@@ -1,6 +1,6 @@
 var vex = require('vex-js');
 
-function init() {
+export default function subscribeModalInit() {
 
 	window.addEventListener('DOMContentLoaded', function () {
 
@@ -16,5 +16,3 @@ function init() {
 	});
 
 }
-
-module.exports = init;

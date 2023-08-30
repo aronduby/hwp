@@ -37,7 +37,7 @@
 	// full galleries
 	$(document).ready(function () {
 		$('.full-gallery').each(function (el) {
-			$(this).data.gallery = new window,FullGallery(this);
+			$(this).data.gallery = new window.FullGallery(this);
 		});
 	});
 

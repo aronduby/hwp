@@ -130,11 +130,11 @@
 
 @push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="{{elixir('js/player.js')}}"></script>
+    <script src="{{mix('js/player.js')}}"></script>
     @if($player->name_key == 'NathanPorter')
-        <script src="{{elixir('js/porter.js')}}"></script>
+        <script src="{{mix('js/porter.js')}}"></script>
     @endif
     @if($player->name_key == 'DeclanEdema')
-        <script src="{{elixir('js/declan.js')}}"></script>
+        <script src="{{mix('js/declan.js')}}"></script>
     @endif
 @endpush

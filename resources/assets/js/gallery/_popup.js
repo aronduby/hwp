@@ -38,7 +38,7 @@
                 {id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true, fa: 'fa-download'}
             ],
             getImageURLForShare: function (btn) {
-                return self.getImageURLForShare(btn, self.gallery.currItem);
+                return self.getImageURLForShare(btn, gallery.currItem);
             },
             getFilenameForShare: function (btn) {
                 return gallery.currItem.file + '.jpg';

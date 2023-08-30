@@ -32,5 +32,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{elixir('js/recap.js')}}"></script>
+<script src="{{mix('js/recap.js')}}"></script>
 @endpush

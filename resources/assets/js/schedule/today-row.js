@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-function init() {
+export default function todayRowInit() {
 
 	window.addEventListener('DOMContentLoaded', function () {
 
@@ -32,5 +32,3 @@ function init() {
 
 	});
 }
-
-module.exports = init;

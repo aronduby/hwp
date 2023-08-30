@@ -18,7 +18,7 @@
     <?php if (getenv('APP_ENV') == 'local'): ?>
     <link rel="stylesheet" href="{{ asset('css/picker.css') }}">
     <?php else: ?>
-    <link rel="stylesheet" href="{{ elixir('css/picker.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/picker.css') }}">
     <?php endif ?>
 
     <link rel="stylesheet" href="/css/scratch.css" />

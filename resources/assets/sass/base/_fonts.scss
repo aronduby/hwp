@@ -4,8 +4,8 @@
 
 $lg-font-path: $font-path + 'league-gothic';
 
-@import 'https://fonts.googleapis.com/css?family=Play:400,700';
-@import 'bower_components/font-awesome/scss/font-awesome';
+@import url("https://fonts.googleapis.com/css?family=Play:400,700");
+@import "~font-awesome/scss/font-awesome";
 
 
 /* Regular */

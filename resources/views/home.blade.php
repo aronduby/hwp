@@ -15,5 +15,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ elixir('js/home.js') }}"></script>
+    <script src="{{ mix('js/home.js') }}"></script>
 @endpush

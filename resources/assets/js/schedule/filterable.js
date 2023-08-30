@@ -5,7 +5,7 @@ import CheckboxFilter from './filters/checkbox-filter';
 import RadioFilter from './filters/radio-filter';
 import DateFilter from './filters/date-filter';
 
-function init() {
+export default function filterableInit() {
 	window.addEventListener('DOMContentLoaded', function () {
 
 		var table = document.querySelector('table.schedule');
@@ -31,5 +31,3 @@ function init() {
 
 	});
 }
-
-module.exports = init;

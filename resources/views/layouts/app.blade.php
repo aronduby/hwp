@@ -20,7 +20,7 @@
     <?php if (getenv('APP_ENV') == 'local'): ?>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <?php else: ?>
-        <link rel="stylesheet" href="{{ elixir('css/main.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/main.css') }}">
     <?php endif ?>
 
     <link rel="stylesheet" href="/css/scratch.css" />
@@ -54,9 +54,9 @@
     <script type="text/html" id="load-more-btn">@include('partials.photos.load-more-btn')</script>
 
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
-    <script src="{{ elixir('js/components.js') }}"></script>
-    <script src="{{ elixir('js/gallery/shutterfly.js') }}"></script>
-    <script src="{{ elixir('js/main.js') }}"></script>
+    <script src="{{ mix('js/components.js') }}"></script>
+    <script src="{{ mix('js/gallery/shutterfly.js') }}"></script>
+    <script src="{{ mix('js/main.js') }}"></script>
 
     @stack('scripts')
 

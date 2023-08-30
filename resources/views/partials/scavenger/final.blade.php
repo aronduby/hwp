@@ -54,8 +54,8 @@
 
     @include('partials.ga')
 
-    <script src="{{ elixir('js/components.js') }}"></script>
-    <script src="{{ elixir('js/scavenger/step8.js') }}"></script>
+    <script src="{{ mix('js/components.js') }}"></script>
+    <script src="{{ mix('js/scavenger/step8.js') }}"></script>
 
 </head>
 <body>

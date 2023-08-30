@@ -62,5 +62,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ elixir('js/jobs.js') }}"></script>
+    <script src="{{ mix('js/jobs.js') }}"></script>
 @endpush

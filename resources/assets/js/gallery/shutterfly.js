@@ -1,8 +1,8 @@
 (function (){
     'use strict';
 
-    const _FullGallery = require('../_full');
-    const _PopupGallery = require('../_popup');
+    const _FullGallery = require('./_full');
+    const _PopupGallery = require('./_popup');
 
     function getImageURLForShare(btn, item) {
         if (btn.download && item.media_id) {
@@ -22,13 +22,17 @@
     }
 
     class FullGallery extends _FullGallery {
-        getImageURLForShare
+        getImageURLForShare(btn, item) {
+            return getImageURLForShare(btn, item);
+        }
     }
 
     class PopupGallery extends _PopupGallery {
-        getImageURLForShare
+        getImageURLForShare(btn, item) {
+            return getImageURLForShare(btn, item);
+        }
     }
 
     window.FullGallery = FullGallery;
-    window.PopupGaller = PopupGallery;
+    window.PopupGallery = PopupGallery;
 })();

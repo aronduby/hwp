@@ -234,5 +234,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ elixir('js/schedule.js') }}"></script>
+    <script src="{{ mix('js/schedule.js') }}"></script>
 @endpush
