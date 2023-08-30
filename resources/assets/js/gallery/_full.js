@@ -6,7 +6,6 @@
 
 	var PhotoSwipe = require('photoswipe');
 	var PhotoSwipeUI = require('./photoswipe-ui.js');
-	var idToDownload = require('./shutterflyIdToUrl');
 
 	var $ = jQuery;
 	var imgTmpl = $('#gallery-thumb-tmpl');
@@ -19,7 +18,7 @@
 		}
 	}
 
-	function FullGallery(el) {
+	function _FullGallery(el) {
 		this.el = $(el);
 		this.btn = $(btnTmpl.text());
 		this.gallery = null;
@@ -33,14 +32,14 @@
 		this.load(this.el.data('gallery-path'));
 	}
 
-	FullGallery.prototype.attachEvents = function() {
+	_FullGallery.prototype.attachEvents = function() {
 		var self = this;
 
 		this.el.on('click', 'a.gallery-photo--thumb', this.imageClick.bind(self));
 		this.btn.on('click', this.loadMore.bind(self));
 	};
 
-	FullGallery.prototype.load = function(url) {
+	_FullGallery.prototype.load = function(url) {
 		var self = this;
 
 		$.getJSON(url)
@@ -48,7 +47,7 @@
 			.fail(this.error.bind(self));
 	};
 
-	FullGallery.prototype.loaded = function(items) {
+	_FullGallery.prototype.loaded = function(items) {
 		this.items = items;
 		this.totalPages = Math.ceil(items.length / this.perPage);
 
@@ -59,13 +58,13 @@
 		}
 	};
 
-	FullGallery.prototype.error = function(err) {
+	_FullGallery.prototype.error = function(err) {
 		alert('Could not load gallery');
 		console.log(err);
 		this.el.empty();
 	};
 
-	FullGallery.prototype.imageClick = function(e) {
+	_FullGallery.prototype.imageClick = function(e) {
 		var item = $(e.target).parent('[data-offset]');
 		var offset = parseInt(item.attr('data-offset'), 10);
 		var self = this;
@@ -83,13 +82,7 @@
 				}
 			],
 			getImageURLForShare: function(btn) {
-				var item = self.gallery.currItem;
-
-				if (btn.download && item.media_id) {
-					return idToDownload(item.media_id);
-				} else {
-					return item.src;
-				}
+				return self.getImageURLForShare(btn, self.gallery.currItem);
 			  },
 			getFilenameForShare: function(btn) {
 				return self.gallery.currItem.file + '.jpg';
@@ -104,7 +97,11 @@
 		return false;
 	};
 
-	FullGallery.prototype.drawPage = function() {
+	_FullGallery.prototype.getImageURLForShare = function(btn, item) {
+		console.error('You forgot to override getImageURLForShare');
+	};
+
+	_FullGallery.prototype.drawPage = function() {
 		var self = this;
 
 		if (this.items.length) {
@@ -124,16 +121,16 @@
 		}
 	};
 
-	FullGallery.prototype.loadMore = function(e) {
+	_FullGallery.prototype.loadMore = function(e) {
 		this.page++;
 		this.drawPage();
 	};
 
-	FullGallery.prototype.addOffset = function(el) {
+	_FullGallery.prototype.addOffset = function(el) {
 		el.attr('data-offset', this.offset);
 		this.offset++;
 	};
 	
-	module.exports = FullGallery;
+	module.exports = _FullGallery;
 
 })();

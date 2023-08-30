@@ -55,6 +55,7 @@
 
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
     <script src="{{ elixir('js/components.js') }}"></script>
+    <script src="{{ elixir('js/gallery/shutterfly.js') }}"></script>
     <script src="{{ elixir('js/main.js') }}"></script>
 
     @stack('scripts')

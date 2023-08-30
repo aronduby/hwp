@@ -4,8 +4,6 @@
 	var _               = require('lodash'),
 		mlPushMenu      = require('./mlpushmenu'),
 		matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300),
-		PopupGallery    = require('./gallery/popup'),
-		FullGallery     = require('./gallery/full'),
 		Note            = require('./note'),
 	  	shareable				= require('./shareables'),
 		seasonSwitching = require('./seasonSwitching');
@@ -24,7 +22,7 @@
 		$('body').on('click', '.popup-gallery', function () {
 			var url = $(this).data('gallery-path');
 			var el = $(this);
-			var gallery = new PopupGallery(url);
+			var gallery = new window.PopupGallery(url);
 
 			el.addClass('loading');
 			gallery.load()
@@ -39,7 +37,7 @@
 	// full galleries
 	$(document).ready(function () {
 		$('.full-gallery').each(function (el) {
-			$(this).data.gallery = new FullGallery(this);
+			$(this).data.gallery = new window,FullGallery(this);
 		});
 	});
 
