@@ -54,8 +54,7 @@
     <script type="text/html" id="load-more-btn">@include('partials.photos.load-more-btn')</script>
 
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
-    <script src="{{ mix('js/components.js') }}"></script>
-    <script src="{{ mix('js/gallery/shutterfly.js') }}"></script>
+    <script src="{{ mix( app('App\Services\MediaServices\MediaService')->getScript() ) }}"></script>
     <script src="{{ mix('js/main.js') }}"></script>
 
     @stack('scripts')

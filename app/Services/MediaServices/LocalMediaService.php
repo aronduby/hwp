@@ -10,7 +10,7 @@ use App\Models\Recent;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
-class LocalMediaService implements MediaService
+abstract class LocalMediaService implements MediaService
 {
 
     public function forHome(): Photo

@@ -160,6 +160,9 @@ return [
         App\Providers\MiscDirectiveServiceProvider::class,
         App\Providers\JobServiceProvider::class,
 
+        // make sure this is after the tenant provider
+        App\Providers\MediaServiceProvider::class,
+
     ],
 
     /*

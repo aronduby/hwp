@@ -20,6 +20,13 @@ interface MediaService
      */
     const PER_PAGE = 48;
 
+    /**
+     * Get the path for the JS file necessary for this provider. Included in app.blade.php
+     *
+     * @return String
+     */
+    public function getScript(): String;
+
     public function forHome(): Photo;
 
     public function forRecent(Recent $recent): Collection;
