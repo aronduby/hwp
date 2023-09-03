@@ -127,7 +127,7 @@ class TenantServiceProvider extends ServiceProvider
             'app.url' => $newAppUrl,
             'urls.app' => $newAppUrl,
             'urls.admin' => $newAdminUrl,
-            'site' => $site->settings->get()
+            // 'site' => $site->settings->get()
         ]);
     }
 
