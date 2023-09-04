@@ -2,11 +2,20 @@
 
 namespace App\Models;
 
+use App\Collections\AdvantagesCollection;
+use App\Collections\BoxscoresCollection;
+use App\Collections\StatCollection;
 use App\Models\Contracts\IPersistTo;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\Event;
 use App\Models\Traits\HasSiteAndSeason;
 use App\Models\Traits\UsesCustomCollection;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,46 +31,48 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $badge_id
  * @property mixed $team
  * @property string|null $title_append
- * @property \Carbon\Carbon $start
- * @property \Carbon\Carbon $end
+ * @property Carbon $start
+ * @property Carbon $end
  * @property int $district
  * @property string $opponent
  * @property int|null $score_us
  * @property int|null $score_them
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Collections\AdvantagesCollection|\App\Models\Advantage[] $advantages
- * @property-read \App\Models\PhotoAlbum|null $album
- * @property-read \App\Models\Badge|null $badge
- * @property-read \App\Models\GameStatDump $boxStats
- * @property-read \App\Collections\BoxscoresCollection|\App\Models\Boxscore[] $boxscores
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read AdvantagesCollection|Advantage[] $advantages
+ * @property-read PhotoAlbum|null $album
+ * @property-read Badge|null $badge
+ * @property-read GameStatDump $boxStats
+ * @property-read BoxscoresCollection|Boxscore[] $boxscores
  * @property-read mixed $result
  * @property-read mixed $title
- * @property-read \App\Models\Location|null $location
- * @property-read \App\Collections\StatCollection|\App\Models\Stat[] $stats
- * @property-read \App\Models\Tournament|null $tournament
- * @property-read \App\Models\GameUpdateDump $updates
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game results()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game team($team)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game upcoming()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereAlbumId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereBadgeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereDistrict($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereEnd($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereOpponent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereScoreThem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereScoreUs($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereStart($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereTitleAppend($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereTournamentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Game whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read Location|null $location
+ * @property-read StatCollection|Stat[] $stats
+ * @property-read Tournament|null $tournament
+ * @property-read GameUpdateDump $updates
+ * @property-read Season $season
+ * @property-read Site $site
+ * @method static Builder|Game results()
+ * @method static Builder|Game team($team)
+ * @method static Builder|Game upcoming()
+ * @method static Builder|Game whereAlbumId($value)
+ * @method static Builder|Game whereBadgeId($value)
+ * @method static Builder|Game whereCreatedAt($value)
+ * @method static Builder|Game whereDistrict($value)
+ * @method static Builder|Game whereEnd($value)
+ * @method static Builder|Game whereId($value)
+ * @method static Builder|Game whereLocationId($value)
+ * @method static Builder|Game whereOpponent($value)
+ * @method static Builder|Game whereScoreThem($value)
+ * @method static Builder|Game whereScoreUs($value)
+ * @method static Builder|Game whereSeasonId($value)
+ * @method static Builder|Game whereSiteId($value)
+ * @method static Builder|Game whereStart($value)
+ * @method static Builder|Game whereTeam($value)
+ * @method static Builder|Game whereTitleAppend($value)
+ * @method static Builder|Game whereTournamentId($value)
+ * @method static Builder|Game whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Game extends Model implements Shareable, IPersistTo
 {
@@ -87,7 +98,7 @@ class Game extends Model implements Shareable, IPersistTo
     /**
      * @return string - the name of the table to read from (should be the same as the default $table)
      */
-    public function getReadTable()
+    public function getReadTable(): string
     {
         return 'game_with_album_fallback';
     }
@@ -95,67 +106,69 @@ class Game extends Model implements Shareable, IPersistTo
     /**
      * @return string - the name of the table to write to
      */
-    public function getWriteTable()
+    public function getWriteTable(): string
     {
         return 'games';
     }
 
+    /** @noinspection PhpUnused */
     public function getResultAttribute()
     {
         return $this->status();
     }
 
-    public function getTitleAttribute()
+    /** @noinspection PhpUnused */
+    public function getTitleAttribute(): string
     {
         return trans('misc.'.$this->team) . ' vs ' . $this->opponent;
     }
 
-    public function tournament()
+    public function tournament(): BelongsTo
     {
         return $this->belongsTo('App\Models\Tournament');
     }
 
-    public function location()
+    public function location(): BelongsTo
     {
         return $this->belongsTo('App\Models\Location');
     }
 
-    public function album()
+    public function album(): BelongsTo
     {
         return $this->belongsTo('App\Models\PhotoAlbum');
     }
 
-    public function stats()
+    public function stats(): HasMany
     {
         return $this->hasMany('App\Models\Stat');
     }
 
-    public function advantages()
+    public function advantages(): HasMany
     {
         return $this->hasMany('App\Models\Advantage');
     }
 
-    public function boxscores()
+    public function boxscores(): HasMany
     {
         return $this->hasMany('App\Models\Boxscore');
     }
 
-    public function updates()
+    public function updates(): HasOne
     {
         return $this->hasOne('App\Models\GameUpdateDump');
     }
 
-    public function badge()
+    public function badge(): BelongsTo
     {
         return $this->belongsTo('App\Models\Badge');
     }
 
-    public function isShareable()
+    public function isShareable(): bool
     {
         return isset($this->score_us) && isset($this->score_them);
     }
 
-    public function getShareableUrl()
+    public function getShareableUrl(): string
     {
         return route('shareables.game', [
             'shape' => Shareable::SQUARE,
@@ -168,7 +181,8 @@ class Game extends Model implements Shareable, IPersistTo
      * @param $status
      * @return string
      */
-    public static function oppositeStatus($status) {
+    public static function oppositeStatus($status): string
+    {
         switch ($status) {
             case Game::WIN:
                 return Game::LOSS;
@@ -183,9 +197,9 @@ class Game extends Model implements Shareable, IPersistTo
 
     /**
      * @deprecated
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
-    public function boxStats()
+    public function boxStats(): HasOne
     {
         return $this->hasOne('App\Models\GameStatDump');
     }

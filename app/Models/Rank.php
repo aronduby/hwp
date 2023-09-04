@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,15 +19,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $points
  * @property bool $tied
  * @property bool $self
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereRank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereRankingId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereSelf($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Rank whereTied($value)
- * @mixin \Eloquent
+ * @method static Builder|Rank whereId($value)
+ * @method static Builder|Rank whereRank($value)
+ * @method static Builder|Rank whereRankingId($value)
+ * @method static Builder|Rank whereSeasonId($value)
+ * @method static Builder|Rank whereSelf($value)
+ * @method static Builder|Rank whereSiteId($value)
+ * @method static Builder|Rank whereTeam($value)
+ * @method static Builder|Rank whereTied($value)
+ * @method static Builder|Rank wherePoints($value)
+ * @mixin Eloquent
  */
 class Rank extends Model
 {

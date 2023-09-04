@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+use App\Collections\CustomCollection;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,23 +23,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $state
  * @property string|null $zipcode
  * @property string|null $notes
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Collections\CustomCollection|\App\Models\Game[] $games
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read CustomCollection|Game[] $games
  * @property-read string $full_address
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tournament[] $tournaments
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereNotes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereStreet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereTitleShort($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Location whereZipcode($value)
- * @mixin \Eloquent
+ * @property-read Collection|Tournament[] $tournaments
+ * @method static Builder|Location whereCity($value)
+ * @method static Builder|Location whereCreatedAt($value)
+ * @method static Builder|Location whereId($value)
+ * @method static Builder|Location whereNotes($value)
+ * @method static Builder|Location whereSiteId($value)
+ * @method static Builder|Location whereState($value)
+ * @method static Builder|Location whereStreet($value)
+ * @method static Builder|Location whereTitle($value)
+ * @method static Builder|Location whereTitleShort($value)
+ * @method static Builder|Location whereUpdatedAt($value)
+ * @method static Builder|Location whereZipcode($value)
+ * @mixin Eloquent
  */
 class Location extends Model
 {
@@ -50,19 +56,19 @@ class Location extends Model
     /**
      * Gets related games
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function games()
+    public function games(): HasMany
     {
         return $this->hasMany('App\Models\Game');
     }
 
     /**
-     * Gets related tournments
+     * Gets related tournaments
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function tournaments()
+    public function tournaments(): HasMany
     {
         return $this->hasMany('App\Models\Tournament');
     }
@@ -71,22 +77,24 @@ class Location extends Model
      * Creates a full_address attribute
      *
      * @return string
+     * @noinspection PhpUnused
      */
-    public function getFullAddressAttribute()
+    public function getFullAddressAttribute(): string
     {
         return $this->street.' '.$this->city.', '.$this->state.' '.$this->zipcode;
     }
 
 
     /**
-     * Generates a url to a static Google Map image for this location
+     * Generates an url to a static Google Map image for this location
      *
      * @param int $width
      * @param int $height
      * @param null $zoom
      * @return string URL for a map image
+     * @noinspection PhpUnused
      */
-    public function googleStaticMap($width = 200, $height = 200, $zoom = null)
+    public function googleStaticMap(int $width = 200, int $height = 200, $zoom = null): string
     {
 
         $url = 'https://maps.googleapis.com/maps/api/staticmap?';
@@ -103,8 +111,9 @@ class Location extends Model
      * Generates a url to Google Maps for this location
      *
      * @return string URL to show this location in Google Maps
+     * @noinspection PhpUnused
      */
-    public function googleMapLink()
+    public function googleMapLink(): string
     {
         return 'https://maps.google.com/?q=' . urlencode($this->full_address);
     }
@@ -113,8 +122,9 @@ class Location extends Model
      * Generates a url to directions in Google Maps
      *
      * @return string URL to get directions to this location in Google Maps
+     * @noinspection PhpUnused
      */
-    public function googleDirectionsLink()
+    public function googleDirectionsLink(): string
     {
         return 'https://maps.google.com/?daddr=' . urlencode($this->full_address);
     }

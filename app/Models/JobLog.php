@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|JobLog whereState($value)
  * @method static Builder|JobLog whereUpdatedAt($value)
  * @method static Builder|JobLog whereJobInstanceId($value)
+ * @method static Builder|JobLog whereOutput($value)
  */
 class JobLog extends Model
 {

@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Collections\CustomCollection;
 use App\Models\Traits\Event;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * App\Models\Tournament
@@ -17,35 +21,35 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property int $location_id
  * @property mixed $team
  * @property string $title
- * @property \Carbon\Carbon $start
- * @property \Carbon\Carbon $end
+ * @property Carbon $start
+ * @property Carbon $end
  * @property string|null $note
  * @property string|null $result
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int|null $album_id
- * @property-read \App\Models\PhotoAlbum|null $album
- * @property-read \App\Collections\CustomCollection|\App\Models\Game[] $games
+ * @property-read PhotoAlbum|null $album
+ * @property-read CustomCollection|Game[] $games
  * @property-read mixed $recent_title
- * @property-read \App\Models\Location $location
- * @property-read \App\Models\Season $season
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament results()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament team($team)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament upcoming()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereAlbumId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereEnd($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereResult($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereStart($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tournament whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read Location $location
+ * @property-read Season $season
+ * @method static Builder|Tournament results()
+ * @method static Builder|Tournament team($team)
+ * @method static Builder|Tournament upcoming()
+ * @method static Builder|Tournament whereAlbumId($value)
+ * @method static Builder|Tournament whereCreatedAt($value)
+ * @method static Builder|Tournament whereEnd($value)
+ * @method static Builder|Tournament whereId($value)
+ * @method static Builder|Tournament whereLocationId($value)
+ * @method static Builder|Tournament whereNote($value)
+ * @method static Builder|Tournament whereResult($value)
+ * @method static Builder|Tournament whereSeasonId($value)
+ * @method static Builder|Tournament whereSiteId($value)
+ * @method static Builder|Tournament whereStart($value)
+ * @method static Builder|Tournament whereTeam($value)
+ * @method static Builder|Tournament whereTitle($value)
+ * @method static Builder|Tournament whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Tournament extends Model
 {
@@ -61,6 +65,7 @@ class Tournament extends Model
         'end' => 'datetime'
     ];
 
+    /** @noinspection PhpUnused */
     public function getResultAttribute($value)
     {
         if ($value && strlen($value)) {
@@ -75,14 +80,15 @@ class Tournament extends Model
                 if (!$status = $game->status()) {
                     continue;
                 }
-                $results[$game->status()]++;
+                $results[$status]++;
             }
 
             return preg_replace('/\-0$/', '', join('-', $results));
         }
     }
 
-    public function getRecentTitleAttribute()
+    /** @noinspection PhpUnused */
+    public function getRecentTitleAttribute(): string
     {
         $title = trans('misc.'.$this->team) . ' ' . trans('misc.finished') . ' ' . $this->result;
         if (ends_with($this->title, 's')) {
@@ -95,22 +101,22 @@ class Tournament extends Model
         return $title;
     }
 
-    public function location()
+    public function location(): BelongsTo
     {
         return $this->belongsTo('App\Models\Location');
     }
 
-    public function games()
+    public function games(): HasMany
     {
         return $this->hasMany('App\Models\Game');
     }
 
-    public function season()
+    public function season(): BelongsTo
     {
         return $this->belongsTo('App\Models\Season');
     }
 
-    public function album()
+    public function album(): BelongsTo
     {
         return $this->belongsTo('App\Models\PhotoAlbum');
     }

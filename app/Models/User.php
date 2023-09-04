@@ -2,8 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\Token;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -17,22 +25,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $password
  * @property int $root
  * @property string|null $remember_token
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Client[] $clients
  * @property-read bool $admin
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRoot($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @property-read Collection|Token[] $tokens
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User whereName($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereRoot($value)
+ * @method static Builder|User whereSiteId($value)
+ * @method static Builder|User whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class User extends Authenticatable
 {
@@ -68,8 +76,9 @@ class User extends Authenticatable
      * Used in token generation, if they have a login right now they are an admin
      *
      * @return bool
+     * @noinspection PhpUnused
      */
-    public function getAdminAttribute()
+    public function getAdminAttribute(): bool
     {
         return true;
     }

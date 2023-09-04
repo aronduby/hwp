@@ -3,7 +3,12 @@
 namespace App\Models;
 
 
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 
 /**
  * Easy way for dependency inject to get the site being viewed
@@ -18,25 +23,26 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $title
  * @property string|null $subtitle
  * @property string|null $description
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Photo[] $featuredPhotos
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\JobInstance[] $jobs
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \App\Models\Site|null $picker
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Season[] $seasons
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Site[] $sites
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Site domain($domain)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereDomain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereIsPicker($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereSubtitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ActiveSite whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Photo[] $featuredPhotos
+ * @property-read Collection|JobInstance[] $jobs
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @property-read Site|null $picker
+ * @property-read Collection|Season[] $seasons
+ * @property-read Collection|Site[] $sites
+ * @property-read Settings $settings
+ * @method static Builder|Site domain($domain)
+ * @method static Builder|ActiveSite whereCreatedAt($value)
+ * @method static Builder|ActiveSite whereDescription($value)
+ * @method static Builder|ActiveSite whereDomain($value)
+ * @method static Builder|ActiveSite whereId($value)
+ * @method static Builder|ActiveSite whereIsPicker($value)
+ * @method static Builder|ActiveSite whereParentId($value)
+ * @method static Builder|ActiveSite whereSubtitle($value)
+ * @method static Builder|ActiveSite whereTitle($value)
+ * @method static Builder|ActiveSite whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class ActiveSite extends Site
 {
@@ -49,7 +55,7 @@ class ActiveSite extends Site
      *
      * @return string
      */
-    public function getMorphClass()
+    public function getMorphClass(): string
     {
         return Site::class;
     }

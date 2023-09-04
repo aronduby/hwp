@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string|null $ranking
  * @property string $ranking_updated
  * @property int $ranking_tie
+ * @property string|null $ranking_title
  * @property string $media_service
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -43,6 +44,8 @@ use Illuminate\Database\Eloquent\Collection;
  * @method static Builder|ActiveSeason whereSiteId($value)
  * @method static Builder|ActiveSeason whereTitle($value)
  * @method static Builder|ActiveSeason whereUpdatedAt($value)
+ * @method static Builder|ActiveSeason whereMediaService($value)
+ * @method static Builder|ActiveSeason whereRankingTitle($value)
  */
 class ActiveSeason extends Season
 {

@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * App\Models\Badge
@@ -12,27 +17,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $image
  * @property string|null $description
  * @property int|null $display_order
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Player[] $players
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Season[] $seasons
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereDisplayOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Badge whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Player[] $players
+ * @property-read Collection|Season[] $seasons
+ * @method static Builder|Badge whereCreatedAt($value)
+ * @method static Builder|Badge whereDescription($value)
+ * @method static Builder|Badge whereDisplayOrder($value)
+ * @method static Builder|Badge whereId($value)
+ * @method static Builder|Badge whereImage($value)
+ * @method static Builder|Badge whereTitle($value)
+ * @method static Builder|Badge whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Badge extends Model
 {
-    public function players()
+    public function players(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Player');
     }
 
-    public function seasons()
+    public function seasons(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Season');
     }

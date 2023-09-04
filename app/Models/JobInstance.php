@@ -6,11 +6,10 @@ use App\Models\Traits\HasSettings;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Facades\Artisan;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 
 /**
@@ -19,7 +18,6 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  * @package App\Models
  * @mixin Eloquent
  * @property int id
- * @property HasMany logs
  * @property int $site_id
  * @property string $job
  * @property bool $enabled
@@ -35,6 +33,8 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  * @method static Builder|JobInstance whereSettings($value)
  * @method static Builder|JobInstance whereSiteId($value)
  * @method static Builder|JobInstance whereUpdatedAt($value)
+ * @property-read Collection|JobLog[] $logs
+ * @method static Builder|JobInstance whereLastRan($value)
  */
 class JobInstance extends Model
 {

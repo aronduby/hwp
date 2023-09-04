@@ -33,6 +33,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read Site|null $picker
  * @property-read Collection|Season[] $seasons
  * @property-read Collection|Site[] $sites
+ * @property-read Settings $settings
  * @method static Builder|Site domain($domain)
  * @method static Builder|Site whereCreatedAt($value)
  * @method static Builder|Site whereDescription($value)
@@ -57,6 +58,7 @@ class Site extends Model
         'is_picker' => 'boolean'
     ];
 
+    /** @noinspection PhpUnused */
     public function scopeDomain($query, $domain)
     {
         return $query->where('domain', '=', $domain);
@@ -80,6 +82,7 @@ class Site extends Model
         return $this->hasMany('App\Models\Site', 'parent_id');
     }
 
+    /** @noinspection PhpUnused */
     public function featuredPhotos(): HasMany
     {
         return $this->hasMany('App\Models\Photo', 'site_id')
@@ -96,10 +99,10 @@ class Site extends Model
     /**
      * Pull the twitter authorization from the site settings file
      *
-     * @param $notification
      * @return array
+     * @noinspection PhpUnused
      */
-    public function routeNotificationForTwitter($notification): array
+    public function routeNotificationForTwitter(): array
     {
         return [
             config('services.twitter.consumer_key'), // TWITTER_CONSUMER_KEY

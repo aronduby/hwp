@@ -2,8 +2,16 @@
 
 namespace App\Models;
 
+use App\Collections\StatCollection;
 use App\Models\Traits\Event;
 use App\Models\Traits\UsesCustomCollection;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,8 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $season_id
  * @property int|null $location_id
  * @property string $team
- * @property \Carbon\Carbon $start
- * @property \Carbon\Carbon $end
+ * @property Carbon $start
+ * @property Carbon $end
  * @property int|null $district
  * @property string $opponent
  * @property float|null $score_us
@@ -26,32 +34,32 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $scheduled_id
  * @property int|null $album_id
  * @property float|null $join_id
- * @property-read \App\Models\PhotoAlbum|null $album
- * @property-read \App\Models\GameStatDump $boxStats
- * @property-read \App\Models\Location|null $location
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $scheduled
- * @property-read \App\Collections\StatCollection|\App\Models\Stat[] $stats
- * @property-read \App\Models\GameUpdateDump $updates
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule results()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule team($team)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule upcoming()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereAlbumId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereDistrict($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereEnd($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereJoinId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereLocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereOpponent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereScheduledId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereScheduledType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereScoreThem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereScoreUs($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereStart($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Schedule whereType($value)
- * @mixin \Eloquent
+ * @property-read PhotoAlbum|null $album
+ * @property-read GameStatDump $boxStats
+ * @property-read Location|null $location
+ * @property-read Model|Eloquent $scheduled
+ * @property-read StatCollection|Stat[] $stats
+ * @property-read GameUpdateDump $updates
+ * @method static Builder|Schedule results()
+ * @method static Builder|Schedule team($team)
+ * @method static Builder|Schedule upcoming()
+ * @method static Builder|Schedule whereAlbumId($value)
+ * @method static Builder|Schedule whereDistrict($value)
+ * @method static Builder|Schedule whereEnd($value)
+ * @method static Builder|Schedule whereId($value)
+ * @method static Builder|Schedule whereJoinId($value)
+ * @method static Builder|Schedule whereLocationId($value)
+ * @method static Builder|Schedule whereOpponent($value)
+ * @method static Builder|Schedule whereScheduledId($value)
+ * @method static Builder|Schedule whereScheduledType($value)
+ * @method static Builder|Schedule whereScoreThem($value)
+ * @method static Builder|Schedule whereScoreUs($value)
+ * @method static Builder|Schedule whereSeasonId($value)
+ * @method static Builder|Schedule whereSiteId($value)
+ * @method static Builder|Schedule whereStart($value)
+ * @method static Builder|Schedule whereTeam($value)
+ * @method static Builder|Schedule whereType($value)
+ * @mixin Eloquent
  */
 class Schedule extends Model
 {
@@ -72,36 +80,36 @@ class Schedule extends Model
         'end' => 'datetime'
     ];
 
-    public function scheduled()
+    public function scheduled(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function location()
+    public function location(): BelongsTo
     {
         return $this->belongsTo('App\Models\Location');
     }
 
-    public function album()
+    public function album(): BelongsTo
     {
         return $this->belongsTo('App\Models\PhotoAlbum');
     }
 
-    public function updates()
+    public function updates(): HasOne
     {
         return $this->hasOne('App\Models\GameUpdateDump', 'game_id', 'join_id');
     }
 
     /**
-     * @deprecated use stats()
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
+     * @noinspection PhpUnused*@deprecated use stats()
      */
-    public function boxStats()
+    public function boxStats(): HasOne
     {
         return $this->hasOne('App\Models\GameStatDump', 'game_id', 'join_id');
     }
 
-    public function stats()
+    public function stats(): HasMany
     {
         return $this->hasMany('App\Models\Stat', 'game_id', 'join_id');
     }

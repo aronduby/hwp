@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Collection|Rank[] $ranks
+ * @property-read Season $season
+ * @property-read Site $site
  * @method static Builder|Ranking latest()
  * @method static Builder|Ranking total()
  * @method static Builder|Ranking whereCreatedAt($value)
@@ -58,7 +60,7 @@ class Ranking extends Model
         static::addGlobalScope(new RankingScope);
     }
 
-
+    /** @noinspection PhpUnused */
     public function scopeLatest(Builder $query)
     {
         return $query->take(1);

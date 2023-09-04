@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Season
+ *
  * @mixin Eloquent
  * @property int $id
  * @property int $site_id
@@ -45,6 +46,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Season whereSiteId($value)
  * @method static Builder|Season whereTitle($value)
  * @method static Builder|Season whereUpdatedAt($value)
+ * @method static Builder|Season whereMediaService($value)
+ * @method static Builder|Season whereRankingTitle($value)
  */
 class Season extends Model
 {
@@ -58,6 +61,7 @@ class Season extends Model
      */
     protected $tenantColumns = ['site_id'];
 
+    /** @noinspection PhpUnused */
     public function scopeCurrent($query)
     {
         return $query->where('current', '=', 1);

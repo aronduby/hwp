@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use App\Collections\BoxscoresCollection;
 use App\Services\PlayerListService;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,24 +19,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $game_id
  * @property string $team
  * @property int $quarter
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int $player_id
  * @property string $name
  * @property int $goals
- * @property-read \App\Models\Game $game
+ * @property-read Game $game
  * @property-read mixed $player
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereGameId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereGoals($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore wherePlayerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereQuarter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Boxscore whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Boxscore whereCreatedAt($value)
+ * @method static Builder|Boxscore whereGameId($value)
+ * @method static Builder|Boxscore whereGoals($value)
+ * @method static Builder|Boxscore whereId($value)
+ * @method static Builder|Boxscore whereName($value)
+ * @method static Builder|Boxscore wherePlayerId($value)
+ * @method static Builder|Boxscore whereQuarter($value)
+ * @method static Builder|Boxscore whereSiteId($value)
+ * @method static Builder|Boxscore whereTeam($value)
+ * @method static Builder|Boxscore whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Boxscore extends Model
 {
@@ -68,7 +73,7 @@ class Boxscore extends Model
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
@@ -84,6 +89,7 @@ class Boxscore extends Model
         return $this->player;
     }
 
+    /** @noinspection PhpUnused */
     public function getNameAttribute($name)
     {
         if ($this->player_id) {
@@ -97,14 +103,14 @@ class Boxscore extends Model
         return $name;
     }
 
-    public function game()
+    public function game(): BelongsTo
     {
         return $this->belongsTo('App\Models\Game');
     }
 
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): BoxscoresCollection
     {
-        return new \App\Collections\BoxscoresCollection($models);
+        return new BoxscoresCollection($models);
     }
 
 

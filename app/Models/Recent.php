@@ -1,8 +1,10 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Models;
 
 use App\Models\Traits\HasTotal;
+use Carbon\Carbon;
+use Eloquent;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,20 +18,20 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $renderer
  * @property string $content
  * @property int $sticky
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read string $rendered
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent latest($page)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent total()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereRenderer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereSticky($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recent whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Recent latest($page)
+ * @method static Builder|Recent total()
+ * @method static Builder|Recent whereContent($value)
+ * @method static Builder|Recent whereCreatedAt($value)
+ * @method static Builder|Recent whereId($value)
+ * @method static Builder|Recent whereRenderer($value)
+ * @method static Builder|Recent whereSeasonId($value)
+ * @method static Builder|Recent whereSiteId($value)
+ * @method static Builder|Recent whereSticky($value)
+ * @method static Builder|Recent whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Recent extends Model
 {
@@ -37,8 +39,6 @@ class Recent extends Model
 
     /**
      * How long should titles be?
-     *
-     * @param int
      */
     const TITLE_LIMIT = 30;
 
@@ -78,12 +78,13 @@ class Recent extends Model
      * @param $page
      * @return Builder
      */
-    public function scopeLatest(Builder $query, $page)
+    public function scopeLatest(Builder $query, $page): Builder
     {
         $query->orderBy('created_at', 'desc');
 
+        /** @noinspection PhpStatementHasEmptyBodyInspection */
         if ($page === 1) {
-            // make sure we have enough items regardless of season
+            // TODO -- make sure we have enough items regardless of season?
         }
 
         return $query;
@@ -93,8 +94,9 @@ class Recent extends Model
      * Allows for rendered to be accessed as an attribute
      *
      * @return string
+     * @noinspection PhpUnused
      */
-    public function getRenderedAttribute()
+    public function getRenderedAttribute(): string
     {
         return $this->render();
     }
@@ -104,7 +106,7 @@ class Recent extends Model
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->getRenderer()->render();
     }

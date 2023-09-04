@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,38 +21,40 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $file
  * @property int $width
  * @property int $height
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PhotoAlbum[] $albums
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|PhotoAlbum[] $albums
  * @property-read mixed $photo
  * @property-read mixed $thumb
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Player[] $players
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereFeatured($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereFile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereHeight($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereMediaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Photo whereWidth($value)
- * @mixin \Eloquent
+ * @property-read Collection|Player[] $players
+ * @method static Builder|Photo whereCreatedAt($value)
+ * @method static Builder|Photo whereFeatured($value)
+ * @method static Builder|Photo whereFile($value)
+ * @method static Builder|Photo whereHeight($value)
+ * @method static Builder|Photo whereId($value)
+ * @method static Builder|Photo whereSeasonId($value)
+ * @method static Builder|Photo whereMediaId($value)
+ * @method static Builder|Photo whereSiteId($value)
+ * @method static Builder|Photo whereUpdatedAt($value)
+ * @method static Builder|Photo whereWidth($value)
+ * @mixin Eloquent
  */
 class Photo extends Model
 {
     use BelongsToTenants;
 
-    public function getPhotoAttribute()
+    public function getPhotoAttribute(): string
     {
         return config('urls.photos') . '/' . $this->file . '.jpg';
     }
 
-    public function getThumbAttribute()
+    /** @noinspection PhpUnused */
+    public function getThumbAttribute(): string
     {
         return config('urls.photos') . '/thumbs/' . $this->file . '.jpg';
     }
 
+    /** @noinspection PhpUnused */
     public function getJSONData(Player $player = null)
     {
         $json = ['main'=>null, 'also'=>[]];
@@ -68,12 +75,12 @@ class Photo extends Model
         return json_encode($json);
     }
 
-    public function albums()
+    public function albums(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\PhotoAlbum', 'album_photo');
     }
 
-    public function players()
+    public function players(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Player');
     }

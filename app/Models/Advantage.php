@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Collections\AdvantagesCollection;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,18 +19,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $team
  * @property int $drawn
  * @property int $converted
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Game $game
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereConverted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereDrawn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereGameId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Advantage whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Game $game
+ * @method static Builder|Advantage whereConverted($value)
+ * @method static Builder|Advantage whereCreatedAt($value)
+ * @method static Builder|Advantage whereDrawn($value)
+ * @method static Builder|Advantage whereGameId($value)
+ * @method static Builder|Advantage whereId($value)
+ * @method static Builder|Advantage whereSiteId($value)
+ * @method static Builder|Advantage whereTeam($value)
+ * @method static Builder|Advantage whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Advantage extends Model
 {
@@ -47,9 +52,9 @@ class Advantage extends Model
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function game()
+    public function game(): BelongsTo
     {
         return $this->belongsTo('App\Models\Game');
     }
@@ -58,10 +63,10 @@ class Advantage extends Model
      * Return a custom collection when getting this item
      *
      * @param array $models
-     * @return \App\Collections\AdvantagesCollection
+     * @return AdvantagesCollection
      */
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): AdvantagesCollection
     {
-        return new \App\Collections\AdvantagesCollection($models);
+        return new AdvantagesCollection($models);
     }
 }
