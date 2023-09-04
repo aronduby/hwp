@@ -14,11 +14,22 @@ Homestead.json
 .env
 *.map
 *.rnd
-storage/sites/
-!storage/sites/domain.json
+storage/sites/*
 storage/*.key
 *scratch.*
 *.key
 /_ide_helper.php
 /public/badges/2x/
 /public/badges/4x/
+
+# +----------------------------+
+# |    Keep .gitkeep files     |
+# +----------------------------+-------------------------------+
+# | To keep an empty directory, add a .gitkeep file to it      |
+# | and ignore the directory with a wildcard:                  |
+# |                                                            |
+# |     /path/to/dir/*                                         |
+# |                                                            |
+# | this will ignore the content but not the director itself.  |
+# +------------------------------------------------------------+
+!/**/.gitkeep

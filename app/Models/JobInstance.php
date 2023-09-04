@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasSettings;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Artisan;
 use Torzer\Awesome\Landlord\BelongsToTenants;
 
@@ -21,7 +23,7 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  * @property int $site_id
  * @property string $job
  * @property bool $enabled
- * @property array $settings
+ * @property string $settings
  * @property Carbon|null $last_ran
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -36,7 +38,8 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  */
 class JobInstance extends Model
 {
-    use BelongsToTenants;
+    use BelongsToTenants,
+        HasSettings;
 
     /**
      * Specify the tenant columns to use for this model
@@ -51,7 +54,6 @@ class JobInstance extends Model
      * @var string[]
      */
     protected $casts = [
-        'settings' => 'array',
         'last_ran' => 'datetime'
     ];
 

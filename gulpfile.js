@@ -1,3 +1,11 @@
+/**
+ *
+ * @deprecated
+ * We're using the new mix instead of the older elixir
+ * Check out the webpack.mix.js file for actual build settings now
+ *
+ */
+
 var elixir = require('laravel-elixir');
 
 /*

@@ -48,6 +48,12 @@ return [
             'root' => storage_path('app'),
         ],
 
+        // @deprecated - use settings model
+        'settings-old' => [
+            'driver' => 'local',
+            'root' => storage_path('sites'),
+        ],
+
         // 'public' => [
         //     'driver' => 'local',
         //     'root' => storage_path('app/public'),

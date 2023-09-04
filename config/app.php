@@ -139,7 +139,6 @@ return [
          * Package Service Providers...
          */
         Torzer\Awesome\Landlord\LandlordServiceProvider::class,
-        Thetispro\Setting\SettingServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         NotificationChannels\Twitter\TwitterServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
@@ -210,7 +209,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Landlord' => Torzer\Awesome\Landlord\Facades\Landlord::class,
-        'Setting' => Thetispro\Setting\Facades\Setting::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
     ],

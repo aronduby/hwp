@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasSettings;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
-use Thetispro\Setting\Facades\Setting;
 
 /**
  * App\Models\Site
@@ -28,7 +28,6 @@ use Thetispro\Setting\Facades\Setting;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Photo[] $featuredPhotos
- * @property-read \Thetispro\Setting\Setting $settings
  * @property-read Collection|JobInstance[] $jobs
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read Site|null $picker
@@ -47,7 +46,8 @@ use Thetispro\Setting\Facades\Setting;
  */
 class Site extends Model
 {
-    use Notifiable;
+    use Notifiable,
+        HasSettings;
 
     /**
      * properties that should get type casted
@@ -56,32 +56,10 @@ class Site extends Model
     protected $casts = [
         'is_picker' => 'boolean'
     ];
-    
-    /**
-     * @var \Thetispro\Setting\Setting
-     */
-    protected $settings;
 
     public function scopeDomain($query, $domain)
     {
         return $query->where('domain', '=', $domain);
-    }
-
-    /**
-     * @return \Thetispro\Setting\Setting
-     */
-    public function getSettingsAttribute(): \Thetispro\Setting\Setting
-    {
-        if (!isset($this->settings)) {
-            $this->settings = Setting::filename($this->getSettingFileName())->load();
-        }
-
-        return $this->settings;
-    }
-
-    protected function getSettingFileName()
-    {
-        return $this->domain . '.json';
     }
 
     /**
@@ -126,8 +104,8 @@ class Site extends Model
         return [
             config('services.twitter.consumer_key'), // TWITTER_CONSUMER_KEY
             config('services.twitter.consumer_secret'), // TWITTER_CONSUMER_SECRET
-            $this->getSettingsAttribute()->get('twitter.accessToken'), // TWITTER_ACCESS_TOKEN
-            $this->getSettingsAttribute()->get('twitter.accessTokenSecret') // TWITTER_ACCESS_SECRET
+            $this->settings->get('twitter.accessToken'), // TWITTER_ACCESS_TOKEN
+            $this->settings->get('twitter.accessTokenSecret') // TWITTER_ACCESS_SECRET
         ];
     }
 }

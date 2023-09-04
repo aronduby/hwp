@@ -1,0 +1,2 @@
+@deprecated
+This used to be where site settings files were stored, but that has been replaced with database settings models.

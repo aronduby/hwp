@@ -4,11 +4,9 @@ namespace App\Providers;
 
 use App\Models\ActiveSeason;
 use App\Models\ActiveSite;
-use App\Models\Site;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Torzer\Awesome\Landlord\Facades\Landlord;
 
