@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://hudsonvillewaterpolo.com/schemas/cloudinary.json",
+	"title": "Cloudinary Settings",
+	"description": "Settings used for integrating with Cloudinary as the media service for a season",
+	"type": "object",
+	"properties": {
+		"cloud_name": {
+			"type": "string",
+			"minLength": 5,
+			"description": "The cloud name for your cloudinary instance, also called the product environment"
+		},
+		"api_key": {
+			"type": "string",
+			"minLength": 5,
+			"description": "The API Key, found under Settings > Access Keys"
+		},
+		"api_secret": {
+			"type": "string",
+			"minLength": 5,
+			"description": "The API Secret, found under Settings > Access Keys"
+		},
+		"root_folder": {
+			"type": "string",
+			"minLength": 1,
+			"description": "The path value of the root folder used as the root for the season"
+		}
+	},
+	"required": [
+		"cloud_name",
+		"api_key",
+		"api_secret",
+		"root_folder"
+	]
+}
