@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property-read Collection|Player[] $players
  * @property-read Collection|Recent[] $recent
  * @property-read StatCollection|Stat[] $stats
+ * @property-read Settings $settings
  * @method static Builder|Season current()
  * @method static Builder|ActiveSeason whereCreatedAt($value)
  * @method static Builder|ActiveSeason whereCurrent($value)
@@ -52,4 +53,16 @@ class ActiveSeason extends Season
     protected $table = 'seasons';
 
     protected $guarded = [];
+
+    /**
+     * This is used with polymorphic relationships to tell what class name should be used with the relationships
+     * Normally this comes from a morphMap or just the calling classes name, but since we want every Season/ActiveSeason
+     * to share this relationship properly we overload it here to always be the season class
+     *
+     * @return string
+     */
+    public function getMorphClass(): string
+    {
+        return Season::class;
+    }
 }

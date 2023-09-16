@@ -26,7 +26,8 @@
         "laravel/tinker": "^1.0",
         "monolog/monolog": "1.23",
         "laravel/passport": "^7.5",
-        "benbjurstrom/passport-custom-jwt-claims": "dev-master"
+        "benbjurstrom/passport-custom-jwt-claims": "dev-master",
+        "cloudinary/cloudinary_php": "^2.11"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -27,11 +27,11 @@ interface MediaService
      */
     public function getScript(): String;
 
-    public function forHome(): Photo;
+    public function forHome(): ?Photo;
 
-    public function forRecent(Recent $recent): Collection;
+    public function forRecent(Recent $recent): ?Collection;
 
-    public function forAlbum(PhotoAlbum $album): Collection;
+    public function forAlbum(PhotoAlbum $album): ?Collection;
 
     /**
      * @param Player $player

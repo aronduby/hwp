@@ -1,4 +1,6 @@
 <?php
+
+use Cloudinary\Cloudinary;
 use Illuminate\Http\Request;
 
 /*
@@ -174,4 +176,40 @@ Route::group([
         'index', 'store', 'update', 'destroy'
     ]);
 
+});
+
+
+Route::get('cloudinary', function(\App\Models\ActiveSeason $season) {
+    $settings = $season->settings->get('cloudinary');
+    $cloudinary = new Cloudinary([
+        'cloud' => [
+            'cloud_name' => $settings['cloud_name'],
+            'api_key' => $settings['api_key'],
+            'api_secret' => $settings['api_secret'],
+            'url' => [
+                'secure' => true
+            ]
+        ]
+    ]);
+
+    // undocumented folder search, but I don't think we're going to need it because we're planning on importing those
+    // $data = $cloudinary->searchFoldersApi()->execute();
+
+    // list everything in a folder
+    $data = $cloudinary->searchApi()
+        ->expression('folder:23-24/* && folder:"23-24/Test Subfolder"')
+        ->withField('metadata')
+        ->withField('tags')
+        ->maxResults(\App\Services\MediaServices\MediaService::PER_PAGE)
+        ->execute();
+
+    // list everything with player tag
+    // $data = $cloudinary->searchApi()
+    //     ->expression('metadata.players:rylan_mcdowell')
+    //     ->withField('metadata')
+    //     ->withField('tags')
+    //     ->maxResults(\App\Services\MediaServices\MediaService::PER_PAGE)
+    //     ->execute();
+
+    return response()->json($data);
 });

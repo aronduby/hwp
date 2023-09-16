@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Collections\StatCollection;
+use App\Models\Traits\HasSettings;
 use App\Models\Traits\HasStats;
 use Carbon\Carbon;
 use Eloquent;
@@ -51,7 +52,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Season extends Model
 {
-    use BelongsToTenants, HasStats;
+    use BelongsToTenants, HasStats, HasSettings;
 
     /**
      * Specify the tenant columns to use for this model

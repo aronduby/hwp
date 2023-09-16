@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\ActiveSeason;
+use App\Services\MediaServices\CloudinaryMediaService;
 use App\Services\MediaServices\ShutterflyMediaService;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,9 @@ class MediaServiceProvider extends ServiceProvider
             switch ($activeSeason->media_service) {
                 case ShutterflyMediaService::class:
                     return new ShutterflyMediaService();
+
+                case CloudinaryMediaService::class:
+                    return new CloudinaryMediaService($activeSeason);
 
                 default:
                     \Log::warning('Unknown media provider supplied, falling back to Shutterfly: ' . $activeSeason->media_service);
