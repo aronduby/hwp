@@ -9,7 +9,7 @@ use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
 use Cloudinary\Cloudinary;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class CloudinaryMediaService implements MediaService
 {
@@ -44,31 +44,55 @@ class CloudinaryMediaService implements MediaService
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getScript(): string
-    {
-        // TODO: Implement getScript() method.
-        return '';
-    }
-
     public function forHome(): ?Photo
     {
         // TODO: Implement forHome() method.
         return null;
     }
 
-    public function forRecent(Recent $recent): ?Collection
+    public function forRecent(Recent $recent): ?array
     {
         // TODO: Implement forRecent() method.
         return null;
     }
 
-    public function forAlbum(PhotoAlbum $album): ?Collection
+    public function forAlbum(PhotoAlbum $album): ?array
     {
-        // TODO: Implement forAlbum() method.
-        return null;
+        $rsp = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$album->media_id.'"')
+            ->execute();
+
+        return $rsp['resources'];
+    }
+
+    public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection
+    {
+        $keyed = $albums->keyBy('media_id');
+
+        // pull all the paths, but make sure you add the quotes
+        $paths = $albums->pluck('media_id')
+            ->map(function($p) {
+                return '"'.$p.'"';
+            })
+            ->implode(' OR ');
+
+        // all the paths that have the cover tag
+        $rsp = $this->cloudinary->searchApi()
+            ->expression('('.$paths.') AND tags:cover')
+            ->withField('tags')
+            ->execute();
+
+        $resources = $rsp['resources'];
+        foreach ($resources as $r) {
+            if (!$keyed[$r['folder']]->cover) {
+                $cover = new \StdClass();
+                $cover->photo = $r['secure_url'];
+
+                $keyed[$r['folder']]->cover = $cover;
+            }
+        }
+
+        return $albums;
     }
 
     /**

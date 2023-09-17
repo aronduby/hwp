@@ -8,6 +8,7 @@ use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 abstract class LocalMediaService implements MediaService
@@ -18,16 +19,22 @@ abstract class LocalMediaService implements MediaService
         return Photo::inRandomOrder()->first();
     }
 
-    public function forRecent(Recent $recent): Collection
+    public function forRecent(Recent $recent): array
     {
         $ids = json_decode($recent->content);
         return Photo::whereIn('id', $ids)
-            ->get();
+            ->get()
+            ->toArray();
     }
 
-    public function forAlbum(PhotoAlbum $album): Collection
+    public function forAlbum(PhotoAlbum $album): array
     {
-        return $album->photos;
+        return $album->photos->toArray();
+    }
+
+    public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection
+    {
+        return $albums->load('cover');
     }
 
     /**

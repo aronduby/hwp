@@ -95,6 +95,6 @@ class GalleryController extends Controller
      */
     public function output($photos)
     {
-        return response()->json($photos->toArray());
+        return response()->json($photos);
     }
 }

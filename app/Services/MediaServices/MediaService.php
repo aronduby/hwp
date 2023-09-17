@@ -8,6 +8,7 @@ use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 /**
@@ -20,18 +21,13 @@ interface MediaService
      */
     const PER_PAGE = 48;
 
-    /**
-     * Get the path for the JS file necessary for this provider. Included in app.blade.php
-     *
-     * @return String
-     */
-    public function getScript(): String;
-
     public function forHome(): ?Photo;
 
-    public function forRecent(Recent $recent): ?Collection;
+    public function forRecent(Recent $recent): ?array;
 
-    public function forAlbum(PhotoAlbum $album): ?Collection;
+    public function forAlbum(PhotoAlbum $album): ?array;
+
+    public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection;
 
     /**
      * @param Player $player

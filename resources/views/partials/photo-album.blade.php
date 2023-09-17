@@ -11,7 +11,9 @@
     </div>
 
     <a href="@route('album', ['id' => $album->id])" title="@lang('photos.viewAlbum')">
-        <div class="tag"><span><em>@number($album->photos_count) @lang('photos.photos')</em></span></div>
+        @if($album->photos_count)
+            <div class="tag"><span><em>@number($album->photos_count) @lang('photos.photos')</em></span></div>
+        @endif
 
         <h1>{{str_limit($album->title, \App\Models\Recent::TITLE_LIMIT)}}</h1>
 

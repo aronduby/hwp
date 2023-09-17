@@ -3,23 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\PhotoAlbum;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Services\MediaServices\MediaService;
+use Illuminate\Database\Eloquent\Collection;
 
 class AlbumController extends Controller
 {
 
-    public function index()
+    public function index(MediaService $mediaService)
     {
-        $albums = PhotoAlbum::with('cover')
-            ->withCount('photos')
+        $albums = PhotoAlbum::withCount('photos')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $albums = $albums->filter(function($album) {
-           return $album->photos_count > 0;
-        });
+        $albums = $mediaService->addCoverToAlbums($albums);
 
         if ($albums->count()) {
             $cover = $albums->random()->cover;
@@ -31,15 +27,14 @@ class AlbumController extends Controller
         return view('albumlist', compact('albums', 'cover'));
     }
 
-    public function photos(PhotoAlbum $album)
+    public function photos(PhotoAlbum $album, MediaService $mediaService)
     {
-        $photos = $album->photos()->paginate(48);
         $games = $album->games()
             ->withCount(['album', 'updates', 'stats'])
             ->get();
 
-        // dd($games);
+        $album = $mediaService->addCoverToAlbums(new Collection([$album]))->first();
 
-        return view('album', compact('album', 'photos', 'games'));
+        return view('album', compact('album', 'games'));
     }
 }
