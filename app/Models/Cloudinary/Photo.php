@@ -11,12 +11,18 @@ class Photo implements PhotoSource
 
     public $photo;
     public $thumb;
+    public $banner;
 
     public function __construct(array $data, Cloudinary $cloudinary)
     {
-        $cImg = $cloudinary->image($data['public_id']);
+        // you have to use separate instances here otherwise they combine, and you end up with tiny banner
 
         $this->photo = $data['secure_url'];
-        $this->thumb = $cImg->namedTransformation(NamedTransformation::name('media_lib_thumb'))->toUrl();
+        $this->thumb = $cloudinary->image($data['public_id'])
+            ->namedTransformation(NamedTransformation::name('media_lib_thumb'))
+            ->toUrl();
+        $this->banner = $cloudinary->image($data['public_id'])
+            ->namedTransformation(NamedTransformation::name('banner'))
+            ->toUrl();
     }
 }

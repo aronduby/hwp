@@ -9,6 +9,7 @@
 namespace App\Services\PlayerData;
 
 
+use App\Models\Contracts\PhotoSource;
 use App\Models\Player;
 use App\Services\PlayerData\Contracts\DataProvider;
 use App\Services\PlayerData\Providers\CareerProvider;
@@ -107,13 +108,21 @@ class PlayerDataService implements DataProvider
     }
 
     /**
-     * Get ALL of the player's photos without any pagination
+     * Get ALL the player's photos without any pagination
      *
      * @return mixed
      */
     public function getAllPhotos()
     {
         return $this->provider->getAllPhotos();
+    }
+
+    /**
+     * @return PhotoSource
+     */
+    public function getHeaderPhoto(): ?PhotoSource
+    {
+        return $this->provider->getHeaderPhoto();
     }
 
 

@@ -40,19 +40,13 @@ class PlayerController extends Controller
         $number = $data->getNumber();
         $team = $data->getTeam();
         $position = $data->getPosition();
-        $photos = $data->getPhotos();
+        $headerPhoto = $data->getHeaderPhoto();
         $badges = $data->getBadges();
         $articles = $data->getArticles();
         $stats = $data->getStats();
         $seasons = $data->getSeasons();
 
         $activeSeasonId = $data->getSeasonId();
-
-        try {
-            $headerPhoto = $photos->random();
-        } catch (\Exception $e) {
-            $headerPhoto = null;
-        }
 
         if ($activeSeasonId) {
             $route = 'gallery.playerSeason';

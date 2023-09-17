@@ -76,6 +76,17 @@ abstract class LocalMediaService implements MediaService
         }
     }
 
+    /**
+     * # TODO - either this or the caller needs to support mixing the services
+     *
+     * @inheritDoc
+     */
+    public function headerForPlayerCareer(Player $player): ?PhotoSource
+    {
+        // TODO: Implement headerForPlayerCareer() method.
+    }
+
+
     public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false)
     {
         $query = Photo::allTenants()
@@ -91,4 +102,26 @@ abstract class LocalMediaService implements MediaService
             return $query->paginate(static::PER_PAGE);
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource
+    {
+        $query = Photo::allTenants()
+            ->select('photos.*')
+            ->join('photo_player', 'photos.id', '=', 'photo_player.photo_id')
+            ->where('photo_player.season_id', '=', $playerSeason->season_id)
+            ->where('photo_player.player_id', '=', $playerSeason->player_id)
+            ->orderBy('photos.created_at', 'desc')
+            ->inRandomOrder();
+
+        /**
+         * @var Photo $photo
+         */
+        $photo = $query->first();
+        return $photo;
+    }
+
+
 }

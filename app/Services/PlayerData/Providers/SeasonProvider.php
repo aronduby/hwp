@@ -11,6 +11,7 @@ namespace App\Services\PlayerData\Providers;
 
 use App\Models\Article;
 use App\Models\Badge;
+use App\Models\Contracts\PhotoSource;
 use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
@@ -131,6 +132,19 @@ class SeasonProvider implements DataProvider
         $mediaService = resolve('App\Services\MediaServices\MediaService');
         return $mediaService->forPlayerSeason($this->playerSeason, false);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHeaderPhoto(): ?PhotoSource
+    {
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        return $mediaService->headerForPlayerSeason($this->playerSeason);
+    }
+
 
     /**
      * Get the player's badges

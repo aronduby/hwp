@@ -13,11 +13,9 @@ use Cloudinary\Api\ApiResponse;
 use Cloudinary\Api\Exception\GeneralError;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use StdClass;
 
 class CloudinaryMediaService implements MediaService
 {
-
     /**
      * @var Cloudinary
      */
@@ -88,36 +86,15 @@ class CloudinaryMediaService implements MediaService
     public function forRecentGallery(Recent $recent): ?array
     {
         $recentData = json_decode($recent->content);
-        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to, Recent\Render\Photos::BG_LIMIT);
+        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to);
         return $rsp['resources'];
-    }
-
-    /**
-     * Does the query for the recent photos, shared between the listing and the gallery setup
-     *
-     * @param int $from
-     * @param int $to
-     * @param int|null $limit
-     * @return ApiResponse
-     * @throws GeneralError
-     */
-    protected function getPhotosForRecent(int $from, int $to, ?int $limit = null): ApiResponse {
-        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
-
-        $request = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']');
-
-        if ($limit) {
-            $request->maxResults($limit);
-        }
-
-        return $request->execute();
     }
 
     public function forAlbum(PhotoAlbum $album): ?array
     {
         $rsp = $this->cloudinary->searchApi()
             ->expression('folder:"'.$album->media_id.'"')
+            ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
 
         return $rsp['resources'];
@@ -156,13 +133,91 @@ class CloudinaryMediaService implements MediaService
     public function forPlayerCareer(Player $player, bool $all = false)
     {
         // TODO: Implement forPlayerCareer() method.
+        // will likely need to do multiple checks, even with max of 500
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function headerForPlayerCareer(Player $player): ?PhotoSource
+    {
+        // TODO: Implement headerForPlayerCareer() method.
+    }
+
 
     /**
      * @inheritDoc
      */
     public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false)
     {
-        // TODO: Implement forPlayerSeason() method.
+        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+
+        $rsp = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players:'.$playerTag)
+            ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
+            ->execute();
+
+        return $rsp['resources'];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource
+    {
+        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+
+        $rsp = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players:'.$playerTag)
+            ->maxResults(self::PER_PAGE)
+            ->execute();
+
+        if (!empty($rsp['resources'])) {
+            $randomItem = array_random($rsp['resources']);
+            return new Photo($randomItem, $this->cloudinary);
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * Does the query for the recent photos, shared between the listing and the gallery setup
+     *
+     * @param int $from
+     * @param int $to
+     * @param int|null $limit
+     * @return ApiResponse
+     * @throws GeneralError
+     */
+    protected function getPhotosForRecent(int $from, int $to, ?int $limit = null): ApiResponse {
+        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+
+        $request = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']');
+
+        $request->maxResults($limit ?: self::CLOUDINARY_RESULTS_LIMIT);
+
+        return $request->execute();
+    }
+
+    /**
+     * @param PlayerSeason $playerSeason
+     * @return string
+     */
+    protected function getMetadataNameForPlayerSeason(PlayerSeason $playerSeason): string
+    {
+        if (!empty($playerSeason->media_tag)) {
+            return $playerSeason->media_tag;
+        } else {
+            return strtolower($playerSeason->player->first_name.'_'.$playerSeason->player->last_name);
+        }
+    }
+
+    /**
+     * The maximum limit cloudinary supports, will be used as the default for non-paged items
+     */
+    const CLOUDINARY_RESULTS_LIMIT = 500;
 }

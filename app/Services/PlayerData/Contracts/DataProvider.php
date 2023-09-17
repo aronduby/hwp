@@ -8,6 +8,8 @@
 
 namespace App\Services\PlayerData\Contracts;
 
+use App\Models\Contracts\PhotoSource;
+
 interface DataProvider
 {
     /**
@@ -59,11 +61,18 @@ interface DataProvider
     public function getPhotos();
 
     /**
-     * Get ALL of the player's photos without any pagination
+     * Get ALL the player's photos without any pagination
      *
      * @return mixed
      */
     public function getAllPhotos();
+
+    /**
+     * Get a single photos for the players header image
+     *
+     * @return PhotoSource
+     */
+    public function getHeaderPhoto(): ?PhotoSource;
 
     /**
      * Get the player's badges

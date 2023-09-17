@@ -74,6 +74,14 @@ interface MediaService
     public function forPlayerCareer(Player $player, bool $all = false);
 
     /**
+     * Get a single photo to be used in the header for the supplied player career
+     *
+     * @param Player $player
+     * @return PhotoSource
+     */
+    public function headerForPlayerCareer(Player $player): ?PhotoSource;
+
+    /**
      * Get all the photos for the supplied player season
      *
      * @param PlayerSeason $playerSeason
@@ -81,4 +89,12 @@ interface MediaService
      * @return Paginator|Collection|Photo[]
      */
     public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false);
+
+    /**
+     * Get a single photo to be used in the header for the supplied player season
+     *
+     * @param PlayerSeason $playerSeason
+     * @return PhotoSource
+     */
+    public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource;
 }

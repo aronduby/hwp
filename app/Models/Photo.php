@@ -56,6 +56,12 @@ class Photo extends Model implements PhotoSource
     }
 
     /** @noinspection PhpUnused */
+    public function getBannerAttribute(): string
+    {
+        return $this->getPhotoAttribute();
+    }
+
+    /** @noinspection PhpUnused */
     public function getJSONData(Player $player = null)
     {
         $json = ['main'=>null, 'also'=>[]];
