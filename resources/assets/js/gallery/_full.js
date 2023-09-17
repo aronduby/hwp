@@ -48,7 +48,7 @@
 	};
 
 	_FullGallery.prototype.loaded = function(items) {
-		this.items = items;
+		this.items = this.mapImageData(items);
 		this.totalPages = Math.ceil(items.length / this.perPage);
 
 		this.el.empty();
@@ -95,6 +95,16 @@
 
 		this.gallery.init();
 		return false;
+	};
+
+	/**
+	 * Take the items returned from the ajax request and maps them into the fields that are required, as outlined below
+	 * @param items
+	 * @returns ImageData[]
+	 */
+	_FullGallery.prototype.mapImageData = function(items) {
+		console.log('did you intentionally not override the mapImageData method?');
+		return items;
 	};
 
 	_FullGallery.prototype.getImageURLForShare = function(btn, item) {

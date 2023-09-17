@@ -1,0 +1,1 @@
+<script src="{{ mix( app('App\Services\MediaServices\MediaService')->getScript() ) }}"></script>

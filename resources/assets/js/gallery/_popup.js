@@ -1,3 +1,14 @@
+/**
+ * The type definition that the photo gallery needs the image data mapped to
+ *
+ * @typedef {Object} ImageData
+ * @property {string} src the URL path to the image
+ * @property {string} msrc the URL path to the thumb image
+ * @property {int} w the width of the image
+ * @property {int} h the height of the image
+ * @property {int} id the id of the image, used for tracking
+ * @property {file} string the file of the image, used for tracking
+ */
 (function () {
     'use strict';
 
@@ -33,7 +44,7 @@
     _PopupGallery.prototype.loaded = function (items) {
         const self = this;
         var pswpElement = document.querySelectorAll('.pswp')[0];
-        var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, items, {
+        var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, self.mapImageData(items), {
             shareButtons: [
                 {id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true, fa: 'fa-download'}
             ],
@@ -51,6 +62,16 @@
         gallery.init();
 
         return gallery;
+    };
+
+    /**
+     * Take the items returned from the ajax request and maps them into the fields that are required, as outlined below
+     * @param items
+     * @returns ImageData[]
+     */
+    _PopupGallery.prototype.mapImageData = function(items) {
+        console.log('did you intentionally not override the mapImageData method?');
+        return items;
     };
 
     _PopupGallery.prototype.getImageURLForShare = function(btn, item) {

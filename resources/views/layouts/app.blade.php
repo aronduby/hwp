@@ -54,7 +54,7 @@
     <script type="text/html" id="load-more-btn">@include('partials.photos.load-more-btn')</script>
 
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
-    <script src="{{ mix( app('App\Services\MediaServices\MediaService')->getScript() ) }}"></script>
+    @include('partials.mediaservice.'.kebab_case(class_basename(app('App\Services\MediaServices\MediaService'))))
     <script src="{{ mix('js/main.js') }}"></script>
 
     @stack('scripts')

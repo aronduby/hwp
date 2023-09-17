@@ -95,15 +95,6 @@ class GalleryController extends Controller
      */
     public function output($photos)
     {
-        $items = $photos->map(function($item) {
-            $item->w = $item->width;
-            $item->h = $item->height;
-            $item->src = $item->photo;
-            $item->thumb = $item->thumb;
-
-            return $item;
-        });
-
-        return response()->json($items->toArray());
+        return response()->json($photos->toArray());
     }
 }

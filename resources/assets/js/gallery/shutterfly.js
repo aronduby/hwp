@@ -21,15 +21,41 @@
         }
     }
 
+    function mapImageData(items) {
+        return items.map(item => ({
+            ...item,
+            w: item.width,
+            h: item.height,
+            src: `${PHOTOS_DOMAIN}/${item.file}.jpg`,
+            msrc: `${PHOTOS_DOMAIN}/thumbs/${item.file}.jpg`,
+        }));
+    }
+
     class FullGallery extends _FullGallery {
         getImageURLForShare(btn, item) {
             return getImageURLForShare(btn, item);
+        }
+
+        /**
+         * @param items
+         * @returns ImageData[]
+         */
+        mapImageData(items) {
+            return mapImageData(items);
         }
     }
 
     class PopupGallery extends _PopupGallery {
         getImageURLForShare(btn, item) {
             return getImageURLForShare(btn, item);
+        }
+
+        /**
+         * @param items
+         * @returns ImageData[]
+         */
+        mapImageData(items) {
+            return mapImageData(items);
         }
     }
 
