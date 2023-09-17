@@ -2,6 +2,7 @@
 
 namespace App\Services\MediaServices;
 
+use App\Models\Contracts\PhotoSource;
 use App\Models\Photo;
 use App\Models\PhotoAlbum;
 use App\Models\Player;
@@ -21,7 +22,7 @@ interface MediaService
      */
     const PER_PAGE = 48;
 
-    public function forHome(): ?Photo;
+    public function forHome(): ?PhotoSource;
 
     public function forRecent(Recent $recent): ?array;
 

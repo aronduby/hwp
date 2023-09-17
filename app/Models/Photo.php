@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\PhotoSource;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Photo whereWidth($value)
  * @mixin Eloquent
  */
-class Photo extends Model
+class Photo extends Model implements PhotoSource
 {
     use BelongsToTenants;
 

@@ -3,13 +3,15 @@
 namespace App\Services\MediaServices;
 
 use App\Models\ActiveSeason;
-use App\Models\Photo;
+use App\Models\Cloudinary\Photo;
+use App\Models\Contracts\PhotoSource;
 use App\Models\PhotoAlbum;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use StdClass;
 
 class CloudinaryMediaService implements MediaService
 {
@@ -44,10 +46,20 @@ class CloudinaryMediaService implements MediaService
         ]);
     }
 
-    public function forHome(): ?Photo
+    public function forHome(): ?PhotoSource
     {
-        // TODO: Implement forHome() method.
-        return null;
+        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+
+        $rsp = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$rootFolder.'/*" AND tags:home')
+            ->execute();
+
+        if (!empty($rsp['resources'])) {
+            $randomItem = array_random($rsp['resources']);
+            return new Photo($randomItem, $this->cloudinary);
+        } else {
+            return null;
+        }
     }
 
     public function forRecent(Recent $recent): ?array
@@ -85,10 +97,7 @@ class CloudinaryMediaService implements MediaService
         $resources = $rsp['resources'];
         foreach ($resources as $r) {
             if (!$keyed[$r['folder']]->cover) {
-                $cover = new \StdClass();
-                $cover->photo = $r['secure_url'];
-
-                $keyed[$r['folder']]->cover = $cover;
+                $keyed[$r['folder']]->cover = new Photo($r, $this->cloudinary);
             }
         }
 

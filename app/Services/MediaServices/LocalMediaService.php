@@ -2,6 +2,7 @@
 
 namespace App\Services\MediaServices;
 
+use App\Models\Contracts\PhotoSource;
 use App\Models\Photo;
 use App\Models\PhotoAlbum;
 use App\Models\Player;
@@ -14,7 +15,7 @@ use Illuminate\Support\Collection;
 abstract class LocalMediaService implements MediaService
 {
 
-    public function forHome(): Photo
+    public function forHome(): ?PhotoSource
     {
         return Photo::inRandomOrder()->first();
     }
