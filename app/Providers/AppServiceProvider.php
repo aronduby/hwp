@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\MediaServices\LocalMediaService;
-use App\Services\MediaServices\MediaService;
-use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

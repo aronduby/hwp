@@ -9,6 +9,8 @@ use App\Models\PhotoAlbum;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
+use Cloudinary\Api\ApiResponse;
+use Cloudinary\Api\Exception\GeneralError;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use StdClass;
@@ -62,10 +64,54 @@ class CloudinaryMediaService implements MediaService
         }
     }
 
-    public function forRecent(Recent $recent): ?array
+    /**
+     * @param string $content
+     * @return array|null
+     * @throws GeneralError
+     */
+    public function forRecentListing(string $content): ?array
     {
-        // TODO: Implement forRecent() method.
-        return null;
+        $recentData = json_decode($content);
+        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to, Recent\Render\Photos::BG_LIMIT);
+
+        $photos = collect($rsp['resources'])
+            ->map(function($r) {
+                return new Photo($r, $this->cloudinary);
+            });
+
+        return [
+            'photos' => $photos,
+            'count' => $rsp['total_count'],
+        ];
+    }
+
+    public function forRecentGallery(Recent $recent): ?array
+    {
+        $recentData = json_decode($recent->content);
+        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to, Recent\Render\Photos::BG_LIMIT);
+        return $rsp['resources'];
+    }
+
+    /**
+     * Does the query for the recent photos, shared between the listing and the gallery setup
+     *
+     * @param int $from
+     * @param int $to
+     * @param int|null $limit
+     * @return ApiResponse
+     * @throws GeneralError
+     */
+    protected function getPhotosForRecent(int $from, int $to, ?int $limit = null): ApiResponse {
+        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+
+        $request = $this->cloudinary->searchApi()
+            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']');
+
+        if ($limit) {
+            $request->maxResults($limit);
+        }
+
+        return $request->execute();
     }
 
     public function forAlbum(PhotoAlbum $album): ?array

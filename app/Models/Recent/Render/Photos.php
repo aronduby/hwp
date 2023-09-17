@@ -3,6 +3,7 @@
 namespace App\Models\Recent\Render;
 
 use App\Models\Photo;
+use App\Services\MediaServices\MediaService;
 
 class Photos extends Renderer
 {
@@ -22,11 +23,11 @@ class Photos extends Renderer
      */
     public function process($content)
     {
-        $photo_ids = json_decode($content);
-        $count = count($photo_ids);
-        $photos = Photo::with('players')
-            ->whereIn('id', array_slice($photo_ids, 0, self::BG_LIMIT))
-            ->get();
+        /**
+         * @var MediaService $mediaService
+         */
+        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        ['photos' => $photos, 'count' => $count] = $mediaService->forRecentListing($content);
 
         $this->data = [
             'count' => $count,

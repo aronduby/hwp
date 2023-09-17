@@ -42,7 +42,7 @@ class GalleryController extends Controller
             return abort(406, 'Supplied item doesnt have associated photos');
         }
 
-        return $this->output($this->mediaService->forRecent($recent));
+        return $this->output($this->mediaService->forRecentGallery($recent));
     }
 
     /**
