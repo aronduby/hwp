@@ -76,17 +76,6 @@ abstract class LocalMediaService implements MediaService
         }
     }
 
-    /**
-     * # TODO - either this or the caller needs to support mixing the services
-     *
-     * @inheritDoc
-     */
-    public function headerForPlayerCareer(Player $player): ?PhotoSource
-    {
-        // TODO: Implement headerForPlayerCareer() method.
-    }
-
-
     public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false)
     {
         $query = Photo::allTenants()

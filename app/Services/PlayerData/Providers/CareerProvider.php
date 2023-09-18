@@ -16,6 +16,7 @@ use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
+use App\Providers\MediaServiceProvider;
 use App\Services\MediaServices\MediaService;
 use App\Services\PlayerData\Contracts\DataProvider;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -48,7 +49,7 @@ class CareerProvider implements DataProvider
      * Get the Player
      * @return Player
      */
-    public function getPlayer()
+    public function getPlayer(): Player
     {
         return $this->player;
     }
@@ -58,7 +59,7 @@ class CareerProvider implements DataProvider
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->latestSeason->title;
     }
@@ -68,7 +69,7 @@ class CareerProvider implements DataProvider
      *
      * @return string
      */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->latestSeason->number;
     }
@@ -78,7 +79,7 @@ class CareerProvider implements DataProvider
      *
      * @return string V, JV, or STAFF
      */
-    public function getTeam()
+    public function getTeam(): string
     {
         return $this->latestSeason->team;
     }
@@ -88,7 +89,7 @@ class CareerProvider implements DataProvider
      *
      * @return string FIELD or GOALIE
      */
-    public function getPosition()
+    public function getPosition(): string
     {
         return $this->latestSeason->position;
     }
@@ -98,7 +99,7 @@ class CareerProvider implements DataProvider
      *
      * @return Integer
      */
-    public function getSeasonId()
+    public function getSeasonId(): int
     {
         return 0;
     }
@@ -106,7 +107,7 @@ class CareerProvider implements DataProvider
     /**
      * Get ALL the player's photos without any pagination
      *
-     * @return mixed
+     * @return Collection|Paginator|Photo[]
      */
     public function getAllPhotos()
     {
@@ -129,7 +130,7 @@ class CareerProvider implements DataProvider
          * @var MediaService $mediaService
          */
         $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->forPlayerCareer($this->player, false);
+        return $mediaService->forPlayerCareer($this->player);
     }
 
     /**
@@ -137,17 +138,15 @@ class CareerProvider implements DataProvider
      */
     public function getHeaderPhoto(): ?PhotoSource
     {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->headerForPlayerCareer($this->player);
+        // limit the header banner to the latest season instead of all
+        $mediaService = MediaServiceProvider::getServiceForSeason($this->latestSeason->season);
+        return $mediaService->headerForPlayerSeason($this->latestSeason);
     }
 
 
     /**
      * Get the player's badges.
-     * NOTE - this takes advantage of the fact that badges aren't tenated to the season
+     * NOTE - this takes advantage of the fact that badges aren't tenanted to the season
      *
      * @return Collection|Badge[]
      */
@@ -159,9 +158,9 @@ class CareerProvider implements DataProvider
     /**
      * Gets the player's articles
      *
-     * @return Collection|Article[]
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getArticles()
+    public function getArticles(): \Illuminate\Database\Eloquent\Collection
     {
         return Article::allTenants()
             ->select(['articles.*', 'article_player.highlight'])
@@ -176,7 +175,7 @@ class CareerProvider implements DataProvider
      *
      * @return Stat
      */
-    public function getStats()
+    public function getStats(): Stat
     {
         return $this->player->statsTotal();
     }

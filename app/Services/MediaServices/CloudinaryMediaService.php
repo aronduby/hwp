@@ -9,6 +9,7 @@ use App\Models\PhotoAlbum;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
+use App\Models\Season;
 use Cloudinary\Api\ApiResponse;
 use Cloudinary\Api\Exception\GeneralError;
 use Cloudinary\Cloudinary;
@@ -22,14 +23,14 @@ class CloudinaryMediaService implements MediaService
     public $cloudinary;
 
     /**
-     * @var ActiveSeason $season
+     * @var Season $season
      */
     protected $season;
 
     /**
-     * @param ActiveSeason $season
+     * @param Season $season
      */
-    public function __construct(ActiveSeason $season)
+    public function __construct(Season $season)
     {
         $this->season = $season;
 
@@ -135,15 +136,6 @@ class CloudinaryMediaService implements MediaService
         // TODO: Implement forPlayerCareer() method.
         // will likely need to do multiple checks, even with max of 500
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function headerForPlayerCareer(Player $player): ?PhotoSource
-    {
-        // TODO: Implement headerForPlayerCareer() method.
-    }
-
 
     /**
      * @inheritDoc

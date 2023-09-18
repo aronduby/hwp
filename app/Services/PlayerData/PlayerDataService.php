@@ -9,11 +9,17 @@
 namespace App\Services\PlayerData;
 
 
+use App\Models\Article;
+use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
+use App\Models\Photo;
 use App\Models\Player;
+use App\Models\PlayerSeason;
+use App\Models\Stat;
 use App\Services\PlayerData\Contracts\DataProvider;
 use App\Services\PlayerData\Providers\CareerProvider;
 use App\Services\PlayerData\Providers\SeasonProvider;
+use Illuminate\Support\Collection;
 
 class PlayerDataService implements DataProvider
 {
@@ -25,7 +31,8 @@ class PlayerDataService implements DataProvider
 
     /**
      * PlayerDataService constructor.
-     * @param DataProvider $provider
+     * @param Player $player
+     * @param null $season_id
      */
     public function __construct(Player $player, $season_id = null)
     {
@@ -38,9 +45,9 @@ class PlayerDataService implements DataProvider
 
     /**
      * Get the Player
-     * @return \App\Models\Player
+     * @return Player
      */
-    public function getPlayer()
+    public function getPlayer(): Player
     {
         return $this->provider->getPlayer();
     }
@@ -50,7 +57,7 @@ class PlayerDataService implements DataProvider
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         $tmp = $this->provider->getTitle();
         return $tmp == '' ? null : $tmp;
@@ -61,37 +68,37 @@ class PlayerDataService implements DataProvider
      *
      * @return string
      */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->provider->getNumber();
     }
 
     /**
-     * Get's the player's team
+     * Get the player's team
      *
      * @return string V, JV, or STAFF
      */
-    public function getTeam()
+    public function getTeam(): string
     {
         return $this->provider->getTeam();
     }
 
     /**
-     * Get's the player's position
+     * Get the player's position
      *
      * @return string FIELD or GOALIE
      */
-    public function getPosition()
+    public function getPosition(): string
     {
         return $this->provider->getPosition();
     }
 
     /**
-     * Get's the season id
+     * Get the season id
      *
      * @return Integer
      */
-    public function getSeasonId()
+    public function getSeasonId(): int
     {
         return $this->provider->getSeasonId();
     }
@@ -100,7 +107,8 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's photos
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Photo[]
+     * @return Collection|Photo[]
+     * @noinspection PhpReturnDocTypeMismatchInspection
      */
     public function getPhotos()
     {
@@ -129,7 +137,7 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's badges
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Badge[]
+     * @return Collection|Badge[]
      */
     public function getBadges()
     {
@@ -137,9 +145,9 @@ class PlayerDataService implements DataProvider
     }
 
     /**
-     * Get's the player's articles
+     * Get the player's articles
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Article[]
+     * @return Collection|Article[]
      */
     public function getArticles()
     {
@@ -147,19 +155,19 @@ class PlayerDataService implements DataProvider
     }
 
     /**
-     * Get's the player's stats
+     * Get the player's stats
      *
-     * @return \App\Models\Stat
+     * @return Stat
      */
-    public function getStats()
+    public function getStats(): Stat
     {
         return $this->provider->getStats();
     }
 
     /**
-     * Get's all of the player's seasons
+     * Get all the player's seasons
      *
-     * @return \Illuminate\Support\Collection|\App\Models\PlayerSeason[]
+     * @return Collection|PlayerSeason[]
      */
     public function getSeasons()
     {
