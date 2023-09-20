@@ -12,13 +12,11 @@ namespace App\Services\PlayerData\Providers;
 use App\Models\Article;
 use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
-use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
-use App\Services\MediaServices\MediaService;
+use App\Providers\MediaServiceProvider;
 use App\Services\PlayerData\Contracts\DataProvider;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
 class SeasonProvider implements DataProvider
@@ -38,7 +36,7 @@ class SeasonProvider implements DataProvider
      * @param Player $player
      * @param Int $season_id
      */
-    public function __construct(Player $player, $season_id)
+    public function __construct(Player $player, int $season_id)
     {
         $this->player = $player;
         $this->playerSeason = $player->seasons()->where('season_id', $season_id)->firstOrFail();
@@ -47,9 +45,9 @@ class SeasonProvider implements DataProvider
 
     /**
      * Get the Player
-     * @return \App\Models\Player
+     * @return Player
      */
-    public function getPlayer()
+    public function getPlayer(): Player
     {
         return $this->player;
     }
@@ -57,9 +55,9 @@ class SeasonProvider implements DataProvider
     /**
      * Get the player's title
      *
-     * @return string
+     * @return string|null
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->playerSeason->title;
     }
@@ -69,37 +67,37 @@ class SeasonProvider implements DataProvider
      *
      * @return string
      */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->playerSeason->number;
     }
 
     /**
-     * Get's the player's team
+     * Gets the player's team
      *
      * @return string V, JV, or STAFF
      */
-    public function getTeam()
+    public function getTeam(): string
     {
         return $this->playerSeason->team;
     }
 
     /**
-     * Get's the player's position
+     * Gets the player's position
      *
      * @return string FIELD or GOALIE
      */
-    public function getPosition()
+    public function getPosition(): string
     {
         return $this->playerSeason->position;
     }
 
     /**
-     * Get's the season id
+     * Gets the season id
      *
      * @return Integer
      */
-    public function getSeasonId()
+    public function getSeasonId(): int
     {
         return $this->playerSeason->season_id;
     }
@@ -107,30 +105,12 @@ class SeasonProvider implements DataProvider
     /**
      * Get ALL the player's photos without any pagination
      *
-     * @return mixed
+     * @return array|null
      */
-    public function getAllPhotos()
+    public function getAllPhotos(): ?array
     {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->forPlayerSeason($this->playerSeason, true);
-    }
-
-
-    /**
-     * Get the player's photos
-     *
-     * @return Paginator|Photo[]
-     */
-    public function getPhotos()
-    {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->forPlayerSeason($this->playerSeason, false);
+        $mediaService = MediaServiceProvider::getServiceForSeason($this->playerSeason->season);
+        return $mediaService->forPlayerSeason($this->playerSeason);
     }
 
     /**
@@ -138,10 +118,7 @@ class SeasonProvider implements DataProvider
      */
     public function getHeaderPhoto(): ?PhotoSource
     {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
+        $mediaService = MediaServiceProvider::getServiceForSeason($this->playerSeason->season);
         return $mediaService->headerForPlayerSeason($this->playerSeason);
     }
 
@@ -164,9 +141,9 @@ class SeasonProvider implements DataProvider
     /**
      * Gets the player's articles
      *
-     * @return Collection|Article[]
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getArticles()
+    public function getArticles(): \Illuminate\Database\Eloquent\Collection
     {
         return Article::allTenants()
             ->select(['articles.*', 'article_player.highlight'])
@@ -182,7 +159,7 @@ class SeasonProvider implements DataProvider
      *
      * @return Stat
      */
-    public function getStats()
+    public function getStats(): Stat
     {
         return $this->playerSeason->statsTotal();
     }

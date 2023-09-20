@@ -1,3 +1,13 @@
+// noinspection SpellCheckingInspection
+
+/**
+ * Cloudinary image service data
+ *
+ * @typedef {object} CloudinaryImageServiceData *
+ * @property {string} key - 'cloudinary'
+ * @property {string} cloudName
+ */
+
 /**
  * Cloudinary User Data that is a part of the image data
  *
@@ -36,6 +46,8 @@
  * @property {string} etag "22227ba3132aba18a4a210edafe67075",
  * @property {CloudinaryUserData} created_by
  * @property {CloudinaryUserData} uploaded_by
+ *
+ * @property {CloudinaryImageServiceData} __service
  */
 
 /**
@@ -45,11 +57,15 @@
 (function (){
     'use strict';
 
-    const _FullGallery = require('./_full');
-    const _PopupGallery = require('./_popup');
-
     const THUMB_TRANSFORM = 't_media_lib_thumb';
 
+    /**
+     * Get the URL for the download button
+     *
+     * @param btn
+     * @param item
+     * @returns {string|*}
+     */
     function getImageURLForShare(btn, item) {
         if (btn.download) {
             return item.secure_url;
@@ -57,50 +73,27 @@
     }
 
     /**
+     * Map from cloudinary specific data to gallery specific
      *
-     * @param {CloundaryImageData[]} items
-     * @returns {ImageData[]}
+     * @param {CloundaryImageData} item
+     * @returns {any & ImageData}
      */
-    function mapImageData(items) {
-        return items.map(item => ({
+    function mapImageData(item) {
+        return {
             ...item,
             w: item.width,
             h: item.height,
             src: item.secure_url,
-            msrc: `${CLOUDINARY_URL}/${CLOUDINARY_CLOUD_NAME}/${item.resource_type}/${item.type}/${THUMB_TRANSFORM}/v${item.version}/${item.public_id}.${item.format}`,
+            msrc: `https://res.cloudinary.com/${item.__service.cloudName}/${item.resource_type}/${item.type}/${THUMB_TRANSFORM}/v${item.version}/${item.public_id}.${item.format}`,
             file: item.filename,
             id: item.public_id,
-        }));
+        };
     }
 
-    class FullGallery extends _FullGallery {
-        getImageURLForShare(btn, item) {
-            return getImageURLForShare(btn, item);
-        }
+    module.exports = {
+        key: 'cloudinary',
+        getImageURLForShare,
+        mapImageData
+    };
 
-        /**
-         * @param items
-         * @returns ImageData[]
-         */
-        mapImageData(items) {
-            return mapImageData(items);
-        }
-    }
-
-    class PopupGallery extends _PopupGallery {
-        getImageURLForShare(btn, item) {
-            return getImageURLForShare(btn, item);
-        }
-
-        /**
-         * @param items
-         * @returns ImageData[]
-         */
-        mapImageData(items) {
-            return mapImageData(items);
-        }
-    }
-
-    window.FullGallery = FullGallery;
-    window.PopupGallery = PopupGallery;
 })();

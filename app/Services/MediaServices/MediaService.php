@@ -3,12 +3,9 @@
 namespace App\Services\MediaServices;
 
 use App\Models\Contracts\PhotoSource;
-use App\Models\Photo;
 use App\Models\PhotoAlbum;
-use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
@@ -65,22 +62,12 @@ interface MediaService
     public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection;
 
     /**
-     * Get all the photos for the supplied player career
-     *
-     * @param Player $player
-     * @param bool $all
-     * @return Paginator|Collection|Photo[]
-     */
-    public function forPlayerCareer(Player $player, bool $all = false);
-
-    /**
      * Get all the photos for the supplied player season
      *
      * @param PlayerSeason $playerSeason
-     * @param bool $all
-     * @return Paginator|Collection|Photo[]
+     * @return array|null
      */
-    public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false);
+    public function forPlayerSeason(PlayerSeason $playerSeason): ?array;
 
     /**
      * Get a single photo to be used in the header for the supplied player season

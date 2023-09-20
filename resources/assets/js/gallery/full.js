@@ -4,13 +4,13 @@
 	global.jQuery = require('jquery');
 	require('jquery.loadtemplate');
 
-	var PhotoSwipe = require('photoswipe');
-	var PhotoSwipeUI = require('./photoswipe-ui.js');
+	const PhotoSwipe = require('photoswipe');
+	const PhotoSwipeUI = require('./photoswipe-ui.js');
 
-	var $ = jQuery;
-	var imgTmpl = $('#gallery-thumb-tmpl');
-	var emptyTmpl = $('#gallery-no-photos-found-tmpl');
-	var btnTmpl = $('#load-more-btn');
+	const $ = jQuery;
+	const imgTmpl = $('#gallery-thumb-tmpl');
+	const emptyTmpl = $('#gallery-no-photos-found-tmpl');
+	const btnTmpl = $('#load-more-btn');
 
 	function trackEvent(type, item) {
 		if (ga) {
@@ -18,7 +18,7 @@
 		}
 	}
 
-	function _FullGallery(el) {
+	function FullGallery(el, services) {
 		this.el = $(el);
 		this.btn = $(btnTmpl.text());
 		this.gallery = null;
@@ -27,28 +27,29 @@
 		this.page = 1;
 		this.totalPages = 1;
 		this.offset = 0;
+		this.services = services;
 
 		this.attachEvents();
 		this.load(this.el.data('gallery-path'));
 	}
 
-	_FullGallery.prototype.attachEvents = function() {
-		var self = this;
+	FullGallery.prototype.attachEvents = function() {
+		const self = this;
 
 		this.el.on('click', 'a.gallery-photo--thumb', this.imageClick.bind(self));
 		this.btn.on('click', this.loadMore.bind(self));
 	};
 
-	_FullGallery.prototype.load = function(url) {
-		var self = this;
+	FullGallery.prototype.load = function(url) {
+		const self = this;
 
 		$.getJSON(url)
 			.done(this.loaded.bind(self))
 			.fail(this.error.bind(self));
 	};
 
-	_FullGallery.prototype.loaded = function(items) {
-		this.items = this.mapImageData(items);
+	FullGallery.prototype.loaded = function(items) {
+		this.items = this.services.mapImageData(items);
 		this.totalPages = Math.ceil(items.length / this.perPage);
 
 		this.el.empty();
@@ -58,18 +59,19 @@
 		}
 	};
 
-	_FullGallery.prototype.error = function(err) {
+	FullGallery.prototype.error = function(err) {
 		alert('Could not load gallery');
 		console.log(err);
 		this.el.empty();
 	};
 
-	_FullGallery.prototype.imageClick = function(e) {
-		var item = $(e.target).parent('[data-offset]');
-		var offset = parseInt(item.attr('data-offset'), 10);
-		var self = this;
+	FullGallery.prototype.imageClick = function(e) {
+		const item = $(e.target).parent('[data-offset]');
+		const offset = parseInt(item.attr('data-offset'), 10);
+		const self = this;
 
-		var pswpElement = document.querySelectorAll('.pswp')[0];
+		const pswpElement = document.querySelectorAll('.pswp')[0];
+		// noinspection JSValidateTypes
 		this.gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, this.items, {
 			index: offset,
 			shareButtons: [
@@ -82,9 +84,9 @@
 				}
 			],
 			getImageURLForShare: function(btn) {
-				return self.getImageURLForShare(btn, self.gallery.currItem);
+				return self.services.getImageURLForShare(btn, self.gallery.currItem);
 			  },
-			getFilenameForShare: function(btn) {
+			getFilenameForShare: function() {
 				return self.gallery.currItem.file + '.jpg';
 			}
 		});
@@ -97,22 +99,8 @@
 		return false;
 	};
 
-	/**
-	 * Take the items returned from the ajax request and maps them into the fields that are required, as outlined below
-	 * @param items
-	 * @returns ImageData[]
-	 */
-	_FullGallery.prototype.mapImageData = function(items) {
-		console.log('did you intentionally not override the mapImageData method?');
-		return items;
-	};
-
-	_FullGallery.prototype.getImageURLForShare = function(btn, item) {
-		console.error('You forgot to override getImageURLForShare');
-	};
-
-	_FullGallery.prototype.drawPage = function() {
-		var self = this;
+	FullGallery.prototype.drawPage = function() {
+		const self = this;
 
 		if (this.items.length) {
 			this.el.loadTemplate(imgTmpl, this.items, {
@@ -131,16 +119,16 @@
 		}
 	};
 
-	_FullGallery.prototype.loadMore = function(e) {
+	FullGallery.prototype.loadMore = function() {
 		this.page++;
 		this.drawPage();
 	};
 
-	_FullGallery.prototype.addOffset = function(el) {
+	FullGallery.prototype.addOffset = function(el) {
 		el.attr('data-offset', this.offset);
 		this.offset++;
 	};
 	
-	module.exports = _FullGallery;
+	module.exports = FullGallery;
 
 })();

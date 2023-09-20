@@ -29,8 +29,7 @@ mix
     .js('resources/assets/js/scavenger/step8.js', 'public/js/scavenger/step8.js')
     .js('resources/assets/js/porter.js', 'public/js/porter.js')
     .js('resources/assets/js/declan.js', 'public/js/declan.js')
-    .js('resources/assets/js/gallery/shutterfly.js', 'public/js/gallery/shutterfly.js')
-    .js('resources/assets/js/gallery/cloudinary.js', 'public/js/gallery/cloudinary.js');
+;
 
 if (mix.inProduction()) {
     mix.version();

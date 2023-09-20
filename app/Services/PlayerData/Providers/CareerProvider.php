@@ -17,9 +17,7 @@ use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Providers\MediaServiceProvider;
-use App\Services\MediaServices\MediaService;
 use App\Services\PlayerData\Contracts\DataProvider;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
 class CareerProvider implements DataProvider
@@ -57,7 +55,7 @@ class CareerProvider implements DataProvider
     /**
      * Get the player's title
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -107,30 +105,12 @@ class CareerProvider implements DataProvider
     /**
      * Get ALL the player's photos without any pagination
      *
-     * @return Collection|Paginator|Photo[]
+     * @return Photo[]
      */
-    public function getAllPhotos()
+    public function getAllPhotos(): array
     {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->forPlayerCareer($this->player, true);
-    }
-
-
-    /**
-     * Get the player's photos
-     *
-     * @return Paginator|Photo[]
-     */
-    public function getPhotos()
-    {
-        /**
-         * @var MediaService $mediaService
-         */
-        $mediaService = resolve('App\Services\MediaServices\MediaService');
-        return $mediaService->forPlayerCareer($this->player);
+        // TODO -- loop through all of the seasons to get the media providers and combine them all
+        return [];
     }
 
     /**

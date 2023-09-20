@@ -1,12 +1,10 @@
-<?php
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
 namespace App\Services\MediaServices;
 
-use App\Models\ActiveSeason;
 use App\Models\Cloudinary\Photo;
 use App\Models\Contracts\PhotoSource;
 use App\Models\PhotoAlbum;
-use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
 use App\Models\Season;
@@ -28,6 +26,14 @@ class CloudinaryMediaService implements MediaService
     protected $season;
 
     /**
+     * @var array{
+     *     key: 'cloudinary',
+     *     cloudName: string
+     * }
+     */
+    protected $service;
+
+    /**
      * @param Season $season
      */
     public function __construct(Season $season)
@@ -45,6 +51,11 @@ class CloudinaryMediaService implements MediaService
                 ]
             ]
         ]);
+
+        $this->service = [
+            'key' => 'cloudinary',
+            'cloudName' => $settings['cloud_name'],
+        ];
     }
 
     public function forHome(): ?PhotoSource
@@ -88,7 +99,7 @@ class CloudinaryMediaService implements MediaService
     {
         $recentData = json_decode($recent->content);
         $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to);
-        return $rsp['resources'];
+        return $this->mergeServiceData($rsp['resources']);
     }
 
     public function forAlbum(PhotoAlbum $album): ?array
@@ -98,7 +109,7 @@ class CloudinaryMediaService implements MediaService
             ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
 
-        return $rsp['resources'];
+        return $this->mergeServiceData($rsp['resources']);
     }
 
     public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection
@@ -131,16 +142,7 @@ class CloudinaryMediaService implements MediaService
     /**
      * @inheritDoc
      */
-    public function forPlayerCareer(Player $player, bool $all = false)
-    {
-        // TODO: Implement forPlayerCareer() method.
-        // will likely need to do multiple checks, even with max of 500
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function forPlayerSeason(PlayerSeason $playerSeason, bool $all = false)
+    public function forPlayerSeason(PlayerSeason $playerSeason): ?array
     {
         $rootFolder = $this->season->settings->get('cloudinary.root_folder');
         $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
@@ -150,7 +152,7 @@ class CloudinaryMediaService implements MediaService
             ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
 
-        return $rsp['resources'];
+        return $this->mergeServiceData($rsp['resources']);
     }
 
     /**
@@ -206,6 +208,20 @@ class CloudinaryMediaService implements MediaService
         } else {
             return strtolower($playerSeason->player->first_name.'_'.$playerSeason->player->last_name);
         }
+    }
+
+    /**
+     * Adds the service data into the image entries
+     *
+     * @param $items
+     * @return mixed
+     */
+    protected function mergeServiceData($items) {
+        foreach ($items as &$item) {
+            $item['__service'] = $this->service;
+        }
+
+        return $items;
     }
 
     /**

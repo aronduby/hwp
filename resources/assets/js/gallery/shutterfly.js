@@ -1,9 +1,22 @@
+/**
+ * Shutterfly image service data
+ *
+ * @typedef {object} ShutterflyImageServiceData
+ * @property {string} key - 'shutterfly'
+ * @property {string} domain
+ */
+
 (function (){
     'use strict';
 
-    const _FullGallery = require('./_full');
-    const _PopupGallery = require('./_popup');
-
+    /**
+     *
+     * @param btn
+     * @param {object} item
+     * @param {int} item.media_id
+     * @param {string} item.src
+     * @returns {*|string}
+     */
     function getImageURLForShare(btn, item) {
         if (btn.download && item.media_id) {
 
@@ -21,44 +34,19 @@
         }
     }
 
-    function mapImageData(items) {
-        return items.map(item => ({
+    function mapImageData(item) {
+        return {
             ...item,
             w: item.width,
             h: item.height,
-            src: `${PHOTOS_DOMAIN}/${item.file}.jpg`,
-            msrc: `${PHOTOS_DOMAIN}/thumbs/${item.file}.jpg`,
-        }));
+            src: `${item.__service.domain}/${item.file}.jpg`,
+            msrc: `${item.__service.domain}/thumbs/${item.file}.jpg`,
+        };
     }
 
-    class FullGallery extends _FullGallery {
-        getImageURLForShare(btn, item) {
-            return getImageURLForShare(btn, item);
-        }
-
-        /**
-         * @param items
-         * @returns ImageData[]
-         */
-        mapImageData(items) {
-            return mapImageData(items);
-        }
-    }
-
-    class PopupGallery extends _PopupGallery {
-        getImageURLForShare(btn, item) {
-            return getImageURLForShare(btn, item);
-        }
-
-        /**
-         * @param items
-         * @returns ImageData[]
-         */
-        mapImageData(items) {
-            return mapImageData(items);
-        }
-    }
-
-    window.FullGallery = FullGallery;
-    window.PopupGallery = PopupGallery;
+    module.exports = {
+        key: 'shutterfly',
+        getImageURLForShare,
+        mapImageData
+    };
 })();

@@ -1,18 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Duby
- * Date: 8/22/2016
- * Time: 1:43 AM
- */
 
 namespace App\Services\PlayerData;
-
 
 use App\Models\Article;
 use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
-use App\Models\Photo;
 use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
@@ -55,7 +47,7 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's title
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -101,18 +93,6 @@ class PlayerDataService implements DataProvider
     public function getSeasonId(): int
     {
         return $this->provider->getSeasonId();
-    }
-
-
-    /**
-     * Get the player's photos
-     *
-     * @return Collection|Photo[]
-     * @noinspection PhpReturnDocTypeMismatchInspection
-     */
-    public function getPhotos()
-    {
-        return $this->provider->getPhotos();
     }
 
     /**

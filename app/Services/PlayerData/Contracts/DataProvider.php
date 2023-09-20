@@ -8,57 +8,56 @@
 
 namespace App\Services\PlayerData\Contracts;
 
+use App\Models\Article;
+use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
+use App\Models\Player;
+use App\Models\PlayerSeason;
+use App\Models\Stat;
+use Illuminate\Support\Collection;
 
 interface DataProvider
 {
     /**
      * Get the Player
-     * @return \App\Models\Player
+     * @return Player
      */
-    public function getPlayer();
+    public function getPlayer(): Player;
 
     /**
      * Get the player's title
      *
-     * @return string
+     * @return string|null
      */
-    public function getTitle();
+    public function getTitle(): ?string;
 
     /**
      * Get the player's number
      *
      * @return string
      */
-    public function getNumber();
+    public function getNumber(): string;
 
     /**
-     * Get's the player's team
+     * Gets the player's team
      *
      * @return string V, JV, or STAFF
      */
-    public function getTeam();
+    public function getTeam(): string;
 
     /**
-     * Get's the player's position
+     * Gets the player's position
      *
      * @return string FIELD or GOALIE
      */
-    public function getPosition();
+    public function getPosition(): string;
 
     /**
-     * Get's the season id
+     * Gets the season id
      *
      * @return Integer
      */
-    public function getSeasonId();
-
-    /**
-     * Get the player's photos
-     *
-     * @return \Illuminate\Contracts\Pagination\Paginator|\App\Models\Photo[]
-     */
-    public function getPhotos();
+    public function getSeasonId(): int;
 
     /**
      * Get ALL the player's photos without any pagination
@@ -77,28 +76,28 @@ interface DataProvider
     /**
      * Get the player's badges
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Badge[]
+     * @return Collection|Badge[]
      */
     public function getBadges();
 
     /**
-     * Get's the player's articles
+     * Gets the player's articles
      *
-     * @return \Illuminate\Support\Collection|\App\Models\Article[]
+     * @return Collection|Article[]
      */
     public function getArticles();
 
     /**
-     * Get's the player's stats
+     * Gets the player's stats
      *
-     * @return \App\Models\Stat
+     * @return Stat
      */
-    public function getStats();
+    public function getStats(): Stat;
 
     /**
-     * Get's all of the player's seasons
+     * Gets all the player's seasons
      *
-     * @return \Illuminate\Support\Collection|\App\Models\PlayerSeason[]
+     * @return Collection|PlayerSeason[]
      */
     public function getSeasons();
 }

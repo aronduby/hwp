@@ -14,10 +14,10 @@
 
     global.jQuery = require('jquery');
 
-    var PhotoSwipe = require('photoswipe');
-    var PhotoSwipeUI = require('./photoswipe-ui.js');
+    const PhotoSwipe = require('photoswipe');
+    const PhotoSwipeUI = require('./photoswipe-ui.js');
 
-    var $ = jQuery;
+    const $ = jQuery;
 
     function trackEvent(type, item) {
         if (ga) {
@@ -25,12 +25,13 @@
         }
     }
 
-    function _PopupGallery(url) {
+    function PopupGallery(url, services) {
         this.url = url;
+        this.services = services;
     }
 
-    _PopupGallery.prototype.load = function (url) {
-        var self = this;
+    PopupGallery.prototype.load = function (url) {
+        const self = this;
 
         if (!url) {
             url = this.url;
@@ -41,17 +42,22 @@
             .fail(this.error.bind(self));
     };
 
-    _PopupGallery.prototype.loaded = function (items) {
+    PopupGallery.prototype.loaded = function (items) {
         const self = this;
-        var pswpElement = document.querySelectorAll('.pswp')[0];
-        var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, self.mapImageData(items), {
+        const pswpElement = document.querySelectorAll('.pswp')[0];
+
+        // noinspection JSValidateTypes
+        /**
+         * @var {object} gallery.currItem
+         */
+        const gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, self.services.mapImageData(items), {
             shareButtons: [
                 {id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true, fa: 'fa-download'}
             ],
             getImageURLForShare: function (btn) {
-                return self.getImageURLForShare(btn, gallery.currItem);
+                return self.services.getImageURLForShare(btn, gallery.currItem);
             },
-            getFilenameForShare: function (btn) {
+            getFilenameForShare: function () {
                 return gallery.currItem.file + '.jpg';
             }
         });
@@ -64,25 +70,11 @@
         return gallery;
     };
 
-    /**
-     * Take the items returned from the ajax request and maps them into the fields that are required, as outlined below
-     * @param items
-     * @returns ImageData[]
-     */
-    _PopupGallery.prototype.mapImageData = function(items) {
-        console.log('did you intentionally not override the mapImageData method?');
-        return items;
-    };
-
-    _PopupGallery.prototype.getImageURLForShare = function(btn, item) {
-        console.error('You forgot to override getImageURLForShare');
-    };
-
-    _PopupGallery.prototype.error = function (err) {
+    PopupGallery.prototype.error = function (err) {
         console.error(err);
         alert('Error loading the recent content');
     };
 
-    module.exports = _PopupGallery;
+    module.exports = PopupGallery;
 
 })();

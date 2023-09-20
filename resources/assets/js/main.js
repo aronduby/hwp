@@ -1,17 +1,23 @@
+// noinspection JSUnusedLocalSymbols
+
 (function () {
 	'use strict';
 
-	var _               = require('lodash'),
-		mlPushMenu      = require('./mlpushmenu'),
-		matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300),
-		Note            = require('./note'),
-	  	shareable				= require('./shareables'),
-		seasonSwitching = require('./seasonSwitching');
+	const _ = require('lodash');
+	const mlPushMenu = require('./mlpushmenu');
+	const matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300);
+	const mediaServices = require('./gallery/mediaServices');
+	const PopupGallery = require('./gallery/popup');
+	const FullGallery = require('./gallery/full');
+	const Note = require('./note');
+	const shareable = require('./shareables');
+	const seasonSwitching = require('./seasonSwitching');
 
 	global.jQuery = require('jquery');
-	var $ = jQuery;
+	const $ = jQuery;
 
 
+	// noinspection JSPotentiallyInvalidConstructorUsage
 	new mlPushMenu(document.getElementById('mp-menu'), document.getElementById('trigger'));
 
 	window.onresize = matchMenuHeight;
@@ -20,9 +26,9 @@
 	// popup galleries
 	$(document).ready(function () {
 		$('body').on('click', '.popup-gallery', function () {
-			var url = $(this).data('gallery-path');
-			var el = $(this);
-			var gallery = new window.PopupGallery(url);
+			const url = $(this).data('gallery-path');
+			const el = $(this);
+			const gallery = new PopupGallery(url, mediaServices);
 
 			el.addClass('loading');
 			gallery.load()
@@ -37,7 +43,7 @@
 	// full galleries
 	$(document).ready(function () {
 		$('.full-gallery').each(function (el) {
-			$(this).data.gallery = new window.FullGallery(this);
+			$(this).data.gallery = new FullGallery(this, mediaServices);
 		});
 	});
 
