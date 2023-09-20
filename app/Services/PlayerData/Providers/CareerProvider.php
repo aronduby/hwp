@@ -109,8 +109,17 @@ class CareerProvider implements DataProvider
      */
     public function getAllPhotos(): array
     {
-        // TODO -- loop through all of the seasons to get the media providers and combine them all
-        return [];
+        // loop through all the seasons to get the media providers and combine them all
+        $allItems = collect([]);
+        $seasons = $this->player->seasons;
+
+        foreach ($seasons as $playerSeason) {
+            $mediaService = MediaServiceProvider::getServiceForSeason($playerSeason->season);
+            $seasonItems = $mediaService->forPlayerSeason($playerSeason);
+            $allItems = $allItems->concat($seasonItems);
+        }
+
+        return $allItems->toArray();
     }
 
     /**
