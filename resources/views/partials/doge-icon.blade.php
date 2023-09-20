@@ -1,6 +1,6 @@
 <svg class="doge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
     <defs>
-        <style>.cls-1{fill:var(--color-doge, #fff);}</style>
+        <style>.cls-1{fill: currentColor}</style>
     </defs>
     <path class="cls-1"
           d="M73,83.85a8.91,8.91,0,1,0,8.79,9A8.77,8.77,0,0,0,73,83.85Zm-.2,13.4a4.37,4.37,0,0,1-4.26-4.76,4.49,4.49,0,0,1,4.56-4.34,4.67,4.67,0,0,1,4.43,4.73A4.56,4.56,0,0,1,72.81,97.25Z"/>
