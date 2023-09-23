@@ -3998,6 +3998,7 @@ h6 {
   right: -2px;
   bottom: -2px;
   left: -2px;
+  line-height: 0;
 }
 
 .bg-elements .bg--gallery {
