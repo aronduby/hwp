@@ -24,6 +24,8 @@ footer .follow-us h1 {
 
 .footer-section .twitter-embed {
   margin-bottom: $gap-large;
+  max-height: 420px;
+  overflow: hidden;
 }
 
 .footer-section .player-list {
