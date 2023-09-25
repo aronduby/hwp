@@ -2,7 +2,7 @@
   "name": "hwp-site",
   "dependencies": [
     {
-      "source": "git@github.com:aronduby/hwp-bridge.git#coudinary",
+      "source": "git@github.com:aronduby/hwp-bridge.git#cloudinary",
       "installTo": "../hwp-bridge"
     }
   ]

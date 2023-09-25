@@ -20,7 +20,7 @@
 /**
  * Cloudinary Image Data
  *
- * @typedef {Object} CloundaryImageData
+ * @typedef {Object} CloudinaryImageData
  * @property {string} asset_id "80d6ba97ed509c7092d2cbe90995865a"
  * @property {string} public_id "23-24/Test Subfolder/photo-1693560332243-4e6c9cf23f7f_kygmob",
  * @property {string} folder "23-24/Test Subfolder",
@@ -46,6 +46,7 @@
  * @property {string} etag "22227ba3132aba18a4a210edafe67075",
  * @property {CloudinaryUserData} created_by
  * @property {CloudinaryUserData} uploaded_by
+ * @property {?Object} metadata
  *
  * @property {CloudinaryImageServiceData} __service
  */
@@ -58,6 +59,8 @@
     'use strict';
 
     const THUMB_TRANSFORM = 't_media_lib_thumb';
+    const DPR_AUTO = 'dpr_auto';
+    const W_AUTO = 'w_auto';
 
     /**
      * Get the URL for the download button
@@ -75,7 +78,7 @@
     /**
      * Map from cloudinary specific data to gallery specific
      *
-     * @param {CloundaryImageData} item
+     * @param {CloudinaryImageData} item
      * @returns {any & ImageData}
      */
     function mapImageData(item) {
@@ -83,11 +86,32 @@
             ...item,
             w: item.width,
             h: item.height,
-            src: item.secure_url,
-            msrc: `https://res.cloudinary.com/${item.__service.cloudName}/${item.resource_type}/${item.type}/${THUMB_TRANSFORM}/v${item.version}/${item.public_id}.${item.format}`,
+            src: toUrl([DPR_AUTO, W_AUTO], item),
+            msrc: toUrl([THUMB_TRANSFORM], item),
             file: item.filename,
             id: item.public_id,
+            // title: item.metadata.title || null,
+            title: item.metadata ? item.metadata.title || null : null,
         };
+    }
+
+    /**
+     *
+     * @param {(string|string[])[]} transforms
+     * @param {CloudinaryImageData} item
+     * @return {string}
+     */
+    function toUrl(transforms, item) {
+        const transformStr = transforms.reduce((acc, transformation) => {
+            if (Array.isArray(transformation)) {
+                acc.push(transformation.join(','));
+            } else {
+                acc.push(transformation);
+            }
+            return acc;
+        }, []).join('/');
+
+        return `https://res.cloudinary.com/${item.__service.cloudName}/${item.resource_type}/${item.type}/${transformStr}/v${item.version}/${item.public_id}.${item.format}`
     }
 
     module.exports = {

@@ -64,6 +64,7 @@ class CloudinaryMediaService implements MediaService
 
         $rsp = $this->cloudinary->searchApi()
             ->expression('folder:"'.$rootFolder.'/*" AND tags:home')
+            ->withField('metadata')
             ->execute();
 
         if (!empty($rsp['resources'])) {
@@ -106,6 +107,7 @@ class CloudinaryMediaService implements MediaService
     {
         $rsp = $this->cloudinary->searchApi()
             ->expression('folder:"'.$album->media_id.'"')
+            ->withField('metadata')
             ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
 
@@ -149,6 +151,7 @@ class CloudinaryMediaService implements MediaService
 
         $rsp = $this->cloudinary->searchApi()
             ->expression('folder:"'.$rootFolder.'/*" AND metadata.players:'.$playerTag)
+            ->withField('metadata')
             ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
 
@@ -190,7 +193,8 @@ class CloudinaryMediaService implements MediaService
         $rootFolder = $this->season->settings->get('cloudinary.root_folder');
 
         $request = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']');
+            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']')
+            ->withField('metadata');
 
         $request->maxResults($limit ?: self::CLOUDINARY_RESULTS_LIMIT);
 
