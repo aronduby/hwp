@@ -150,7 +150,7 @@ class CloudinaryMediaService implements MediaService
         $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
 
         $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players:'.$playerTag)
+            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
             ->withField('metadata')
             ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
             ->execute();
@@ -167,7 +167,7 @@ class CloudinaryMediaService implements MediaService
         $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
 
         $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players:'.$playerTag)
+            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
             ->maxResults(self::PER_PAGE)
             ->execute();
 
