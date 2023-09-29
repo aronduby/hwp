@@ -116,6 +116,10 @@ class CloudinaryMediaService implements MediaService
 
     public function addCoverToAlbums(EloquentCollection $albums): ?EloquentCollection
     {
+        if ($albums->count() === 0) {
+            return $albums;
+        }
+
         $keyed = $albums->keyBy('media_id');
 
         // pull all the paths, but make sure you add the quotes
