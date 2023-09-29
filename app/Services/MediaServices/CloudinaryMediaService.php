@@ -133,7 +133,7 @@ class CloudinaryMediaService implements MediaService
 
         $resources = $rsp['resources'];
         foreach ($resources as $r) {
-            if (!$keyed[$r['folder']]->cover) {
+            if ($keyed->has($r['folder']) && !$keyed[$r['folder']]->cover) {
                 $keyed[$r['folder']]->cover = new Photo($r, $this->cloudinary);
             }
         }
