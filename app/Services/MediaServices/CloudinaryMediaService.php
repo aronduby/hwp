@@ -144,7 +144,14 @@ class CloudinaryMediaService implements MediaService
 
         foreach ($resources as $r) {
             if ($keyed->has($r['folder']) && !$keyed[$r['folder']]->cover) {
-                $keyed[$r['folder']]->cover = new Photo($r, $this->cloudinary);
+                $album = $keyed[$r['folder']];
+                $album->cover = new Photo($r, $this->cloudinary);
+
+                // if we already have the album cached, grab the photos_count
+                $key = sprintf(self::CACHE_KEY_FOR_ALBUM, $album->id);
+                if (Cache::has($key)) {
+                    $album->photos_count = Cache::get($key)['total_count'];
+                }
             }
         }
 
