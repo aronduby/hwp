@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ActiveSeason;
+use App\Services\MediaServices\MediaService;
 use Cloudinary\Cloudinary;
 use Illuminate\Http\Request;
 
@@ -8,7 +10,7 @@ use Illuminate\Http\Request;
 | Application Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
+| Here is where you can register all the routes for an application.
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
@@ -86,7 +88,7 @@ Route::get('files', ['as' => 'files', function() {
         'googleFolderID' => resolve('App\Models\ActiveSite')->settings->get('google.folder.id')
     ]);
 }]);
-Route::redirect('/parents', '/files', 301);
+Route::redirect('/parents', '/files');
 
 
 Route::group(['middleware' => 'cors'], function() {
@@ -122,6 +124,7 @@ Route::post('shook', function(Request $request) {
         && $second['short_name'] === 'doughnut'
     );
 
+    /** @noinspection PhpMethodParametersCountMismatchInspection */
     return response()->json([
         'first' => $success ? $answer[0] : '' . rand(1,9),
         'second' => $success ? $answer[1] : '' . rand(1,9),
@@ -178,8 +181,17 @@ Route::group([
 
 });
 
+Route::group([
+    'prefix' => 'cloudinary/webhooks',
+    'middleware' => 'cloudinary',
+    'namespace' => 'Cloudinary',
+], function() {
 
-Route::get('cloudinary', function(\App\Models\ActiveSeason $season) {
+    Route::post('tags', ['uses' => 'Tags', 'as' => 'cloudinary.tags']);
+
+});
+
+Route::get('cloudinary', function(ActiveSeason $season) {
     $settings = $season->settings->get('cloudinary');
     $cloudinary = new Cloudinary([
         'cloud' => [
@@ -200,7 +212,7 @@ Route::get('cloudinary', function(\App\Models\ActiveSeason $season) {
         ->expression('folder:23-24/* && folder:"23-24/Test Subfolder"')
         ->withField('metadata')
         ->withField('tags')
-        ->maxResults(\App\Services\MediaServices\MediaService::PER_PAGE)
+        ->maxResults(MediaService::PER_PAGE)
         ->execute();
 
     // list everything with player tag

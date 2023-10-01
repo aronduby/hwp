@@ -12,6 +12,7 @@ use Cloudinary\Api\ApiResponse;
 use Cloudinary\Api\Exception\GeneralError;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Facades\Cache;
 
 class CloudinaryMediaService implements MediaService
 {
@@ -60,15 +61,19 @@ class CloudinaryMediaService implements MediaService
 
     public function forHome(): ?PhotoSource
     {
-        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+        $resources = Cache::rememberForever(sprintf(self::CACHE_KEY_FOR_HOME, $this->season->id), function() {
+            $rootFolder = $this->season->settings->get('cloudinary.root_folder');
 
-        $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND tags:home')
-            ->withField('metadata')
-            ->execute();
+            $rsp = $this->cloudinary->searchApi()
+                ->expression('folder:"'.$rootFolder.'/*" AND tags:'.self::TAG_FOR_HOME)
+                ->withField('metadata')
+                ->execute();
 
-        if (!empty($rsp['resources'])) {
-            $randomItem = array_random($rsp['resources']);
+            return $rsp['resources'];
+        });
+
+        if (!empty($resources)) {
+            $randomItem = array_random($resources);
             return new Photo($randomItem, $this->cloudinary);
         } else {
             return null;
@@ -120,22 +125,25 @@ class CloudinaryMediaService implements MediaService
             return $albums;
         }
 
+        $resources = Cache::rememberForever(sprintf(self::CACHE_KEY_FOR_COVERS, $this->season->id), function() use ($albums) {
+            // pull all the paths, but make sure you add the quotes
+            $paths = $albums->pluck('media_id')
+                ->map(function($p) {
+                    return '"'.$p.'"';
+                })
+                ->implode(' OR ');
+
+            // all the paths that have the cover tag
+            $rsp = $this->cloudinary->searchApi()
+                ->expression('('.$paths.') AND tags:'.self::TAG_FOR_COVER)
+                ->withField('tags')
+                ->execute();
+
+            return $rsp['resources'];
+        });
+
         $keyed = $albums->keyBy('media_id');
 
-        // pull all the paths, but make sure you add the quotes
-        $paths = $albums->pluck('media_id')
-            ->map(function($p) {
-                return '"'.$p.'"';
-            })
-            ->implode(' OR ');
-
-        // all the paths that have the cover tag
-        $rsp = $this->cloudinary->searchApi()
-            ->expression('('.$paths.') AND tags:cover')
-            ->withField('tags')
-            ->execute();
-
-        $resources = $rsp['resources'];
         foreach ($resources as $r) {
             if ($keyed->has($r['folder']) && !$keyed[$r['folder']]->cover) {
                 $keyed[$r['folder']]->cover = new Photo($r, $this->cloudinary);
@@ -236,4 +244,24 @@ class CloudinaryMediaService implements MediaService
      * The maximum limit cloudinary supports, will be used as the default for non-paged items
      */
     const CLOUDINARY_RESULTS_LIMIT = 500;
+
+    /**
+     * The tag used in cloudinary to mark photos belonging to the homepage
+     */
+    const TAG_FOR_HOME = 'home';
+
+    /**
+     * The tag used in cloudinary to mark photos as the album's cover
+     */
+    const TAG_FOR_COVER = 'cover';
+
+    /**
+     * The cache key for the home photos cache - to be used with sprintf and the season id
+     */
+    const CACHE_KEY_FOR_HOME = 'forHome.%d';
+
+    /**
+     * The cache key for the albums covers - to be used with sprintf for the season id
+     */
+    const CACHE_KEY_FOR_COVERS = 'forCovers.%d';
 }

@@ -25,7 +25,7 @@ class TenantServiceProvider extends ServiceProvider
             $domain = $this->getFromCLI('domain');
             $season_id = $this->getFromCLI('season');
 
-            $domain = isset($domain) ? $domain : env('DEFAULT_DOMAIN');
+            $domain = $domain ?? env('DEFAULT_DOMAIN');
 
         } else {
             $host = $_SERVER['HTTP_HOST'];
@@ -37,6 +37,10 @@ class TenantServiceProvider extends ServiceProvider
                 if ($sub !== 'www') {
                     $domain = $sub .'.'. $domain;
                 }
+            }
+
+            if (str_contains($domain, 'ngrok')) {
+                $domain = 'ngrok';
             }
 
             // special cases
@@ -52,14 +56,18 @@ class TenantServiceProvider extends ServiceProvider
             $season_id = Cookie::get('season_id');
         }
 
-        // Setup the site
+        /**
+         * Set up the site
+         *
+         * @var ActiveSite $site
+         **/
         $site = ActiveSite::domain($domain)->firstOrFail();
         Landlord::addTenant('site_id', $site->id);
         $this->app->instance(ActiveSite::class, $site);
 
         $this->updateSiteBasedConfig($site);
 
-        // Setup the season, if its a picker site we don't need one
+        // Set up the season, if it's a picker site we don't need one
         if (!$site->is_picker) {
             if (isset($season_id)) {
                 $season = ActiveSeason::findOrFail($season_id);
@@ -95,8 +103,7 @@ class TenantServiceProvider extends ServiceProvider
 
             } elseif (starts_with($arg, $searchFor.'=')) {
                 $value = explode('=', $arg);
-                $value = array_pop($value);
-                return $value;
+                return array_pop($value);
             }
         }
 

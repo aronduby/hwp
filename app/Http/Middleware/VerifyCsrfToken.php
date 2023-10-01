@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'shook',
-        'twilio/incoming/*'
+        'twilio/incoming/*',
+        'cloudinary/webhooks/*'
     ];
 }
