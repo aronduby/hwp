@@ -17,7 +17,7 @@ abstract class LocalMediaService implements MediaService
         return Photo::inRandomOrder()->first();
     }
 
-    public function forRecentListing(string $content): ?array
+    public function forRecentListing(Recent $recent, string $content): ?array
     {
         $photo_ids = json_decode($content);
         $count = count($photo_ids);

@@ -35,7 +35,7 @@ interface MediaService
      *     photos: Collection
      * }|null
      */
-    public function forRecentListing(string $content): ?array;
+    public function forRecentListing(Recent $recent, string $content): ?array;
 
     /**
      * Get the data for the entire gallery of the photos in the supplied recent entry

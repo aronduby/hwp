@@ -2,7 +2,6 @@
 
 namespace App\Models\Recent\Render;
 
-use App\Models\Photo;
 use App\Services\MediaServices\MediaService;
 
 class Photos extends Renderer
@@ -27,7 +26,7 @@ class Photos extends Renderer
          * @var MediaService $mediaService
          */
         $mediaService = resolve('App\Services\MediaServices\MediaService');
-        ['photos' => $photos, 'count' => $count] = $mediaService->forRecentListing($content);
+        ['photos' => $photos, 'count' => $count] = $mediaService->forRecentListing($this->recent, $content);
 
         $this->data = [
             'count' => $count,

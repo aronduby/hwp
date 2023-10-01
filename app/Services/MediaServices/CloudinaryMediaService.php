@@ -9,7 +9,6 @@ use App\Models\PlayerSeason;
 use App\Models\Recent;
 use App\Models\Season;
 use Cloudinary\Api\ApiResponse;
-use Cloudinary\Api\Exception\GeneralError;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Facades\Cache;
@@ -81,15 +80,13 @@ class CloudinaryMediaService implements MediaService
     }
 
     /**
+     * @param Recent $recent
      * @param string $content
      * @return array|null
-     * @throws GeneralError
      */
-    public function forRecentListing(string $content): ?array
+    public function forRecentListing(Recent $recent, string $content): ?array
     {
-        $recentData = json_decode($content);
-        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to, Recent\Render\Photos::BG_LIMIT);
-
+        $rsp = $this->getPhotosForRecent($recent, Recent\Render\Photos::BG_LIMIT);
         $photos = collect($rsp['resources'])
             ->map(function($r) {
                 return new Photo($r, $this->cloudinary);
@@ -103,18 +100,19 @@ class CloudinaryMediaService implements MediaService
 
     public function forRecentGallery(Recent $recent): ?array
     {
-        $recentData = json_decode($recent->content);
-        $rsp = $this->getPhotosForRecent($recentData->from, $recentData->to);
+        $rsp = $this->getPhotosForRecent($recent);
         return $this->mergeServiceData($rsp['resources']);
     }
 
     public function forAlbum(PhotoAlbum $album): ?array
     {
-        $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$album->media_id.'"')
-            ->withField('metadata')
-            ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
-            ->execute();
+        $rsp = Cache::remember(sprintf(self::CACHE_KEY_FOR_ALBUM, $album->id), self::DEFAULT_CACHE_TIME, function() use($album) {
+            return $this->cloudinary->searchApi()
+                ->expression('folder:"'.$album->media_id.'"')
+                ->withField('metadata')
+                ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
+                ->execute();
+        });
 
         return $this->mergeServiceData($rsp['resources']);
     }
@@ -158,14 +156,16 @@ class CloudinaryMediaService implements MediaService
      */
     public function forPlayerSeason(PlayerSeason $playerSeason): ?array
     {
-        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
-        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+        $rsp = Cache::remember(sprintf(self::CACHE_KEY_FOR_PLAYER_SEASON, $playerSeason->id), self::DEFAULT_CACHE_TIME, function() use($playerSeason) {
+            $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+            $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
 
-        $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
-            ->withField('metadata')
-            ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
-            ->execute();
+            return $this->cloudinary->searchApi()
+                ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
+                ->withField('metadata')
+                ->maxResults(self::CLOUDINARY_RESULTS_LIMIT)
+                ->execute();
+        });
 
         return $this->mergeServiceData($rsp['resources']);
     }
@@ -175,13 +175,15 @@ class CloudinaryMediaService implements MediaService
      */
     public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource
     {
-        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
-        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+        $rsp = Cache::remember(sprintf(self::CACHE_KEY_FOR_PLAYER_SEASON_HEADER, $playerSeason->id), self::DEFAULT_CACHE_TIME, function() use($playerSeason) {
+            $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+            $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
 
-        $rsp = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
-            ->maxResults(self::PER_PAGE)
-            ->execute();
+            return $this->cloudinary->searchApi()
+                ->expression('folder:"'.$rootFolder.'/*" AND metadata.players='.$playerTag)
+                ->maxResults(self::PER_PAGE)
+                ->execute();
+        });
 
         if (!empty($rsp['resources'])) {
             $randomItem = array_random($rsp['resources']);
@@ -195,22 +197,25 @@ class CloudinaryMediaService implements MediaService
     /**
      * Does the query for the recent photos, shared between the listing and the gallery setup
      *
-     * @param int $from
-     * @param int $to
+     * @param Recent $recent
      * @param int|null $limit
      * @return ApiResponse
-     * @throws GeneralError
      */
-    protected function getPhotosForRecent(int $from, int $to, ?int $limit = null): ApiResponse {
-        $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+    protected function getPhotosForRecent(Recent $recent, ?int $limit = null): ApiResponse {
+        return Cache::remember(sprintf(self::CACHE_KEY_FOR_RECENT, $recent->id, $limit ?? 0), self::DEFAULT_CACHE_TIME, function() use($recent, $limit) {
+            $rootFolder = $this->season->settings->get('cloudinary.root_folder');
+            $content = json_decode($recent->content, true);
+            $from = $content['from'];
+            $to = $content['to'];
 
-        $request = $this->cloudinary->searchApi()
-            ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']')
-            ->withField('metadata');
+            $request = $this->cloudinary->searchApi()
+                ->expression('folder:"'.$rootFolder.'/*" AND uploaded_at:['.$from.' TO '.$to.']')
+                ->withField('metadata');
 
-        $request->maxResults($limit ?: self::CLOUDINARY_RESULTS_LIMIT);
+            $request->maxResults($limit ?: self::CLOUDINARY_RESULTS_LIMIT);
 
-        return $request->execute();
+            return $request->execute();
+        });
     }
 
     /**
@@ -256,6 +261,11 @@ class CloudinaryMediaService implements MediaService
     const TAG_FOR_COVER = 'cover';
 
     /**
+     * The default amount of time to cache data for, in minutes
+     */
+    const DEFAULT_CACHE_TIME = 60;
+
+    /**
      * The cache key for the home photos cache - to be used with sprintf and the season id
      */
     const CACHE_KEY_FOR_HOME = 'forHome.%d';
@@ -264,4 +274,24 @@ class CloudinaryMediaService implements MediaService
      * The cache key for the albums covers - to be used with sprintf for the season id
      */
     const CACHE_KEY_FOR_COVERS = 'forCovers.%d';
+
+    /**
+     * The cache key for the recent listings - to be used with sprint for the recent item id and the limit
+     */
+    const CACHE_KEY_FOR_RECENT = 'forRecent.%d.%d';
+
+    /**
+     * The cache key for an album - to be used with sprintf for the album id
+     */
+    const CACHE_KEY_FOR_ALBUM = 'forAlbum.%d';
+
+    /**
+     * The cache key for a player season - to be used with sprintf for the player season id
+     */
+    const CACHE_KEY_FOR_PLAYER_SEASON = 'forPlayerSeason.%d';
+
+    /**
+     * The cache key for a player season header - to be used with sprintf for the player season id
+     */
+    const CACHE_KEY_FOR_PLAYER_SEASON_HEADER = 'forPlayerSeasonHeader.%d';
 }
