@@ -1,12 +1,9 @@
-(function() {
-    'use strict';
+const trackingCategory = 'Scavenger Hunt';
 
-    const trackingCategory = 'Scavenger Hunt';
+export function trackStep(action, ...rest) {
+    ga('send', 'event', trackingCategory, `Step ${action}`, ...rest);
+}
 
-    module.exports = {
-        trackStep: function(action, ...rest) {
-            ga('send', 'event', trackingCategory, `Step ${action}`, ...rest);
-        }
-    };
-
-})();
+export default {
+    trackStep
+}

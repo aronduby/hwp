@@ -18,23 +18,23 @@
             </li>
 
             <li class="mp-has-subs">
-                <a href="@route('playerlist')">@lang('menu.players')</a>
+                <a href="@route('playerlist')"><i class="fa-solid fa-angle-left"></i>@lang('menu.players')</a>
                 <div class="mp-level">
                     <header>
                         <h2>@lang('menu.players')</h2>
                     </header>
                     <div class="icon"><i class="fa fa-rebel"></i></div>
-                    <a class="mp-back" href="#">back</a>
+                    <a class="mp-back" href="#"><i class="fa-solid fa-angle-right"></i>back</a>
                     <ul>
                         @foreach(['V', 'JV', 'STAFF'] as $team)
                             @if($playerList->team($team))
                             <li class="mp-has-subs">
-                                <a href="#">@lang('misc.'.$team)</a>
+                                <a href="#"><i class="fa-solid fa-angle-left"></i>@lang('misc.'.$team)</a>
                                 <div class="mp-level">
                                     <header>
                                         <h2>@lang('misc.'.$team)</h2>
                                     </header>
-                                    <a class="mp-back" href="#">back</a>
+                                    <a class="mp-back" href="#"><i class="fa-solid fa-angle-right"></i>back</a>
                                     <ul class="team team--{{$team}}">
                                         @foreach($playerList->team($team) as $player)
                                             <li>
@@ -70,12 +70,12 @@
             </li>
 
             <li class="mp-has-subs seasons">
-                <a href="#">@lang('menu.seasons') @warn(!$activeSeason->current, menu.notViewingCurrentSeason)</a>
+                <a href="#"><i class="fa-solid fa-angle-left"></i>@lang('menu.seasons')@warn(!$activeSeason->current, menu.notViewingCurrentSeason)</a>
                 <div class="mp-level">
                     <header>
                         <h2>@lang('menu.seasons')</h2>
                     </header>
-                    <a class="mp-back" href="#">back</a>
+                    <a class="mp-back" href="#"><i class="fa-solid fa-angle-right"></i>back</a>
                     <ul>
                         @foreach($site->seasons->reverse() as $season)
                             <li class="{{$season->id == $activeSeason->id ? 'season--active' : ''}} {{$season->current ? 'season--current' : ''}}">

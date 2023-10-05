@@ -11,7 +11,23 @@ let mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    resolve: {
+        modules: [
+            'node_modules'
+        ],
+        alias: {
+
+        }
+    }
+});
+
+mix.autoload({
+    jquery: ['$', 'window.jQuery', 'jQuery'],
+});
+
 mix
+    .sourceMaps(true, 'source-map')
     .sass('resources/assets/sass/main.scss', 'public/css')
     .sass('resources/assets/sass/picker.scss', 'public/css')
 

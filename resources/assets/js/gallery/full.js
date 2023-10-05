@@ -1,134 +1,127 @@
-(function () {
-	'use strict';
+import 'jquery.loadtemplate';
+import PhotoSwipe from 'photoswipe';
+import PhotoSwipeUI from './photoswipe-ui';
 
-	global.jQuery = require('jquery');
-	require('jquery.loadtemplate');
+const $ = jQuery;
+const imgTmpl = $('#gallery-thumb-tmpl');
+const emptyTmpl = $('#gallery-no-photos-found-tmpl');
+const btnTmpl = $('#load-more-btn');
 
-	const PhotoSwipe = require('photoswipe');
-	const PhotoSwipeUI = require('./photoswipe-ui.js');
+function trackEvent(type, item) {
+    if (ga) {
+        ga('send', 'event', 'Photos', type, item.file, item.id);
+    }
+}
 
-	const $ = jQuery;
-	const imgTmpl = $('#gallery-thumb-tmpl');
-	const emptyTmpl = $('#gallery-no-photos-found-tmpl');
-	const btnTmpl = $('#load-more-btn');
+function FullGallery(el, services) {
+    this.el = $(el);
+    this.btn = $(btnTmpl.text());
+    this.gallery = null;
+    this.items = null;
+    this.perPage = 48;
+    this.page = 1;
+    this.totalPages = 1;
+    this.offset = 0;
+    this.services = services;
 
-	function trackEvent(type, item) {
-		if (ga) {
-			ga('send', 'event', 'Photos', type, item.file, item.id);
-		}
-	}
+    this.attachEvents();
+    this.load(this.el.data('gallery-path'));
+}
 
-	function FullGallery(el, services) {
-		this.el = $(el);
-		this.btn = $(btnTmpl.text());
-		this.gallery = null;
-		this.items = null;
-		this.perPage = 48;
-		this.page = 1;
-		this.totalPages = 1;
-		this.offset = 0;
-		this.services = services;
+FullGallery.prototype.attachEvents = function () {
+    const self = this;
 
-		this.attachEvents();
-		this.load(this.el.data('gallery-path'));
-	}
+    this.el.on('click', 'a.gallery-photo--thumb', this.imageClick.bind(self));
+    this.btn.on('click', this.loadMore.bind(self));
+};
 
-	FullGallery.prototype.attachEvents = function() {
-		const self = this;
+FullGallery.prototype.load = function (url) {
+    const self = this;
 
-		this.el.on('click', 'a.gallery-photo--thumb', this.imageClick.bind(self));
-		this.btn.on('click', this.loadMore.bind(self));
-	};
+    $.getJSON(url)
+        .done(this.loaded.bind(self))
+        .fail(this.error.bind(self));
+};
 
-	FullGallery.prototype.load = function(url) {
-		const self = this;
+FullGallery.prototype.loaded = function (items) {
+    this.items = this.services.mapImageData(items);
+    this.totalPages = Math.ceil(items.length / this.perPage);
 
-		$.getJSON(url)
-			.done(this.loaded.bind(self))
-			.fail(this.error.bind(self));
-	};
+    this.el.empty();
+    this.drawPage();
+    if (this.totalPages > 1) {
+        this.btn.insertAfter(this.el);
+    }
+};
 
-	FullGallery.prototype.loaded = function(items) {
-		this.items = this.services.mapImageData(items);
-		this.totalPages = Math.ceil(items.length / this.perPage);
+FullGallery.prototype.error = function (err) {
+    alert('Could not load gallery');
+    console.log(err);
+    this.el.empty();
+};
 
-		this.el.empty();
-		this.drawPage();
-		if (this.totalPages > 1) {
-			this.btn.insertAfter(this.el);
-		}
-	};
+FullGallery.prototype.imageClick = function (e) {
+    const item = $(e.target).parent('[data-offset]');
+    const offset = parseInt(item.attr('data-offset'), 10);
+    const self = this;
 
-	FullGallery.prototype.error = function(err) {
-		alert('Could not load gallery');
-		console.log(err);
-		this.el.empty();
-	};
+    const pswpElement = document.querySelectorAll('.pswp')[0];
+    // noinspection JSValidateTypes
+    this.gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, this.items, {
+        index: offset,
+        shareButtons: [
+            {
+                id: 'download',
+                label: 'Download image',
+                url: '{{raw_image_url}}',
+                download: true,
+                fa: 'fa-download'
+            }
+        ],
+        getImageURLForShare: function (btn) {
+            return self.services.getImageURLForShare(btn, self.gallery.currItem);
+        },
+        getFilenameForShare: function () {
+            return self.gallery.currItem.file + '.jpg';
+        }
+    });
 
-	FullGallery.prototype.imageClick = function(e) {
-		const item = $(e.target).parent('[data-offset]');
-		const offset = parseInt(item.attr('data-offset'), 10);
-		const self = this;
+    this.gallery.listen('afterChange', function () {
+        trackEvent('View', this.currItem);
+    });
 
-		const pswpElement = document.querySelectorAll('.pswp')[0];
-		// noinspection JSValidateTypes
-		this.gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, this.items, {
-			index: offset,
-			shareButtons: [
-				{
-					id: 'download',
-					label: 'Download image',
-					url: '{{raw_image_url}}',
-					download: true,
-					fa: 'fa-download'
-				}
-			],
-			getImageURLForShare: function(btn) {
-				return self.services.getImageURLForShare(btn, self.gallery.currItem);
-			  },
-			getFilenameForShare: function() {
-				return self.gallery.currItem.file + '.jpg';
-			}
-		});
+    this.gallery.init();
+    return false;
+};
 
-		this.gallery.listen('afterChange', function() {
-			trackEvent('View', this.currItem);
-		});
+FullGallery.prototype.drawPage = function () {
+    const self = this;
 
-		this.gallery.init();
-		return false;
-	};
+    if (this.items.length) {
+        this.el.loadTemplate(imgTmpl, this.items, {
+            beforeInsert: self.addOffset.bind(self),
+            paged: true,
+            elemPerPage: this.perPage,
+            append: true,
+            pageNo: this.page
+        });
+    } else {
+        this.el.loadTemplate(emptyTmpl);
+    }
 
-	FullGallery.prototype.drawPage = function() {
-		const self = this;
+    if (this.perPage * this.page >= this.items.length) {
+        this.btn.remove();
+    }
+};
 
-		if (this.items.length) {
-			this.el.loadTemplate(imgTmpl, this.items, {
-				beforeInsert: self.addOffset.bind(self),
-				paged: true,
-				elemPerPage: this.perPage,
-				append: true,
-				pageNo: this.page
-			});
-		} else {
-			this.el.loadTemplate(emptyTmpl);
-		}
+FullGallery.prototype.loadMore = function () {
+    this.page++;
+    this.drawPage();
+};
 
-		if (this.perPage * this.page >= this.items.length) {
-			this.btn.remove();
-		}
-	};
+FullGallery.prototype.addOffset = function (el) {
+    el.attr('data-offset', this.offset);
+    this.offset++;
+};
 
-	FullGallery.prototype.loadMore = function() {
-		this.page++;
-		this.drawPage();
-	};
-
-	FullGallery.prototype.addOffset = function(el) {
-		el.attr('data-offset', this.offset);
-		this.offset++;
-	};
-	
-	module.exports = FullGallery;
-
-})();
+export default FullGallery;

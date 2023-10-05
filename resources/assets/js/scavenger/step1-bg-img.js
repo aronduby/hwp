@@ -1,46 +1,43 @@
-(function() {
-    'use strict';
+export function bgImg(imgSrc) {
+    class BackgroundImage {
+        constructor() {
+            this.uniforms = {
+                resolution: {
+                    type: 'v2',
+                    value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+                },
+                imageResolution: {
+                    type: 'v2',
+                    value: new THREE.Vector2(2048, 1356),
+                },
+                texture: {
+                    type: 't',
+                    value: null,
+                },
+            };
+            this.obj = null;
+        }
 
-    // global.THREE = require('THREE');
+        init(src, callback) {
+            const loader = new THREE.TextureLoader();
+            loader.crossOrigin = 'anonymous';
+            loader.origin = 'anonymous';
+            loader.load(
+                src, (tex) => {
+                    tex.magFilter = THREE.NearestFilter;
+                    tex.minFilter = THREE.NearestFilter;
+                    this.uniforms.texture.value = tex;
+                    this.obj = this.createObj();
+                    callback();
+                });
+        }
 
-    function go(imgSrc) {
-        class BackgroundImage {
-            constructor() {
-                this.uniforms = {
-                    resolution: {
-                        type: 'v2',
-                        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-                    },
-                    imageResolution: {
-                        type: 'v2',
-                        value: new THREE.Vector2(2048, 1356),
-                    },
-                    texture: {
-                        type: 't',
-                        value: null,
-                    },
-                };
-                this.obj = null;
-            }
-            init(src, callback) {
-                const loader = new THREE.TextureLoader();
-                loader.crossOrigin = 'anonymous';
-                loader.origin = 'anonymous';
-                loader.load(
-                    src, (tex) => {
-                        tex.magFilter = THREE.NearestFilter;
-                        tex.minFilter = THREE.NearestFilter;
-                        this.uniforms.texture.value = tex;
-                        this.obj = this.createObj();
-                        callback();
-                    });
-            }
-            createObj() {
-                return new THREE.Mesh(
-                    new THREE.PlaneBufferGeometry(2, 2),
-                    new THREE.RawShaderMaterial({
-                        uniforms: this.uniforms,
-                        vertexShader: `attribute vec3 position;
+        createObj() {
+            return new THREE.Mesh(
+                new THREE.PlaneBufferGeometry(2, 2),
+                new THREE.RawShaderMaterial({
+                    uniforms: this.uniforms,
+                    vertexShader: `attribute vec3 position;
           attribute vec2 uv;
 
           varying vec2 vUv;
@@ -50,7 +47,7 @@
             gl_Position = vec4(position, 1.0);
           }
         `,
-                        fragmentShader: `precision highp float;
+                    fragmentShader: `precision highp float;
 
           uniform vec2 resolution;
           uniform vec2 imageResolution;
@@ -71,38 +68,40 @@
             gl_FragColor = texture2D(texture, uv);
           }
         `,
-                    })
-                );
-            }
-            resize() {
-                this.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
-            }
+                })
+            );
         }
 
-        class PostEffect {
-            constructor(texture) {
-                this.uniforms = {
-                    time: {
-                        type: 'f',
-                        value: 0
-                    },
-                    resolution: {
-                        type: 'v2',
-                        value: new THREE.Vector2(window.innerWidth, window.innerHeight)
-                    },
-                    texture: {
-                        type: 't',
-                        value: texture,
-                    },
-                };
-                this.obj = this.createObj();
-            }
-            createObj() {
-                return new THREE.Mesh(
-                    new THREE.PlaneBufferGeometry(2, 2),
-                    new THREE.RawShaderMaterial({
-                        uniforms: this.uniforms,
-                        vertexShader: `attribute vec3 position;
+        resize() {
+            this.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        }
+    }
+
+    class PostEffect {
+        constructor(texture) {
+            this.uniforms = {
+                time: {
+                    type: 'f',
+                    value: 0
+                },
+                resolution: {
+                    type: 'v2',
+                    value: new THREE.Vector2(window.innerWidth, window.innerHeight)
+                },
+                texture: {
+                    type: 't',
+                    value: texture,
+                },
+            };
+            this.obj = this.createObj();
+        }
+
+        createObj() {
+            return new THREE.Mesh(
+                new THREE.PlaneBufferGeometry(2, 2),
+                new THREE.RawShaderMaterial({
+                    uniforms: this.uniforms,
+                    vertexShader: `attribute vec3 position;
           attribute vec2 uv;
           
           varying vec2 vUv;
@@ -112,7 +111,7 @@
             gl_Position = vec4(position, 1.0);
           }
         `,
-                        fragmentShader: `precision highp float;
+                    fragmentShader: `precision highp float;
         
           uniform float time;
           uniform vec2 resolution;
@@ -275,99 +274,97 @@
             gl_FragColor = vec4(r, g, b, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
           }
         `,
-                    })
-                );
-            }
-            render(time) {
-                this.uniforms.time.value += time;
-            }
-            resize() {
-                this.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
-            }
+                })
+            );
         }
 
-        const debounce = (callback, duration) => {
-            var timer;
-            return function(event) {
-                clearTimeout(timer);
-                timer = setTimeout(function(){
-                    callback(event);
-                }, duration);
-            };
-        };
+        render(time) {
+            this.uniforms.time.value += time;
+        }
 
-        const canvas = document.getElementById('glitcher-canvas');
-        const renderer = new THREE.WebGLRenderer({
-            antialias: false,
-            canvas: canvas,
-        });
-        const renderBack1 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
-        const scene = new THREE.Scene();
-        const sceneBack = new THREE.Scene();
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const cameraBack = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-        const clock = new THREE.Clock();
+        resize() {
+            this.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        }
+    }
+
+    const debounce = (callback, duration) => {
+        var timer;
+        return function (event) {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback(event);
+            }, duration);
+        };
+    };
+
+    const canvas = document.getElementById('glitcher-canvas');
+    const renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        canvas: canvas,
+    });
+    const renderBack1 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
+    const scene = new THREE.Scene();
+    const sceneBack = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const cameraBack = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+    const clock = new THREE.Clock();
 
 //
 // process for this sketch.
 //
 
-        const bgImg = new BackgroundImage();
-        const postEffect = new PostEffect(renderBack1.texture);
+    const bgImg = new BackgroundImage();
+    const postEffect = new PostEffect(renderBack1.texture);
 
 //
 // common process
 //
-        const resizeWindow = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            cameraBack.aspect = window.innerWidth / window.innerHeight;
-            cameraBack.updateProjectionMatrix();
-            bgImg.resize();
-            postEffect.resize();
-            renderBack1.setSize(window.innerWidth, window.innerHeight);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        const render = () => {
-            const time = clock.getDelta();
-            renderer.render(sceneBack, cameraBack, renderBack1);
-            postEffect.render(time);
-            renderer.render(scene, camera);
-        }
-        const renderLoop = () => {
-            render();
-            requestAnimationFrame(renderLoop);
-        }
-
-        const on = () => {
-            window.addEventListener('resize', debounce(() => {
-                resizeWindow();
-            }), 1000);
-        }
-
-        const init = (imgSrc) => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x111111, 1.0);
-            cameraBack.position.set(0, 0, 100);
-            cameraBack.lookAt(new THREE.Vector3());
-
-            // const imgSrc = 'https://www.tplh.net/file/osaka01.jpg';
-            // const imgSrc = 'https://photos.hudsonvillewaterpolo.com/s8-p1769.jpg';
-            // const imgSrc = 'https://photos.hudsonvillewaterpolo.com/natatorium.jpg';
-
-            bgImg.init(imgSrc, () => {
-                sceneBack.add(bgImg.obj);
-                scene.add(postEffect.obj);
-            });
-
-            on();
-            resizeWindow();
-            renderLoop();
-        }
-
-        init(imgSrc);
+    const resizeWindow = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cameraBack.aspect = window.innerWidth / window.innerHeight;
+        cameraBack.updateProjectionMatrix();
+        bgImg.resize();
+        postEffect.resize();
+        renderBack1.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    const render = () => {
+        const time = clock.getDelta();
+        renderer.render(sceneBack, cameraBack, renderBack1);
+        postEffect.render(time);
+        renderer.render(scene, camera);
+    }
+    const renderLoop = () => {
+        render();
+        requestAnimationFrame(renderLoop);
     }
 
-    module.exports = go;
+    const on = () => {
+        window.addEventListener('resize', debounce(() => {
+            resizeWindow();
+        }), 1000);
+    }
 
-})();
+    const init = (imgSrc) => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x111111, 1.0);
+        cameraBack.position.set(0, 0, 100);
+        cameraBack.lookAt(new THREE.Vector3());
+
+        // const imgSrc = 'https://www.tplh.net/file/osaka01.jpg';
+        // const imgSrc = 'https://photos.hudsonvillewaterpolo.com/s8-p1769.jpg';
+        // const imgSrc = 'https://photos.hudsonvillewaterpolo.com/natatorium.jpg';
+
+        bgImg.init(imgSrc, () => {
+            sceneBack.add(bgImg.obj);
+            scene.add(postEffect.obj);
+        });
+
+        on();
+        resizeWindow();
+        renderLoop();
+    }
+
+    init(imgSrc);
+}

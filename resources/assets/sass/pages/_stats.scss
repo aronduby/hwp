@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $_spacing: 3em;
 
 .page--stats {
@@ -5,7 +7,7 @@ $_spacing: 3em;
   .section--dateRange {
 
     .dateRange-buttons {
-      margin: ($_spacing / 2) 0;
+      margin: (math.div($_spacing, 2)) 0;
     }
 
     .dateRange-picker {

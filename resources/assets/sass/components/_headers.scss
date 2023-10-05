@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $_accent-width: 100px;
 
 header {
@@ -27,7 +29,7 @@ header {
       display: block;
       position: absolute;
       left: 50%;
-      margin-left: -$_accent-width / 2;
+      margin-left: math.div(-$_accent-width, 2);
       bottom: -2px;
       width: $_accent-width;
       border-bottom: 5px solid $color-accent;

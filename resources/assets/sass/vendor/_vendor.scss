@@ -1,5 +1,6 @@
 @import 'normalize';
-@import './node_modules/photoswipe/dist/photoswipe';
-@import './node_modules/photoswipe/dist/default-skin/default-skin';
-@import './node_modules/vex-js/dist/css/vex';
-@import './node_modules/vex-js/dist/css/vex-theme-default';
+@import '~photoswipe/dist/photoswipe';
+@import '~photoswipe/dist/default-skin/default-skin';
+@import '~vex-js/dist/css/vex';
+@import '~vex-js/dist/css/vex-theme-default';
+@import "fa-overrides";

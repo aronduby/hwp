@@ -1,11 +1,11 @@
 $_img-blur-size: 2px;
 
 @each $name, $color in $colors {
-  .bg--#{$name} {
+  .bg--#{"" + $name} {
     background-color: $color !important;
   }
 
-  .bg--bottom-third-#{$name} {
+  .bg--bottom-third-#{"" + $name} {
     background-image: linear-gradient(to top, $color 0, transparent 66%);
   }
 }

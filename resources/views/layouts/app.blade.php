@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/css/scratch.css" />
 
     <script src="js/modernizr.custom.js"></script>
+    <script src="https://kit.fontawesome.com/07e53d67dd.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="mp-container">

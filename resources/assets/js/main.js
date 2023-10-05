@@ -1,50 +1,46 @@
 // noinspection JSUnusedLocalSymbols
 
-(function () {
-	'use strict';
+import FullGallery from "./gallery/full";
+import PopupGallery from "./gallery/popup";
+import mediaServices from "./gallery/mediaServices";
 
-	const _ = require('lodash');
-	const mlPushMenu = require('./mlpushmenu');
-	const matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300);
-	const mediaServices = require('./gallery/mediaServices');
-	const PopupGallery = require('./gallery/popup');
-	const FullGallery = require('./gallery/full');
-	const Note = require('./note');
-	const shareable = require('./shareables');
-	const seasonSwitching = require('./seasonSwitching');
+const _ = require('lodash');
+const mlPushMenu = require('./mlpushmenu');
+const matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300);
+const Note = require('./note');
+const shareable = require('./shareables');
+const seasonSwitching = require('./seasonSwitching');
+// const firebase = require('./firebase');
 
-	global.jQuery = require('jquery');
-	const $ = jQuery;
+// window.$ = window.jQuery = require('jquery');
 
 
-	// noinspection JSPotentiallyInvalidConstructorUsage
-	new mlPushMenu(document.getElementById('mp-menu'), document.getElementById('trigger'));
+// noinspection JSPotentiallyInvalidConstructorUsage
+new mlPushMenu(document.getElementById('mp-menu'), document.getElementById('trigger'));
 
-	window.onresize = matchMenuHeight;
-	document.addEventListener('DOMContentLoaded', matchMenuHeight);
+window.onresize = matchMenuHeight;
+document.addEventListener('DOMContentLoaded', matchMenuHeight);
 
-	// popup galleries
-	$(document).ready(function () {
-		$('body').on('click', '.popup-gallery', function () {
-			const url = $(this).data('gallery-path');
-			const el = $(this);
-			const gallery = new PopupGallery(url, mediaServices);
+// popup galleries
+$(document).ready(function () {
+    $('body').on('click', '.popup-gallery', function () {
+        const url = $(this).data('gallery-path');
+        const el = $(this);
+        const gallery = new PopupGallery(url, mediaServices);
 
-			el.addClass('loading');
-			gallery.load()
-				.always(function () {
-					el.removeClass('loading');
-				});
+        el.addClass('loading');
+        gallery.load()
+            .always(function () {
+                el.removeClass('loading');
+            });
 
-			return false;
-		});
-	});
+        return false;
+    });
+});
 
-	// full galleries
-	$(document).ready(function () {
-		$('.full-gallery').each(function (el) {
-			$(this).data.gallery = new FullGallery(this, mediaServices);
-		});
-	});
-
-})();
+// full galleries
+$(document).ready(function () {
+    $('.full-gallery').each(function (el) {
+        $(this).data.gallery = new FullGallery(this, mediaServices);
+    });
+});

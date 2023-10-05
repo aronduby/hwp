@@ -1,4 +1,4 @@
-var vex = require('vex-js');
+import vex from 'vex-js';
 
 export default function subscribeModalInit() {
 

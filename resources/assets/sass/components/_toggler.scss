@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $_toggle-base: 3em;
 
 input.toggler {
@@ -14,9 +16,9 @@ input.toggler {
     user-select: none;
     padding: 2px;
     width: $_toggle-base;
-    height: $_toggle-base / 2;
+    height: math.div($_toggle-base, 2);
     background-color: #dddddd;
-    border-radius: $_toggle-base / 2;
+    border-radius: math.div($_toggle-base, 2);
 
     &:before,
     &:after {
@@ -31,7 +33,7 @@ input.toggler {
     &:before {
       right: 1px;
       background-color: #f1f1f1;
-      border-radius: $_toggle-base / 2;
+      border-radius: math.div($_toggle-base, 2);
       transition: background 0.4s;
     }
 
@@ -59,7 +61,7 @@ input.toggler {
 }
 
 @each $name, $color in $colors {
-  input.toggler.toggler--#{$name}:checked + label:before {
+  input.toggler.toggler--#{"" + $name}:checked + label:before {
     background-color: $color;
   }
 }

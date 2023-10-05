@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // -----------------------------------------------------------------------------
 // This file contains all application-wide Sass functions.
 // -----------------------------------------------------------------------------
@@ -61,7 +63,7 @@
 
 $browser-context: 16; // Default
 @function em($pixels, $context: $browser-context) {
-  @return #{$pixels/$context}em;
+  @return #{math.div($pixels, $context)}em;
 }
 
 @function greyscale($percent) {

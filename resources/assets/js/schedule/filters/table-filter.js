@@ -1,5 +1,4 @@
-var _ = require('lodash'),
-	$ = require('jquery');
+import _ from 'lodash';
 
 class TableFilter {
 

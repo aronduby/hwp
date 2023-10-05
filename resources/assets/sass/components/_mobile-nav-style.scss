@@ -56,9 +56,7 @@
   }
 }
 
-.mp-menu li.mp-has-subs > a::before {
-  @include fa-icon();
-  content: $fa-var-angle-left;
+.mp-menu li.mp-has-subs > a i {
   position: absolute;
   font-size: 1em;
   color: $color-accent;
@@ -77,9 +75,7 @@
   padding-left: .75em;
   background: $color-primary-darker;
 
-  &::after {
-    @include fa-icon();
-    content: $fa-var-angle-right;
+  i {
     position: absolute;
     right: .5em;
     top: 50%;
@@ -128,12 +124,13 @@
 
   .season--current .fa.current-indicator {
     position: absolute;
-    margin-left: -1.15em;
+    font-size: .6em;
+    transform: translate(-150%, 25%);
   }
 
   .warning-indicator {
     font-size: .6em;
-    vertical-align: super;
+    margin-left: .5em;
   }
 
 }

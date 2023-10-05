@@ -1,6 +1,6 @@
 .vex.vex-theme-note,
 .vex.vex-theme-jobSettings {
-  @extend .vex.vex-theme-default;
+  @extend .vex, .vex-theme-default;
 
   padding-top: 3em;
   padding-bottom: 3em;

@@ -1,21 +1,17 @@
-(function() {
-    'use strict';
+import Shake from '../shake';
+import * as scavenger from "./scavenger";
 
-    let Shake = require('../shake');
-    let scavenger = require('./scavenger');
+scavenger.trackStep('3');
 
-    scavenger.trackStep('3');
+const shaker = new Shake({
+    threshold: 20, // optional shake strength threshold
+    timeout: 1000 // optional, determines the frequency of event generation
+});
+shaker.start();
 
-    const shaker = new Shake({
-        threshold: 20, // optional shake strength threshold
-        timeout: 1000 // optional, determines the frequency of event generation
-    });
-    shaker.start();
+window.addEventListener('shake', shakeEventDidOccur, false);
 
-    window.addEventListener('shake', shakeEventDidOccur, false);
-    function shakeEventDidOccur (e) {
-        scavenger.trackStep('4');
-        window.location.href = 'shook';
-    }
-
-})();
+function shakeEventDidOccur(e) {
+    scavenger.trackStep('4');
+    window.location.href = 'shook';
+}

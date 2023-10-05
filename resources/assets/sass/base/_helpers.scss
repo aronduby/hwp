@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // -----------------------------------------------------------------------------
 // This file contains CSS helper classes.
 // -----------------------------------------------------------------------------
@@ -55,7 +57,7 @@ $end: 100;
 $step: 5;
 @while $begin <= $end {
   .opacity--#{$begin} {
-    opacity: $begin / 100;
+    opacity: math.div($begin, 100);
   }
   $begin: $begin + $step;
 }

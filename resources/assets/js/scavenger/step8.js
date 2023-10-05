@@ -1,11 +1,5 @@
-(function () {
-    'use strict';
+import * as scavenger from "./scavenger";
 
-    let scavenger = require('./scavenger');
-
-    document.addEventListener('DOMContentLoaded', function () {
-
-        scavenger.trackStep('8');
-
-    });
-})();
+document.addEventListener('DOMContentLoaded', function () {
+    scavenger.trackStep('8');
+});

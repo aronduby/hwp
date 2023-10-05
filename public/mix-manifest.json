@@ -1,18 +1,18 @@
 {
-    "/js/recap.js": "/js/recap.js",
-    "/js/home.js": "/js/home.js",
-    "/js/stats.js": "/js/stats.js",
     "/js/main.js": "/js/main.js",
-    "/css/main.css": "/css/main.css",
-    "/css/picker.css": "/css/picker.css",
+    "/js/home.js": "/js/home.js",
     "/js/schedule.js": "/js/schedule.js",
-    "/js/statEdit.js": "/js/statEdit.js",
     "/js/player.js": "/js/player.js",
+    "/js/recap.js": "/js/recap.js",
+    "/js/statEdit.js": "/js/statEdit.js",
     "/js/jobs.js": "/js/jobs.js",
+    "/js/stats.js": "/js/stats.js",
     "/js/scavenger/step3.js": "/js/scavenger/step3.js",
-    "/js/scavenger/step8.js": "/js/scavenger/step8.js",
-    "/js/scavenger/step6.js": "/js/scavenger/step6.js",
     "/js/scavenger/step4.js": "/js/scavenger/step4.js",
+    "/js/scavenger/step6.js": "/js/scavenger/step6.js",
+    "/js/scavenger/step8.js": "/js/scavenger/step8.js",
     "/js/porter.js": "/js/porter.js",
-    "/js/declan.js": "/js/declan.js"
+    "/js/declan.js": "/js/declan.js",
+    "/css/main.css": "/css/main.css",
+    "/css/picker.css": "/css/picker.css"
 }
