@@ -11,11 +11,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=69k3Ao4nqq">
     <link rel="icon" type="image/png" href="/icons/favicon-32x32.png?v=69k3Ao4nqq" sizes="32x32">
     <link rel="icon" type="image/png" href="/icons/favicon-16x16.png?v=69k3Ao4nqq" sizes="16x16">
-    <link rel="manifest" href="/icons/manifest.json?v=69k3Ao4nqq">
+    <link rel="manifest" href="/manifest.json?v=69k3Ao4nqq">
     <link rel="mask-icon" href="/icons/safari-pinned-tab.svg?v=69k3Ao4nqq" color="#32345d">
     <link rel="shortcut icon" href="/icons/favicon.ico?v=69k3Ao4nqq">
     <meta name="msapplication-config" content="/icons/browserconfig.xml?v=69k3Ao4nqq">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#f5d100">
 
     <?php if (getenv('APP_ENV') == 'local'): ?>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">

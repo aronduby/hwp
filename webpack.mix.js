@@ -45,6 +45,8 @@ mix
     .js('resources/assets/js/scavenger/step8.js', 'public/js/scavenger/step8.js')
     .js('resources/assets/js/porter.js', 'public/js/porter.js')
     .js('resources/assets/js/declan.js', 'public/js/declan.js')
+
+    .js('resources/assets/js/firebase-messaging-sw.js', 'public/firebase-messaging-sw.js')
 ;
 
 if (mix.inProduction()) {

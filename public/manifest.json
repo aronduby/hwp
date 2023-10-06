@@ -1,5 +1,8 @@
 {
 	"name": "Hudsonville Water Polo",
+	"short_name": "HWP",
+	"id": "/?source=pwa",
+	"start_url": "/?source=pwa",
 	"icons": [
 		{
 			"src": "\/icons\/android-chrome-192x192.png?v=69k3Ao4nqq",
@@ -12,6 +15,7 @@
 			"type": "image\/png"
 		}
 	],
-	"theme_color": "#ffffff",
+	"background_color": "#32345d",
+	"theme_color": "#f5d100",
 	"display": "standalone"
 }

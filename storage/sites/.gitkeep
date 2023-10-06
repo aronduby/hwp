@@ -1,2 +1,3 @@
 @deprecated
 This used to be where site settings files were stored, but that has been replaced with database settings models.
+except apparently we need it for live scoring settings

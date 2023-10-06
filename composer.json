@@ -27,7 +27,8 @@
         "monolog/monolog": "1.23",
         "laravel/passport": "^7.5",
         "benbjurstrom/passport-custom-jwt-claims": "dev-master",
-        "cloudinary/cloudinary_php": "^2.11"
+        "cloudinary/cloudinary_php": "^2.11",
+        "kreait/laravel-firebase": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

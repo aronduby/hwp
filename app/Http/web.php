@@ -26,61 +26,35 @@ Route::get('/recent', ['uses' => 'HomeController@recent', 'as' => 'recent']);
 
 Route::get('/rankings', ['uses' => 'HomeController@rankings', 'as' => 'rankings']);
 
-
-
 Route::get('/players', ['uses' => 'PlayerController@playerList', 'as' => 'playerlist']);
-
 Route::get('players/{player}', ['uses' => 'PlayerController@player', 'as' => 'players'])
     ->middleware(App\Http\Middleware\Grounded::class, App\Http\Middleware\NotTopBanana::class);
 
-
-
 Route::get('schedule', ['uses' => 'ScheduleController@index', 'as' => 'schedule']);
-
 Route::get('schedule/subscribe', ['uses' => 'ScheduleController@subscribe', 'as' => 'schedule.subscribe']);
-
 Route::get('ical.ics', function() {
     return redirect()->route('schedule.subscribe');
 });
 
-
-
 Route::get('game/{game}/recap', ['uses' => 'GameController@recap', 'as' => 'game.recap']);
-
 Route::get('game/{game}/photos', ['uses' => 'GameController@photos', 'as' => 'game.photos']);
-
-
 Route::get('game/{game}/stats', ['uses' => 'StatController@view', 'as' => 'game.stats']);
-
 Route::get('game/{game}/stats/edit', ['uses' => 'StatController@edit', 'as' => 'game.stats.edit'])->middleware('auth');
-
 Route::post('game/{game}/stats/edit', ['uses' => 'StatController@save', 'as' => 'game.stats.edit'])->middleware('auth');
 
 Route::get('stats', ['uses' => 'StatController@aggregateView', 'as' => 'stats']);
 
-
 Route::get('photos', ['uses' => 'AlbumController@index', 'as' => 'albumlist']);
-
 Route::get('photos/{album}', ['uses' => 'AlbumController@photos', 'as' => 'album']);
 
-
-
 Route::get('tournaments/{tournament}', ['uses' => 'TournamentController@tournament', 'as' => 'tournament']);
-
 Route::get('tournaments/{tournament}/photos', ['uses' => 'TournamentController@photos', 'as' => 'tournament.photos']);
-
-
 
 Route::get('notes/{note}', ['uses' => 'NotesController@note', 'as' => 'notes']);
 
-
-
 Route::get('gallery/recent/{recent}', ['uses' => 'GalleryController@recent', 'as' => 'gallery.recent']);
-
 Route::get('gallery/album/{album}', ['uses' => 'GalleryController@album', 'as' => 'gallery.album']);
-
 Route::get('gallery/player/{player}', ['uses' => 'GalleryController@playerCareer', 'as' => 'gallery.playerCareer']);
-
 Route::get('gallery/player/{player}/season/{season}', ['uses' => 'GalleryController@playerSeason', 'as' => 'gallery.playerSeason']);
 
 Route::get('files', ['as' => 'files', function() {
@@ -90,15 +64,10 @@ Route::get('files', ['as' => 'files', function() {
 }]);
 Route::redirect('/parents', '/files');
 
-
 Route::group(['middleware' => 'cors'], function() {
-
     Route::get('shareables/{shape}/game{ext}', ['uses' => 'ShareableController@game', 'as' => 'shareables.game']);
-
     Route::get('shareables/{shape}/player{ext}', ['uses' => 'ShareableController@player', 'as' => 'shareables.player']);
-
     Route::get('shareables/{shape}/update{ext}', ['uses' => 'ShareableController@update', 'as' => 'shareables.update']);
-
 });
 
 /*
@@ -111,8 +80,8 @@ Route::get('step3', function() {
 Route::get('shook', function() {
     return view('partials.scavenger.step4');
 });
-Route::post('shook', function(Request $request) {
 
+Route::post('shook', function(Request $request) {
     $answer = '85';
 
     $first = Emoji\is_single_emoji($request->input('first'));
@@ -153,16 +122,12 @@ Route::group([
     Route::group([
         'prefix' => 'call/'
     ], function() {
-
         Route::get('welcome', ['uses' => 'CallController@welcome', 'as' => 'twilio.call.welcome']);
-
         Route::get('user/lookup', ['uses' => 'CallController@userLookup', 'as' => 'twilio.call.user.lookup']);
-
         Route::get('user/stats', ['uses' => 'CallController@userStats', 'as' => 'twilio.call.user.stats']);
     });
 
     Route::post('sms', ['uses' => 'SMSController@incoming', 'as' => 'twilio.sms.incoming']);
-
 });
 
 /**
@@ -172,25 +137,25 @@ Route::group([
     'prefix' => 'admin',
     'middleware' => 'auth'
 ], function() {
-
     Route::get('jobs/{jobInstance}/run', ['uses' => 'JobsController@run', 'as' => 'jobs.run']);
-
     Route::resource('jobs', 'JobsController', ['parameters' => ['jobs' => 'jobInstance']])->only([
         'index', 'store', 'update', 'destroy'
     ]);
-
 });
 
+// TODO -- this should probably be in the api routes
 Route::group([
     'prefix' => 'cloudinary/webhooks',
     'middleware' => 'cloudinary',
     'namespace' => 'Cloudinary',
 ], function() {
-
     Route::post('tags', ['uses' => 'Tags', 'as' => 'cloudinary.tags']);
-
 });
 
+
+/**
+ * This is just for testing and scratchpad for that stuff, eventually delete
+ */
 Route::get('cloudinary', function(ActiveSeason $season) {
     $settings = $season->settings->get('cloudinary');
     $cloudinary = new Cloudinary([
