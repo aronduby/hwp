@@ -14,24 +14,118 @@ const firebaseConfig = {
     measurementId: "G-Z86EW7BNVM"
 };
 
+const vapidKey = "BLI72rxe6N0nax_-6yAf26EaCtnVoc8AdUrnbwkzD8vQBeZlcpgtAK6WOD4qQIlnJqAv9AMhiNZWypAsc5CJPsc";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 
-getToken(messaging, { vapidKey: "BLI72rxe6N0nax_-6yAf26EaCtnVoc8AdUrnbwkzD8vQBeZlcpgtAK6WOD4qQIlnJqAv9AMhiNZWypAsc5CJPsc" }).then(currentToken => {
+// region Registration
+
+const notificationPermissions = Notification.permission;
+
+const unsubscribedKey = 'fcm.wasUnsubscribed';
+
+export function isSupported() {
+    return "serviceWorker" in navigator && "PushManager" in window;
+}
+
+export function isPermissionGranted () {
+    return notificationPermissions === 'granted';
+}
+
+export function isPermissionBlocked() {
+    return notificationPermissions === 'blocked';
+}
+
+export function isPermissionDefault() {
+    return notificationPermissions === 'default';
+}
+
+export function wasUnsubscribed() {
+    return !!localStorage.getItem(unsubscribedKey);
+}
+
+/**
+ * Sends to the server and saves the token
+ *
+ * @return {Promise<{subscribeResponse: *, token: string}>}
+ */
+export async function doSubscription() {
+    const currentToken = await getToken(messaging, { vapidKey });
     if (currentToken) {
         // send the token to your server and update the UI if necessary
-        console.log(currentToken);
-    } else {
-        console.log('No registration token available, request permission to generate one')
-    }
-}).catch(err => {
-    console.error('Error occurred while retrieving token', err);
-});
+        try {
+            const subscribeResponse = await sendSubscriptionRequest('POST', currentToken);
+            localStorage.removeItem(unsubscribedKey);
 
+            return {
+                token: currentToken,
+                subscribeResponse
+            };
+        } catch (err) {
+            throw new SaveError('Sorry, but there was an error saving the token to the database. Please try again later');
+        }
+    } else {
+        throw new NoTokenError('No registration token available, request permission to generate one');
+    }
+}
+
+/**
+ * Removes the token from the server
+ *
+ * @param token
+ * @return {Promise<*>}
+ */
+export async function deleteSubscription(token) {
+   const rsp = await sendSubscriptionRequest('DELETE', token);
+   localStorage.setItem(unsubscribedKey, 'true');
+   return rsp;
+}
+
+/**
+ *
+ * @param {'POST'|'DELETE'} method
+ * @param {string} token
+ * @return {Promise<any>}
+ */
+async function sendSubscriptionRequest(method, token) {
+    const rsp = await fetch('/api/fcm/subscribe', {
+        method: method,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            token: token
+        })
+    });
+
+    return await rsp.json();
+}
+
+
+export class SaveError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "SaveError";
+    }
+}
+
+export class NoTokenError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "NoTokenError";
+    }
+}
+
+// endregion
+
+// region Message Handling
 
 onMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
     // ...
 });
+
+// endregion

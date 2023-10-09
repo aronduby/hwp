@@ -1,19 +1,19 @@
-(function () {
+import Rankings from './rankings';
+import Recent from "./recent";
+import { ghostNav } from "./ghostNav";
+import './scavenger/step1';
+import './notifications';
 
-	var GhostedNav = require('./ghostNav'),
-		Rankings   = require('./rankings'),
-		Recent     = require('./recent');
+document.addEventListener('DOMContentLoaded', async () => {
 
-	require('./scavenger/step1');
+    // ghost the nav when we're at the top of the page
+    ghostNav(document.getElementById('main-menu'), document.getElementById('home-header'));
 
-	// ghost the nav when we're at the top of the page
-	GhostedNav(document.getElementById('main-menu'), document.getElementById('home-header'));
+    // rankings
+    new Rankings(document.querySelector('.rankings'));
 
-	// rankings
-	new Rankings(document.querySelector('.rankings'));
+    // recent
+    var recent = new Recent(document.querySelector('.recent-grid'), document.querySelector('.recent-content .btn.load-more'));
+    recent.load();
 
-	// recent
-	var recent = new Recent(document.querySelector('.recent-grid'), document.querySelector('.recent-content .btn.load-more'));
-	recent.load();
-
-})();
+});

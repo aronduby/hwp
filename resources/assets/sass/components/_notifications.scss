@@ -1,0 +1,97 @@
+.notifications {
+
+  a {
+    color: $color-bright-accent-alt;
+  }
+
+  &-container {
+    font-size: 1.2em;
+    padding: 2em;
+    isolation: isolate;
+    text-align: center;
+
+    @include responsive(md) {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 1em;
+      align-items: center;
+      text-align: right;
+    }
+
+    > hr {
+      margin: 2em 4em;
+
+      @include responsive(md) {
+        display: none;
+      }
+    }
+  }
+
+  &-text {
+    h1 {
+      font-size: 4rem;
+    }
+  }
+
+  &-actions {
+    text-align: center;
+  }
+
+  .state {
+    display: none;
+
+    &--with-icon {
+
+      header {
+        position: relative;
+        margin-bottom: 1em;
+
+        i {
+          font-size: 9rem;
+        }
+
+        h2 {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+          font-size: 4rem;
+          backdrop-filter: brightness(.5);
+          line-height: 0;
+          padding: .5em .5em .4em;
+        }
+      }
+
+      > i {
+        display: block;
+        font-size: 6rem;
+      }
+
+      h2 {
+        margin: .5em 0 0 0;
+      }
+    }
+
+    p {
+      color: var(--color-grey);
+      font-size: 0.8em;
+      margin: 0;
+    }
+  }
+
+  .animate-once {
+    --fa-animation-iteration-count: 1;
+  }
+
+  $states: loading, blocked, subscribed, not-subscribed, not-supported, error;
+  @each $state in $states {
+    [data-state="#{$state}"] .state--#{$state} {
+      display: block;
+    }
+  }
+
+  .state--not-subscribed:not(.state--unsubscribed) .unsubscribed-message {
+    display: none;
+  }
+}

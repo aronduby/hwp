@@ -7,6 +7,8 @@
 
         {!! $results !!}
 
+        {!! $notifications !!}
+
         {!! $badges !!}
 
         {!! $content !!}

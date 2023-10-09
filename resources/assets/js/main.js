@@ -10,7 +10,6 @@ const matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300);
 const Note = require('./note');
 const shareable = require('./shareables');
 const seasonSwitching = require('./seasonSwitching');
-const firebase = require('./firebase');
 
 // noinspection JSPotentiallyInvalidConstructorUsage
 new mlPushMenu(document.getElementById('mp-menu'), document.getElementById('trigger'));

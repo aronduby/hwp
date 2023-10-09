@@ -420,25 +420,25 @@ th {
 }
 
 :root {
-  --color-primary: $hex;
-  --color-accent: $hex;
-  --color-bright: $hex;
-  --color-bright-accent: $hex;
-  --color-bright-accent-alt: $hex;
-  --color-dark: $hex;
-  --color-win: $hex;
-  --color-loss: $hex;
-  --color-tie: $hex;
-  --color-white: $hex;
-  --color-smoke: $hex;
-  --color-grey: $hex;
-  --color-doge: $hex;
-  --color-black: $hex;
-  --color-dark-gray: $hex;
-  --color-success: $hex;
-  --color-warn: $hex;
-  --color-danger: $hex;
-  --color-error: $hex;
+  --color-primary: #32345d;
+  --color-accent: #f5d100;
+  --color-bright: #2a82c9;
+  --color-bright-accent: #92db00;
+  --color-bright-accent-alt: #f29800;
+  --color-dark: #32345d;
+  --color-win: #92db00;
+  --color-loss: #ea4d0f;
+  --color-tie: #f29800;
+  --color-white: #fff;
+  --color-smoke: #ececec;
+  --color-grey: #bcbcbc;
+  --color-doge: #bcbcbc;
+  --color-black: #000;
+  --color-dark-gray: greyscale(29);
+  --color-success: #92db00;
+  --color-warn: #f5d100;
+  --color-danger: #f20000;
+  --color-error: #f20000;
 }
 
 /**

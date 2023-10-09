@@ -56,10 +56,11 @@ class HomeController extends Controller
     {
         $header = $this->header()->render();
         $results = $this->latestResults()->render();
+        $notifications = $this->notifications()->render();
         $badges = $this->badges()->render();
         $content = $this->content()->render();
         
-        return view('home', compact('header', 'results', 'badges', 'content'));
+        return view('home', compact('header', 'results', 'notifications','badges', 'content'));
     }
 
     /**
@@ -108,6 +109,15 @@ class HomeController extends Controller
         return view('partials.home.badges', compact('badges'));
     }
 
+    /**
+     * Renders the notifications section
+     *
+     * @return Factory|View
+     */
+    public function notifications()
+    {
+        return view('partials.home.notifications', []);
+    }
 
     /**
      * Render the first page of the content

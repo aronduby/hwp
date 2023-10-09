@@ -34,8 +34,11 @@ a.btn {
 
   &.disabled,
   &[disabled] {
-    opacity: .5;
+    &:not(.btn--loader.loading) {
+      opacity: .5;
+    }
     pointer-events: none;
+    user-select: none;
   }
 }
 
@@ -62,6 +65,24 @@ a.btn {
 
 .btn.btn--submit {
   margin: 0 0  0 $gap;
+}
+
+.btn.btn--loader {
+  position: relative;
+
+  .loader-wrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+    backdrop-filter: brightness(0.6) grayscale(0.6);
+  }
+
+  &.loading .loader-wrapper {
+    opacity: 1;
+  }
 }
 
 .btn-group {
