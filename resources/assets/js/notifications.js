@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const observer = new IntersectionObserver(async (entries) => {
         const shouldStart = entries.some(e => e.isIntersecting);
         if (shouldStart) {
+            observer.disconnect();
+
             if (!isSupported()) {
                 notificationActions.dataset.state = 'not-supported';
             } else if (isPermissionBlocked()) {
