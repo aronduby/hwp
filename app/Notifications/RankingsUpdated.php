@@ -1,19 +1,19 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
+use App\Channels\FCMTopicChannel;
 use App\Channels\LogChannel;
 use App\Models\Rank;
+use App\Notifications\Contracts\SendsToFCMTopic;
 use App\Notifications\Traits\Loggable;
 use App\Providers\MiscDirectiveServiceProvider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Twitter\TwitterChannel;
-use NotificationChannels\Twitter\TwitterStatusUpdate;
+use Kreait\Firebase\Messaging\CloudMessage;
 
-class RankingsUpdated extends Notification implements ShouldQueue
+class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTopic
 {
     use Loggable, Queueable;
 
@@ -30,9 +30,6 @@ class RankingsUpdated extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
-     *
-     * @param Rank $newRank
-     * @param Rank $lastRank
      */
     public function __construct(Rank $newRank = null, Rank $lastRank = null)
     {
@@ -42,13 +39,10 @@ class RankingsUpdated extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
      */
-    public function via($notifiable)
+    public function via(): array
     {
-        return $this->sendToLog() ? [LogChannel::class] : [TwitterChannel::class];
+        return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
 
     /**
@@ -57,7 +51,7 @@ class RankingsUpdated extends Notification implements ShouldQueue
      * @param  mixed $notifiable
      * @return array
      */
-    public function toLog($notifiable)
+    public function toLog($notifiable): array
     {
         return [
             'message' => $this->getMessage(),
@@ -69,28 +63,25 @@ class RankingsUpdated extends Notification implements ShouldQueue
     }
 
     /**
-     * Get the twitter status update for this notification.
-     *
-     * @param $notifiable
-     * @return TwitterStatusUpdate
-     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
-     */
-    public function toTwitter($notifiable)
-    {
-        return new TwitterStatusUpdate($this->getMessage());
-    }
-
-    /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
             //
         ];
+    }
+
+    public function toFCMTopic(): CloudMessage
+    {
+        return CloudMessage::new()
+            ->withNotification([
+                'title' => 'New state rankings announced!',
+                'body' => $this->getMessage()
+            ]);
     }
 
     public function getMessage() {

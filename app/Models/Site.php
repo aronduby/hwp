@@ -111,4 +111,15 @@ class Site extends Model
             $this->settings->get('twitter.accessTokenSecret') // TWITTER_ACCESS_SECRET
         ];
     }
+
+    /**
+     * Sends the topic identifier for FCM Topic notifications
+     *
+     * @return string
+     * @noinspection PhpUnused
+     */
+    public function routeNotificationForFCMTopic(): string
+    {
+        return 'topic.'.$this->id;
+    }
 }

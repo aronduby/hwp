@@ -7278,6 +7278,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// noinspection SpellCheckingInspection
 var firebaseConfig = {
   apiKey: "AIzaSyDAIduxCnC5T4-QoDEw1vRjnI1_1K0odeg",
   authDomain: "hudsonvillewaterpolo.firebaseapp.com",
@@ -7294,12 +7295,12 @@ var messaging = (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.getMessagi
 (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.onBackgroundMessage)(messaging, function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
-  var notificationTitle = 'Background Message Title';
+  var notificationTitle = payload.notification.title;
   var notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png'
+    body: payload.notification.body,
+    icon: '/icons/android-chrome-192x192.png'
   };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });
 })();
 

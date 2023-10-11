@@ -1,17 +1,17 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
+use App\Channels\FCMTopicChannel;
 use App\Channels\LogChannel;
+use App\Notifications\Contracts\SendsToFCMTopic;
 use App\Notifications\Traits\Loggable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Twitter\TwitterChannel;
-use NotificationChannels\Twitter\TwitterStatusUpdate;
+use Kreait\Firebase\Messaging\CloudMessage;
 
-class Test extends Notification implements ShouldQueue
+class Test extends Notification implements ShouldQueue, SendsToFCMTopic
 {
     use Loggable, Queueable;
 
@@ -37,9 +37,9 @@ class Test extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
-        return $this->sendToLog() ? [LogChannel::class] : [TwitterChannel::class];
+        return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
 
     /**
@@ -48,7 +48,7 @@ class Test extends Notification implements ShouldQueue
      * @param  mixed $notifiable
      * @return array
      */
-    public function toLog($notifiable)
+    public function toLog($notifiable): array
     {
         return [
             'message' => $this->message,
@@ -57,28 +57,24 @@ class Test extends Notification implements ShouldQueue
     }
 
     /**
-     * Get the twitter status update for this notification.
-     *
-     * @param $notifiable
-     * @return TwitterStatusUpdate
-     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
-     */
-    public function toTwitter($notifiable)
-    {
-        return new TwitterStatusUpdate($this->message);
-    }
-
-
-    /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
             'message' => $this->message
         ];
+    }
+
+    public function toFCMTopic(): CloudMessage
+    {
+        return CloudMessage::new()
+            ->withNotification([
+                'title' => 'Test Notification',
+                'body' => $this->message,
+            ]);
     }
 }

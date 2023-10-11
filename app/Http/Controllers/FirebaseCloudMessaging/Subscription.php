@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
+
+/** @noinspection PhpUnused */
 
 namespace App\Http\Controllers\FirebaseCloudMessaging;
 
@@ -23,6 +25,7 @@ class Subscription extends Controller
 
     /**
      * @param ActiveSite $site
+     * @param Messaging $messaging
      */
     public function __construct(ActiveSite $site, Messaging $messaging)
     {
@@ -48,7 +51,7 @@ class Subscription extends Controller
         $model->saveOrFail();
 
         // now subscribe it to the site's topic
-        $topic = 'site.'.$this->site->id;
+        $topic = $this->site->routeNotificationForFcmTopic();
         $topicResult = $this->messaging->subscribeToTopic($topic, $token);
 
         return response()->json($topicResult);
@@ -63,7 +66,7 @@ class Subscription extends Controller
         $token = $request->get('token');
         $deletedRows = PushSubscription::where('token', '=', $token)->delete();
 
-        $topic = 'site.'.$this->site->id;
+        $topic = $this->site->routeNotificationForFcmTopic();
         $topicResult = $this->messaging->unsubscribeFromTopic($topic, $token);
 
         return response()->json([

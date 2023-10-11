@@ -4,6 +4,7 @@ import { onBackgroundMessage } from "firebase/messaging/sw";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// noinspection SpellCheckingInspection
 const firebaseConfig = {
     apiKey: "AIzaSyDAIduxCnC5T4-QoDEw1vRjnI1_1K0odeg",
     authDomain: "hudsonvillewaterpolo.firebaseapp.com",
@@ -20,12 +21,11 @@ const messaging = getMessaging(app);
 onBackgroundMessage(messaging, (payload) => {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
-    const notificationTitle = 'Background Message Title';
+    const notificationTitle = payload.notification.title;
     const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
+        body: payload.notification.body,
+        icon: '/icons/android-chrome-192x192.png'
     };
 
-    self.registration.showNotification(notificationTitle,
-        notificationOptions);
+    event.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });

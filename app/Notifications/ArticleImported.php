@@ -1,18 +1,18 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
+use App\Channels\FCMTopicChannel;
 use App\Channels\LogChannel;
 use App\Models\Article;
+use App\Notifications\Contracts\SendsToFCMTopic;
 use App\Notifications\Traits\Loggable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Twitter\TwitterChannel;
-use NotificationChannels\Twitter\TwitterStatusUpdate;
+use Kreait\Firebase\Messaging\CloudMessage;
 
-class ArticleImported extends Notification implements ShouldQueue
+class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTopic
 {
     use Loggable, Queueable;
 
@@ -38,9 +38,9 @@ class ArticleImported extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
-        return $this->sendToLog() ? [LogChannel::class] : [TwitterChannel::class];
+        return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
 
     /**
@@ -49,7 +49,7 @@ class ArticleImported extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toLog($notifiable)
+    public function toLog($notifiable): array
     {
         return [
             'message' => $this->getMessage(),
@@ -58,24 +58,12 @@ class ArticleImported extends Notification implements ShouldQueue
     }
 
     /**
-     * Get the twitter status update for this notification.
-     *
-     * @param $notifiable
-     * @return TwitterStatusUpdate
-     * @throws \NotificationChannels\Twitter\Exceptions\CouldNotSendNotification
-     */
-    public function toTwitter($notifiable)
-    {
-        return new TwitterStatusUpdate($this->getMessage());
-    }
-
-    /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
             //
@@ -87,5 +75,19 @@ class ArticleImported extends Notification implements ShouldQueue
             'title' => $this->article->title,
             'url' => $this->article->url
         ]);
+    }
+
+    public function toFCMTopic(): CloudMessage
+    {
+        return CloudMessage::new()
+            ->withNotification([
+                'title' => 'New Article Imported',
+                'body' => 'We just imported a new article: ' . $this->article->title
+            ])
+            ->withWebPushConfig([
+                'fcm_options' => [
+                    'link' => $this->article->url
+                ]
+            ]);
     }
 }
