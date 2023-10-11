@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Events\ArticleImported' => [
             'App\Listeners\ArticleImportedNotifier'
-        ]
+        ],
     ];
 
     /**

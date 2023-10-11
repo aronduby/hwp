@@ -6,17 +6,12 @@ use App\Events\Contracts\Recent as RecentEvent;
 use App\Models\Recent as Recent;
 use App\Models\Season;
 use App\Models\Site;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class ArticleImported implements RecentEvent, ShouldQueue
 {
-    use InteractsWithSockets, SerializesModels;
+    use SerializesModels;
 
     /**
      * @var Site
@@ -38,11 +33,11 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @param Site $site
      * @param Season $season
-     * @param array $articleIds
+     * @param array $articleId
      *
      * @return void
      */
-    public function __construct(Site $site, Season $season, $articleId)
+    public function __construct(Site $site, Season $season, array $articleId)
     {
         $this->site = $site;
         $this->season = $season;
@@ -50,21 +45,11 @@ class ArticleImported implements RecentEvent, ShouldQueue
     }
 
     /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
-
-    /**
      * Get the value for site_id
      *
      * @return integer
      */
-    public function getSiteId()
+    public function getSiteId(): int
     {
         return $this->site->id;
     }
@@ -74,7 +59,7 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @return integer
      */
-    public function getSeasonId()
+    public function getSeasonId(): int
     {
         return $this->season->id;
     }
@@ -84,7 +69,7 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @return string
      */
-    public function getRenderer()
+    public function getRenderer(): string
     {
         return Recent::TYPE_ARTICLES;
     }
@@ -94,7 +79,7 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return json_encode([$this->articleId]);
     }
@@ -104,7 +89,7 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @return boolean
      */
-    public function getSticky()
+    public function getSticky(): bool
     {
         return false;
     }

@@ -29,11 +29,11 @@ interface MediaService
     /**
      * Get the data for doing the recent photo listing item
      *
+     * @param Recent $recent
      * @param string $content
      * @return array{
      *     count: int,
-     *     photos: Collection
-     * }|null
+     *     photos: Collection }|null
      */
     public function forRecentListing(Recent $recent, string $content): ?array;
 

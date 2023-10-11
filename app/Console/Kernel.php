@@ -3,11 +3,11 @@
 namespace App\Console;
 
 use App\Console\Commands\ArticleImagesCommand;
+use App\Console\Commands\CloudinaryAddRecentPhotosCommand;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
 use App\Console\Commands\ManualArticleImportCommand;
 use App\Console\Commands\ManualRankingNotificationCommand;
-use App\Console\Commands\MWPARankingsCommand;
 use App\Console\Commands\RegisterCommand;
 use App\Console\Commands\ResetPasswordCommand;
 use App\Console\Commands\SaveScoringStatsCommand;
@@ -15,6 +15,7 @@ use App\Jobs\JobGroups;
 use App\Models\JobInstance;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Landlord;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,10 +30,10 @@ class Kernel extends ConsoleKernel
         HudsonvilleAthleticsArticlesCommand::class,
         ManualArticleImportCommand::class,
         ManualRankingNotificationCommand::class,
-        MWPARankingsCommand::class,
         RegisterCommand::class,
         ResetPasswordCommand::class,
         SaveScoringStatsCommand::class,
+        CloudinaryAddRecentPhotosCommand::class
     ];
 
     protected function commands()
@@ -65,7 +66,7 @@ class Kernel extends ConsoleKernel
             }
         }
 
-        \Landlord::disable();
+        Landlord::disable();
 
         $groupInstances = JobInstance::whereIn('job', $groupJobs)->get();
 
@@ -73,6 +74,6 @@ class Kernel extends ConsoleKernel
             call_user_func([$instance->job, 'dispatch'], $instance);
         }
 
-        \Landlord::enable();
+        Landlord::enable();
     }
 }
