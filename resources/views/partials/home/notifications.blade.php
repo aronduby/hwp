@@ -4,7 +4,7 @@
     <div class="container notifications-container">
         <div class="notifications-text">
             <h1>We Have Push Notifications!</h1>
-            <p>Here's some rand text stuff. I don't know what to put here, but it'll be some good hype text. Here's some rand text stuff. I don't know what to put here, but it'll be some good hype text.</p>
+            <p>Exciting News! We're thrilled to announce we've added push notifications, ensuring you stay in the loop with all the latest scores, rankings, and updates. Don't miss a thing – subscribe today and be the first to know!</p>
         </div>
 
         <hr />
