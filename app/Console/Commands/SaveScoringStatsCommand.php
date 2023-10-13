@@ -8,8 +8,9 @@ use App\Models\Boxscore;
 use App\Models\GameStatDump;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
+use App\Notifications\GameResults;
 use App\Services\PlayerListService;
-use Monolog\Logger;
+use Landlord;
 
 class SaveScoringStatsCommand extends LoggedCommand
 {
@@ -35,12 +36,10 @@ class SaveScoringStatsCommand extends LoggedCommand
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
-        \Landlord::disable();
+        Landlord::disable();
 
         $game_id = $this->argument('game_id');
         $dump = GameStatDump::with('game.season')->where('game_id', $game_id)->firstOrFail();
@@ -114,7 +113,7 @@ class SaveScoringStatsCommand extends LoggedCommand
                     $keys = [
                         'game_id' => $dump->game_id,
                         'quarter' => $quarter + 1,
-                        'player_id' => $player_id ? $player_id : 0,
+                        'player_id' => $player_id ?: 0,
                         'name' => $nameKey
                     ];
                     $save = [
@@ -130,8 +129,12 @@ class SaveScoringStatsCommand extends LoggedCommand
             }
         }
 
-        \Landlord::enable();
-    }
+        # NOTIFICATION
+        // We're treating this as the live scoring equivalent for right now, once live scoring is doing push we can remove this
+        $notification = new GameResults($dump->game);
+        $activeSeason->site->notify($notification);
 
+        Landlord::enable();
+    }
 
 }

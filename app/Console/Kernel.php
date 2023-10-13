@@ -7,10 +7,12 @@ use App\Console\Commands\CloudinaryAddRecentPhotosCommand;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
 use App\Console\Commands\ManualArticleImportCommand;
+use App\Console\Commands\ManualGameResultsNotificationCommand;
 use App\Console\Commands\ManualRankingNotificationCommand;
 use App\Console\Commands\RegisterCommand;
 use App\Console\Commands\ResetPasswordCommand;
 use App\Console\Commands\SaveScoringStatsCommand;
+use App\Console\Commands\TestNotificationCommand;
 use App\Jobs\JobGroups;
 use App\Models\JobInstance;
 use Illuminate\Console\Scheduling\Schedule;
@@ -26,14 +28,16 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         ArticleImagesCommand::class,
+        CloudinaryAddRecentPhotosCommand::class,
         GenerateJSPlayerListCommand::class,
         HudsonvilleAthleticsArticlesCommand::class,
         ManualArticleImportCommand::class,
+        ManualGameResultsNotificationCommand::class,
         ManualRankingNotificationCommand::class,
         RegisterCommand::class,
         ResetPasswordCommand::class,
         SaveScoringStatsCommand::class,
-        CloudinaryAddRecentPhotosCommand::class
+        TestNotificationCommand::class,
     ];
 
     protected function commands()

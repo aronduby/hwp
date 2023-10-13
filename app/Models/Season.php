@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read Collection|Recent[] $recent
  * @property-read StatCollection|Stat[] $stats
  * @property-read ActiveSeason $activeSeason
+ * @property-read Site $site
  * @method static Builder|Season current()
  * @method static Builder|Season whereCreatedAt($value)
  * @method static Builder|Season whereCurrent($value)
@@ -91,5 +92,10 @@ class Season extends Model
     public function activeSeason(): BelongsTo
     {
         return $this->belongsTo('App\Models\ActiveSeason', 'id', 'id');
+    }
+
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Site');
     }
 }
