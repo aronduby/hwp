@@ -9,6 +9,7 @@ use Cloudinary\Transformation\NamedTransformation;
 class Photo implements PhotoSource
 {
 
+    public $original;
     public $photo;
     public $thumb;
     public $banner;
@@ -17,10 +18,16 @@ class Photo implements PhotoSource
     {
         // you have to use separate instances here otherwise they combine, and you end up with tiny banner
 
-        $this->photo = $data['secure_url'];
+        $this->original = $data['secure_url'];
+
+        $this->photo = $cloudinary->image($data['public_id'])
+            ->namedTransformation(NamedTransformation::name('media_lib_main'))
+            ->toUrl();
+
         $this->thumb = $cloudinary->image($data['public_id'])
             ->namedTransformation(NamedTransformation::name('media_lib_thumb'))
             ->toUrl();
+
         $this->banner = $cloudinary->image($data['public_id'])
             ->namedTransformation(NamedTransformation::name('banner'))
             ->toUrl();
