@@ -132,3 +132,10 @@
     border-top:    $perpendicular-borders;
   }
 }
+
+/// Helper for doing text overflow ellipsis
+@mixin ellipsis() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

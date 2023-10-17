@@ -5,6 +5,10 @@
 
 .result {
 
+  header h1 {
+    @include ellipsis;
+  }
+
   .body {
     font-size: .9em;
     text-align: left;

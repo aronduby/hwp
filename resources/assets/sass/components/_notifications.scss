@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .notifications {
 
   a {
@@ -31,6 +33,11 @@
     h1 {
       font-size: 4rem;
     }
+  }
+
+  &--fine-print {
+    font-size: em(12);
+    color: map.get($colors, grey);
   }
 
   &-actions {

@@ -1,6 +1,6 @@
 <section class="card result result--{{$result->status()}}" data-id="{{$result->id}}">
     <header>
-        <h1>@lang('misc.'.$result->team) <small>@lang('misc.vs')</small> {{$result->opponent}}</h1>
+        <h1 title="@lang('misc.'.$result->team) @lang('misc.vs') {{$result->opponent}}">@lang('misc.'.$result->team) <small>@lang('misc.vs')</small> {{$result->opponent}}</h1>
     </header>
 
     <div class="body">

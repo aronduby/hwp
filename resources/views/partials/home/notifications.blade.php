@@ -5,6 +5,7 @@
         <div class="notifications-text">
             <h1>We Have Push Notifications!</h1>
             <p>Exciting News! We're thrilled to announce we've added push notifications, ensuring you stay in the loop with all the latest scores, rankings, and updates. Don't miss a thing – subscribe today and be the first to know!</p>
+            <p class="notifications--fine-print">This is a beta release, so expect bugs and please let me know if you have issues.</p>
         </div>
 
         <hr />

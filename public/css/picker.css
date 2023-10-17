@@ -517,6 +517,26 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
+.text--xs {
+  font-size: 0.75em;
+}
+
+.text--sm {
+  font-size: 0.875em;
+}
+
+.text--md {
+  font-size: 1em;
+}
+
+.text--lg {
+  font-size: 1.125em;
+}
+
+.text--xl {
+  font-size: 1.25em;
+}
+
 .text-align--left {
   text-align: left !important;
 }
