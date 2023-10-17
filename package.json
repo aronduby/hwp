@@ -1,5 +1,8 @@
 {
   "private": true,
+  "engines": {
+    "node": "~14.15.3"
+  },
   "scripts": {
     "development": "mix",
     "watch": "mix watch",
