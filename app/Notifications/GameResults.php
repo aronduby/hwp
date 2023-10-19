@@ -84,10 +84,15 @@ class GameResults extends Notification implements ShouldQueue, SendsToFCMTopic
 
     public function toFCMTopic(): CloudMessage
     {
+        // using withNotification results in fcm code triggering a less nice notification
+        // and data can only be a single level with string values, so json encode
         return CloudMessage::new()
-            ->withNotification([
-                'title' => $this->getTitle(),
-                'body' => $this->getMessage()
+            ->withData([
+                'notification' => json_encode([
+                    'title' => $this->getTitle(),
+                    'body' => $this->getMessage(),
+                    'link' => '/game'.$this->game->id.'/stats',
+                ])
             ])
             ->withWebPushConfig([
                 'fcm_options' => [

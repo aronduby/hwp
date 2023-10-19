@@ -7293,11 +7293,14 @@ var firebaseConfig = {
 var app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)(firebaseConfig);
 var messaging = (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.getMessaging)(app);
 (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.onBackgroundMessage)(messaging, function (payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  // we can't use top level payload notification now since that triggers fcm notification which creates double
+  // instead we're going to look for notification within the data level of things
+  var notificationData = JSON.parse(payload.data.notification);
+
   // Customize notification here
-  var notificationTitle = payload.notification.title;
+  var notificationTitle = notificationData.title;
   var notificationOptions = {
-    body: payload.notification.body,
+    body: notificationData.body,
     icon: '/icons/android-chrome-192x192.png'
   };
   self.registration.showNotification(notificationTitle, notificationOptions);

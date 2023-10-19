@@ -79,10 +79,15 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
 
     public function toFCMTopic(): CloudMessage
     {
+        // using withNotification results in fcm code triggering a less nice notification
+        // and data can only be a single level with string values, so json encode
         return CloudMessage::new()
-            ->withNotification([
-                'title' => 'New Article Imported',
-                'body' => 'We just imported a new article: ' . $this->article->title
+            ->withData([
+                'notification' => json_encode([
+                    'title' => 'New Article Imported',
+                    'body' => 'We just imported a new article: ' . $this->article->title,
+                    'link' => $this->article->url
+                ])
             ])
             ->withWebPushConfig([
                 'fcm_options' => [

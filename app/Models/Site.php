@@ -58,6 +58,13 @@ class Site extends Model
         'is_picker' => 'boolean'
     ];
 
+    /**
+     * The (cached) FCM topic to route to
+     *
+     * @var string
+     */
+    protected $fcmTopic;
+
     /** @noinspection PhpUnused */
     public function scopeDomain($query, $domain)
     {
@@ -120,6 +127,10 @@ class Site extends Model
      */
     public function routeNotificationForFCMTopic(): string
     {
-        return 'topic.'.$this->id;
+        if (!isset($this->fcmTopic)) {
+            $this->fcmTopic = sprintf(env('FCM_SITE_TOPIC'), $this->id);
+        }
+
+        return $this->fcmTopic;
     }
 }

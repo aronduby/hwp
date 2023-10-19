@@ -77,10 +77,14 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
 
     public function toFCMTopic(): CloudMessage
     {
+        // using withNotification results in fcm code triggering a less nice notification
+        // and data can only be a single level with string values, so json encode
         return CloudMessage::new()
-            ->withNotification([
-                'title' => 'New state rankings announced!',
-                'body' => $this->getMessage()
+            ->withData([
+                'notification' => json_encode([
+                    'title' => 'New state rankings announced!',
+                    'body' => $this->getMessage()
+                ])
             ]);
     }
 

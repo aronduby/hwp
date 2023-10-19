@@ -19,11 +19,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 onBackgroundMessage(messaging, (payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    // we can't use top level payload notification now since that triggers fcm notification which creates double
+    // instead we're going to look for notification within the data level of things
+    const notificationData = JSON.parse(payload.data.notification);
+
     // Customize notification here
-    const notificationTitle = payload.notification.title;
+    const notificationTitle = notificationData.title;
     const notificationOptions = {
-        body: payload.notification.body,
+        body: notificationData.body,
         icon: '/icons/android-chrome-192x192.png'
     };
 

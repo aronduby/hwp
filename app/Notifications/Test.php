@@ -71,10 +71,14 @@ class Test extends Notification implements ShouldQueue, SendsToFCMTopic
 
     public function toFCMTopic(): CloudMessage
     {
+        // using withNotification results in fcm code triggering a less nice notification
+        // and data can only be a single level with string values, so json encode
         return CloudMessage::new()
-            ->withNotification([
-                'title' => 'Test Notification',
-                'body' => $this->message,
+            ->withData([
+                'notification' => json_encode([
+                    'title' => 'Test Notification',
+                    'body' => $this->message,
+                ])
             ]);
     }
 }
