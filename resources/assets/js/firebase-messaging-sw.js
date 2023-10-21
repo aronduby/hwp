@@ -21,16 +21,10 @@ const messaging = getMessaging(app);
 onBackgroundMessage(messaging, (payload) => {
     // we can't use top level payload notification now since that triggers fcm notification which creates double
     // instead we're going to look for notification within the data level of things
-    const notificationData = JSON.parse(payload.data.notification);
+    const { title, ...options } = JSON.parse(payload.data.notification);
+    options.icon = options.icon ?? '/icons/android-chrome-192x192.png';
 
-    // Customize notification here
-    const notificationTitle = notificationData.title;
-    const notificationOptions = {
-        body: notificationData.body,
-        icon: '/icons/android-chrome-192x192.png'
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    self.registration.showNotification(title, options);
 });
 
 self.addEventListener('notificationclick', function(event){

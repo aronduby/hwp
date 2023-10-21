@@ -7272,6 +7272,9 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/esm/index.esm.js");
 /* harmony import */ var firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/messaging/sw */ "./node_modules/firebase/messaging/sw/dist/esm/index.esm.js");
+var _excluded = ["title"];
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
 
@@ -7293,17 +7296,14 @@ var firebaseConfig = {
 var app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)(firebaseConfig);
 var messaging = (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.getMessaging)(app);
 (0,firebase_messaging_sw__WEBPACK_IMPORTED_MODULE_1__.onBackgroundMessage)(messaging, function (payload) {
+  var _options$icon;
   // we can't use top level payload notification now since that triggers fcm notification which creates double
   // instead we're going to look for notification within the data level of things
-  var notificationData = JSON.parse(payload.data.notification);
-
-  // Customize notification here
-  var notificationTitle = notificationData.title;
-  var notificationOptions = {
-    body: notificationData.body,
-    icon: '/icons/android-chrome-192x192.png'
-  };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  var _JSON$parse = JSON.parse(payload.data.notification),
+    title = _JSON$parse.title,
+    options = _objectWithoutProperties(_JSON$parse, _excluded);
+  options.icon = (_options$icon = options.icon) !== null && _options$icon !== void 0 ? _options$icon : '/icons/android-chrome-192x192.png';
+  self.registration.showNotification(title, options);
 });
 self.addEventListener('notificationclick', function (event) {
   // console.log('notification clicked', event.notification.tag);
