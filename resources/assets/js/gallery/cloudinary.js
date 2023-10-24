@@ -9,6 +9,8 @@ export const key = 'cloudinary';
 
 const THUMB_TRANSFORM = 't_media_lib_thumb';
 const MAIN_TRANSFORM = 't_media_lib_main';
+const FORMAT_AUTO = 'f_auto';
+const QUALITY_AUTO = 'q_auto';
 
 /**
  * Get the URL for the download button
@@ -34,8 +36,8 @@ export function mapImageData(item) {
         ...item,
         w: item.width,
         h: item.height,
-        src: toUrl([MAIN_TRANSFORM], item),
-        msrc: toUrl([THUMB_TRANSFORM], item),
+        src: toUrl([MAIN_TRANSFORM, FORMAT_AUTO, QUALITY_AUTO], item),
+        msrc: toUrl([THUMB_TRANSFORM, FORMAT_AUTO, QUALITY_AUTO], item),
         file: item.filename,
         id: item.public_id,
         // title: item.metadata.title || null,

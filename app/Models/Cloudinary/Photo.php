@@ -4,7 +4,10 @@ namespace App\Models\Cloudinary;
 
 use App\Models\Contracts\PhotoSource;
 use Cloudinary\Cloudinary;
+use Cloudinary\Transformation\Delivery;
+use Cloudinary\Transformation\Format;
 use Cloudinary\Transformation\NamedTransformation;
+use Cloudinary\Transformation\Quality;
 
 class Photo implements PhotoSource
 {
@@ -22,14 +25,20 @@ class Photo implements PhotoSource
 
         $this->photo = $cloudinary->image($data['public_id'])
             ->namedTransformation(NamedTransformation::name('media_lib_main'))
+            ->delivery(Delivery::format(Format::auto()))
+            ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
 
         $this->thumb = $cloudinary->image($data['public_id'])
             ->namedTransformation(NamedTransformation::name('media_lib_thumb'))
+            ->delivery(Delivery::format(Format::auto()))
+            ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
 
         $this->banner = $cloudinary->image($data['public_id'])
             ->namedTransformation(NamedTransformation::name('banner'))
+            ->delivery(Delivery::format(Format::auto()))
+            ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
     }
 }
