@@ -31,7 +31,7 @@ class ArticleImportedNotifier implements ShouldQueue
         /**
          * @var Article $article
          */
-        $article = Article::findOrFail($event->articleId);
+        $article = Article::firstOrFail($event->articleId);
         $notification = new ArticleImportedNotification($article);
         $site = $event->site;
         $site->notify($notification);
