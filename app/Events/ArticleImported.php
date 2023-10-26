@@ -33,11 +33,11 @@ class ArticleImported implements RecentEvent, ShouldQueue
      *
      * @param Site $site
      * @param Season $season
-     * @param array $articleId
+     * @param int $articleId
      *
      * @return void
      */
-    public function __construct(Site $site, Season $season, array $articleId)
+    public function __construct(Site $site, Season $season, int $articleId)
     {
         $this->site = $site;
         $this->season = $season;
