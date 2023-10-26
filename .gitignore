@@ -9,7 +9,9 @@
 !/public/js/modernizr.custom.js
 /public/css/main.css
 /public/css/picker.css
-public/mix-manifest.json
+/public/mix-manifest.json
+/public/firebase-messaging-sw.js
+/public/firebase-messaging-sw.js.LICENSE.txt
 /public/note_imgs/
 Homestead.yaml
 Homestead.json
