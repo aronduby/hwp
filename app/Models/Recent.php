@@ -80,7 +80,9 @@ class Recent extends Model
      */
     public function scopeLatest(Builder $query, $page): Builder
     {
-        $query->orderBy('created_at', 'desc');
+        $query
+            ->orderBy('sticky', 'desc')
+            ->orderBy('created_at', 'desc');
 
         /** @noinspection PhpStatementHasEmptyBodyInspection */
         if ($page === 1) {

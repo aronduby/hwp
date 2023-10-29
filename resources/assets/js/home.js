@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     new Rankings(document.querySelector('.rankings'));
 
     // recent
-    var recent = new Recent(document.querySelector('.recent-grid'), document.querySelector('.recent-content .btn.load-more'));
+    var recent = new Recent(document.querySelector('.recent-content'));
     recent.load();
 
 });

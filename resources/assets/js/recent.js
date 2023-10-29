@@ -2,9 +2,10 @@ import _ from 'lodash';
 
 const $ = jQuery;
 
-function Recent(holder, btn) {
-    this.holder = $(holder);
-    this.btn = $(btn);
+function Recent(container) {
+    this.grid = $(container.querySelector('.recent-grid'));
+    this.btn = $(container.querySelector('.btn.load-more'));
+
     this.loadCount = 0;
     this.templates = [];
 
@@ -33,28 +34,28 @@ Recent.prototype.load = function () {
     var url = this.btn.data('url');
     var tmpl;
 
-    this.holder.addClass('loading');
+    this.grid.addClass('loading');
     this.btn.attr('disabled', 'disabled');
 
     this.loadCount++;
 
     if (this.loadCount > 1) {
         tmpl = this.templates[this.loadCount % 2].clone();
-        tmpl.appendTo(this.holder);
+        tmpl.appendTo(this.grid);
     }
 
     $.getJSON(url)
         .done(this.done.bind(self))
         .fail(this.error.bind(self))
         .always(function () {
-            self.holder.removeClass('loading');
+            self.grid.removeClass('loading');
         });
 };
 
 Recent.prototype.done = function (rsp) {
     var self = this;
     var next = rsp.next_page_url;
-    var loading = this.holder.find('.recent--loading');
+    var loading = this.grid.find('.recent--loading');
     var i = 0;
     var max = Math.min(rsp.per_page, rsp.data.length);
     var pageClass = "";
@@ -70,18 +71,23 @@ Recent.prototype.done = function (rsp) {
 
         newEl.addClass(pageClass);
 
+        if (item.sticky) {
+            newEl.addClass('recent--sticky')
+                .append('<i class="recent-stickyIcon fa-solid fa-thumbtack"></i>');
+        }
+
         if (loadingEl.length) {
             newEl.attr('class', newEl.attr('class') + ' ' + loadingEl.attr('class'))
                 .removeClass('recent--loading');
 
             loadingEl.replaceWith(newEl);
         } else {
-            newEl.appendTo(self.holder);
+            newEl.appendTo(self.grid);
         }
     }
 
     // hide and remove anything still set as loading
-    var empty = this.holder.find('.recent--loading');
+    var empty = this.grid.find('.recent--loading');
     if (this.loadCount > 1) {
         empty.fadeOut();
     } else {
@@ -100,7 +106,7 @@ Recent.prototype.done = function (rsp) {
 Recent.prototype.error = function (err) {
     console.error(err);
     alert('Error loading the recent content');
-    this.holder.find('.recent--loading').remove();
+    this.grid.find('.recent--loading').remove();
     this.loadCount--;
 };
 

@@ -69,6 +69,7 @@ $recent-height: 200px;
     padding: $gap-large;
     pointer-events: none;
     transition: all .25s;
+    z-index: 2;
 
     h1 {
       font-size: 4em;
@@ -102,6 +103,17 @@ $recent-height: 200px;
   & > a:hover > .recent--hover,
   .recent--hover:hover {
     opacity: 1;
+  }
+
+
+  &.recent--sticky .recent-stickyIcon {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    color: white;
+    opacity: .8;
+    font-size: 1em;
+    z-index: 1;
   }
 }
 
