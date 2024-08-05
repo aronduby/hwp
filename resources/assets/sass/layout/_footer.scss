@@ -49,36 +49,25 @@ footer .follow-us h1 {
   }
 
   @include responsive(sm) {
+    display: flex;
+    gap: $gap-large;
+    margin: $gap-extra-large 0 $gap-extra-extra-large 0;
+
     .team {
       text-align: left;
       margin-top: 0;
+      flex: 2;
 
       ul {
         columns: 2;
       }
     }
 
-    .team--V,
-    .team--JV {
-      display: inline-block;
-      width: 47%;
-      vertical-align: top;
-    }
-
-    .team--V {
-      margin-right: 5%;
-    }
-
     .team--STAFF {
-      margin-top: $gap;
+      flex: 1;
 
       ul {
-        columns: auto;
-
-        li {
-          display: inline-block;
-          margin-right: $gap-large;
-        }
+        columns: 1;
       }
     }
   }

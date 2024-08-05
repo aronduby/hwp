@@ -3,13 +3,13 @@
         <div class="bg-elements bg--grid blend--overlay"></div>
 
         <div class="container text-align--center">
-            <h1>Follow us <a href="https://twitter.com/intent/follow?screen_name={{app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}">{{'@'.app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}</a> for live scoring updates</h1>
+            {{-- <h1>Follow us <a href="https://twitter.com/intent/follow?screen_name={{app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}">{{'@'.app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}</a> for live scoring updates</h1> --}}
         </div>
     </section>
 
     <section class="footer-section main bg--primary">
         <div class="container">
-            <div class="row">
+            {{--<div class="row">
                 <div class="col-xs-12 col-md-4">
                     <section class="twitter-embed">
                         <a class="twitter-timeline"
@@ -26,7 +26,8 @@
                 <div class="col-xs-12 col-md-8">
                     @include('partials.playerlist')
                 </div>
-            </div>
+            </div>--}}
+            @include('partials.playerlist')
         </div>
     </section>
 
