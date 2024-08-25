@@ -31,6 +31,15 @@
                 <p>You can always <a id="fcm-unsubscribe" href="#">unsubscribe</a> if you would like.</p>
             </div>
 
+            <div class="state state--with-icon state--not-installed">
+                <header>
+                    <i class="fa-solid fa-house"></i>
+                    <i class="fa-solid fa-circle-plus fa-bounce animate-once text--bright-accent-alt"></i>
+                </header>
+                <h2>Add to Home Screen</h2>
+                <p>Use the browser's menu to add the site to your home screen to enable push notification support.</p>
+            </div>
+
             <div class="state state--not-subscribed">
                 <button id="fcm-subscribe" class="btn btn--lg btn--bright-accent-alt btn--loader fa-bounce animate-once">
                     <i class="fa-solid fa-bell"></i>

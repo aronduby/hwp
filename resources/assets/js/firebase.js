@@ -35,6 +35,13 @@ export function isSupported() {
     return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
+export function isInstalled() {
+    // our best bet right now for telling if the site is installed is to check the display mode
+    // this value will be "browser" by default, and whatever we set in manifest.json when installed
+    // (in this case "standalone")
+    return window.matchMedia('(display-mode: standalone)').matches;
+}
+
 export function isPermissionGranted () {
     return notificationPermissions === 'granted';
 }

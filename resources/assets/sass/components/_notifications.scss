@@ -91,7 +91,7 @@
     --fa-animation-iteration-count: 1;
   }
 
-  $states: loading, blocked, subscribed, not-subscribed, not-supported, error;
+  $states: loading, blocked, subscribed, not-subscribed, not-installed, not-supported, error;
   @each $state in $states {
     [data-state="#{$state}"] .state--#{$state} {
       display: block;
@@ -100,5 +100,15 @@
 
   .state--not-subscribed:not(.state--unsubscribed) .unsubscribed-message {
     display: none;
+  }
+
+  .state--not-installed .fa-circle-plus {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    margin-left: 10px;
+    font-size: 4.4rem;
+    border-radius: 100%;
+    background: white;
   }
 }

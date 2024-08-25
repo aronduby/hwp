@@ -4,6 +4,7 @@ import {
     isPermissionBlocked,
     isPermissionDefault,
     isSupported,
+    isInstalled,
     wasUnsubscribed,
     NoTokenError,
 } from "./firebase";
@@ -21,7 +22,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             observer.disconnect();
 
             if (!isSupported()) {
-                notificationActions.dataset.state = 'not-supported';
+                // ios (maybe others?) has to be installed before its supported, so add this additional check
+                if (!isInstalled()) {
+                    notificationActions.dataset.state = 'not-installed';
+                } else {
+                    notificationActions.dataset.state = 'not-supported';
+                }
             } else if (isPermissionBlocked()) {
                 notificationActions.dataset.state = 'blocked';
             } else if (isPermissionDefault() || wasUnsubscribed()) {
