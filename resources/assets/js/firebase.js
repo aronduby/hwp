@@ -22,13 +22,17 @@ const messaging = getMessaging(app);
 
 
 // region Registration
-
-const notificationPermissions = Notification.permission;
+let notificationPermissions;
+try {
+    notificationPermissions = Notification.permission;
+} catch (err) {
+    notificationPermissions = 'default';
+}
 
 const unsubscribedKey = 'fcm.wasUnsubscribed';
 
 export function isSupported() {
-    return "serviceWorker" in navigator && "PushManager" in window;
+    return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
 export function isPermissionGranted () {
