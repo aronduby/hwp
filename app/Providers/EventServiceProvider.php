@@ -33,13 +33,13 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         // super simple cache logging
-        Event::listen([
-            'Illuminate\Cache\Events\CacheHit',
-            'Illuminate\Cache\Events\CacheMissed',
-            'Illuminate\Cache\Events\KeyForgotten',
-            'Illuminate\Cache\Events\KeyWritten',
-        ], function($event) {
-            Log::debug(get_class($event).': '.$event->key);
-        });
+        // Event::listen([
+        //     'Illuminate\Cache\Events\CacheHit',
+        //     'Illuminate\Cache\Events\CacheMissed',
+        //     'Illuminate\Cache\Events\KeyForgotten',
+        //     'Illuminate\Cache\Events\KeyWritten',
+        // ], function($event) {
+        //     Log::debug(get_class($event).': '.$event->key);
+        // });
     }
 }
