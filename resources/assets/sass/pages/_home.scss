@@ -3,85 +3,109 @@
 // -----------------------------------------------------------------------------
 
 .page--home {
-  margin-top: -85px;
+	margin-top: -85px;
 
-  & > header {
-    height: 100vh;
-    font-family: $heading-font-stack;
-    font-size: em(31);
-    text-transform: uppercase;
+	& > header {
+		height: 100vh;
+		font-family: $heading-font-stack;
+		font-size: em(31);
+		text-transform: uppercase;
 
-    .container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+		.container {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
 
-    a {
-      color: $color-accent-text;
-    }
+		a {
+			color: $color-accent-text;
+		}
 
-    h1.site-name {
-      line-height: .8em;
-      font-size: em(50);
-      margin: $gap-extra-small 0;
-      
-      @include responsive('sm') {
-        font-size: em(75);
-      }
+		h1.site-name {
+			line-height: .8em;
+			font-size: em(50);
+			margin: $gap-extra-small 0;
 
-      @include responsive('lg') {
-        font-size: em(90);
-      }
-    }
+			@include responsive('sm') {
+				font-size: em(75);
+			}
 
-    h2.ranking {
-      font-size: em(20);
-    }
+			@include responsive('lg') {
+				font-size: em(90);
+			}
+		}
 
-    h4.active-season--title {
-      margin-bottom: 1.5em
-    }
-  }
+		h2.ranking {
+			font-size: em(20);
+		}
 
-  header .upcoming {
-    line-height: 1em;
+		h4.active-season--title {
+			margin-bottom: 1.5em
+		}
+	}
 
-    > header h1 {
-      font-size: em(20);
-      color: darken($color-white, 15);
-    }
+	header .upcoming {
+		line-height: 1em;
 
-    .team {
-      margin: $gap-small 0;
+		> header h1 {
+			font-size: em(20);
+			color: darken($color-white, 15);
+		}
 
-      header h1 {
-        font-size: .75em;
-        color: $color-white-darker;
-      }
+		.team {
+			margin: $gap-small 0;
 
-      @include responsive('sm') {
-        margin: $gap-small;
+			header h1 {
+				font-size: .75em;
+				color: $color-white-darker;
+			}
 
-        &.varsity {
-          text-align: right;
-        }
+			@include responsive('sm') {
+				margin: $gap-small;
 
-        &.jv {
-          text-align: left;
-        }
-      }
-    }
+				&.varsity {
+					text-align: right;
+				}
 
-    time .day::after {
-      content:"|";
-      position: relative;
-      display: inline-block;
-      top: -2px;
-      margin-left: .2em;
-      color: $color-white-darker;
-    }
-  }
+				&.jv {
+					text-align: left;
+				}
+			}
+		}
 
+		time .day::after {
+			content: "|";
+			position: relative;
+			display: inline-block;
+			top: -2px;
+			margin-left: .2em;
+			color: $color-white-darker;
+		}
+	}
+}
+
+// Toggling visibility for a better view of the background image
+#home-header .eyeToggle {
+	display: none;
+	position: absolute;
+	bottom: 1em;
+	right: 1em;
+}
+
+#home-header.hasPhoto {
+	.eyeToggle {
+		display: block;
+	}
+
+	&:has(.eyeToggle input:checked) {
+		.container {
+			display: none;
+		}
+
+		.bg--img {
+			filter: none;
+			mix-blend-mode: normal;
+		}
+	}
 }

@@ -1,6 +1,6 @@
 @inject('season', 'App\Models\ActiveSeason')
 
-<header id="home-header" class="bg--dark">
+<header id="home-header" class="bg--dark @if($photo) hasPhoto @endif">
     <div class="bg-elements">
         <div class="bg--gradient"></div>
         @if($photo)
@@ -8,14 +8,6 @@
         @else
             <div class="slide bg--img" style="background-image: url('images/ezra-ball.png');"></div>
         @endif
-
-        {{--<ul class="bg-slideshow blend--hard-light">
-            @foreach($photos as $photo)
-                <div class="slide bg--img" style="background-image: url({{$photo->photo}});"></div>
-            @endforeach
-        </ul>
-        <a class="prev" title="@lang('misc.previous')"><i class="fa fa-previous"></i></a>
-        <a class="next" title="@lang('misc.next')"><i class="fa fa-previous"></i></a>--}}
     </div>
 
     <section class="container text-align--center text--shadow">
@@ -64,4 +56,12 @@
             </section>
         </div>
     </section>
+
+    <div class="eyeToggle">
+        <input id="homeHeader-photoToggle-cb" type="checkbox" autocomplete="off" />
+        <label for="homeHeader-photoToggle-cb">
+            <i class="eyeToggle-icon eyeToggle-icon--unchecked fa fa-eye"></i>
+            <i class="eyeToggle-icon eyeToggle-icon--checked fa fa-eye-slash"></i>
+        </label>
+    </div>
 </header>
