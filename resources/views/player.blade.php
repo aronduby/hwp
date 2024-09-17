@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <article class="page--player">
+    <article class="page--player" data-name-key="{{$player->name_key}}">
 
         <header class="page-header bg--dark">
             <div class="bg-elements">
