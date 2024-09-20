@@ -78,6 +78,7 @@ return [
 
     'goalie' => 'Goalie',
     'field' => 'Field',
+    'total' => 'Total',
     'totals' => 'Totals',
     'perQuarter' => 'Per Quarter',
     'advantages' => 'Advantages',
@@ -94,6 +95,9 @@ return [
     'thirstsQuenched' => 'Thirsts Quenched',
     'thirsts' => 'Thirsts',
     'quenched' => 'Quenched',
+
+    'shirtsDelivered' => 'Shirts Delivered',
+    'delivered' => 'Delivered',
 
     'date' => 'Date',
     'range' => 'Range',

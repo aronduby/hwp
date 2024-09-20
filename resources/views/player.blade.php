@@ -51,7 +51,7 @@
             </div>
         </header>
 
-        @if($team !== 'STAFF')
+        @if($team !== 'STAFF' || in_array($player->name_key, config('hydration-specialists')))
             <section class="page-section">
                 <div class="bg-elements">
                     <div class="bg--light"></div>
@@ -64,10 +64,17 @@
                         @if($position === 'GOALIE')
                             @include('partials.stats.goalie', ['stats' => $stats, 'for' => 'PLAYER'])
                         @else
-                            @include('partials.stats.field', ['stats' => $stats, 'for' => 'PLAYER'])
-                            @if($player->name_key == 'ParkerMolewyk')
-                                @include('partials.stats.thirsts-quenched', ['stats' => $stats, 'for' => 'PLAYER'])
+                            @if($team !== 'STAFF')
+                                @include('partials.stats.field', ['stats' => $stats, 'for' => 'PLAYER'])
                             @endif
+                        @endif
+
+                        @if(in_array($player->name_key, config('hydration-specialists')))
+                            @include('partials.stats.thirsts-quenched', ['stats' => $stats, 'for' => 'PLAYER'])
+                        @endif
+
+                        @if(array_key_exists($player->name_key, config('shirts-delivered')))
+                            @include('partials.stats.shirts-delivered', ['stats' => config('shirts-delivered')[$player->name_key]])
                         @endif
                     </div>
                 </div>

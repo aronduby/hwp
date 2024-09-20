@@ -327,6 +327,18 @@
         }
     }
 
+    function shirtsDelivered(stats) {
+        const data = window.shirtsDeliveredData;
+
+        return {
+            data: [
+                headerArray,
+                ['Delivered', data.whole],
+                ['Forgotten', data.whole - data.part]
+            ]
+        };
+    }
+
     const methods = {
         initCharts,
         drawCharts,
@@ -341,6 +353,7 @@
         sprints,
         stealsToTurnovers,
         thirstsQuenched,
+        shirtsDelivered,
     };
     module.exports = methods;
 })();
