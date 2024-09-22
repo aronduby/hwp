@@ -16,8 +16,8 @@ class SMSController extends Controller
         if ($request->has('OptOutType')) {
             switch ($request->get('OptOutType')) {
                 case 'START':
-                    $this->subscribe($request->get('From'), $request->get('Body'));
-                    return $this->basicResponse();
+                    $msg = $this->subscribe($request->get('From'), $request->get('Body'));
+                    return $this->basicResponse($msg);
 
                 case 'STOP':
                     $this->unsubscribe($request->get('From'));
@@ -34,9 +34,12 @@ class SMSController extends Controller
 
     public function subscribe(string $phone, string $type)
     {
+        $message = null;
+
         switch (strtoupper($type)) {
             case Subscription::TYPE_ALL:
-                $subType = Subscription::TYPE_ALL;
+                $subType = Subscription::TYPE_QUARTERS;
+                $message = "Subscriptions for ALL updates are currently reserved for grandparents or those with issues that prevent them from using push notifications, so we signed you up for QUARTERS instead. If you believe you qualify, touch base with Duby and he'll get it updated. Otherwise, do nothing and enjoy the updates at the end of the quarters, or head to the homepage to subscribe through push notifications.";
                 break;
 
             case Subscription::TYPE_FINAL:
@@ -52,7 +55,11 @@ class SMSController extends Controller
         $sub = Subscription::firstOrNew(['phone' => $phone]);
         $sub->type = $subType;
 
-        return $sub->save();
+        if ($sub->save()) {
+            return $message;
+        } else {
+            return false;
+        }
     }
 
     public function unsubscribe($phone)
