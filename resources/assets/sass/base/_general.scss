@@ -51,6 +51,12 @@ nav ul {
   padding: 0;
 }
 
-time {
-  display: block;
+time{
+  a {
+    color: inherit !important;
+  }
+
+  &:not(.inline) {
+    display: block;
+  }
 }

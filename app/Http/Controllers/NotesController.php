@@ -9,8 +9,9 @@ use App\Http\Requests;
 
 class NotesController extends Controller
 {
-    public function note(Note $note)
+    public function note(Request $request, Note $note)
     {
-        return view('note', compact('note'));
+        $view = 'notes.' . ($request->ajax() ? 'ajax' : 'page');
+        return view($view, compact('note'));
     }
 }

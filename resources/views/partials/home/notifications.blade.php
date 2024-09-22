@@ -28,7 +28,7 @@
                     <i class="fa-solid fa-bell fa-shake animate-once text--success"></i>
                     <h2>Subscribed!</h2>
                 </header>
-                <p>You can always <a id="fcm-unsubscribe" href="#">unsubscribe</a> if you would like.</p>
+                <p>You can always <a id="fcm-unsubscribe" href="#">unsubscribe</a> if you would like. If you are subscribed to text updates don't forget to reply STOP to those messages.</p>
             </div>
 
             <div class="state state--not-installed">
