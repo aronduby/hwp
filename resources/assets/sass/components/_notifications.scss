@@ -102,13 +102,25 @@
     display: none;
   }
 
-  .state--not-installed .fa-circle-plus {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    margin-left: 10px;
-    font-size: 4.4rem;
-    border-radius: 100%;
-    background: white;
+  .state--not-installed {
+    svg {
+      height: 180px;
+      fill: var(--color-white);
+    }
+
+    .iconPosition {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: 10px;
+      transform: translate(30%, 130%);
+    }
+
+    .fa-square-plus {
+      font-size: 4.4rem;
+      border-radius: 10px;
+      background: white;
+      line-height: .8em;
+    }
   }
 }
