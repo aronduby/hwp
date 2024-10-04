@@ -3,7 +3,9 @@
         <div class="bg-elements bg--grid blend--overlay"></div>
 
         <div class="container text-align--center">
-            {{-- <h1>Follow us <a href="https://twitter.com/intent/follow?screen_name={{app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}">{{'@'.app('App\Models\ActiveSite')->settings->get('twitter.screenName')}}</a> for live scoring updates</h1> --}}
+            @if(app('App\Models\ActiveSite')->settings->get('instagram.screenName'))
+                <h1>Follow us on Instagram <a href="https://www.instagram.com/{{app('App\Models\ActiveSite')->settings->get('instagram.screenName')}}" target="_blank"><i class="fa-brands fa-instagram"></i> {{app('App\Models\ActiveSite')->settings->get('instagram.screenName')}}</a></h1>
+            @endif
         </div>
     </section>
 
