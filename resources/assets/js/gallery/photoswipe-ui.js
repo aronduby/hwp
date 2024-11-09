@@ -7,6 +7,10 @@
 * Built just using public methods/properties of PhotoSwipe.
 * 
 */
+
+var vex = require('vex-js');
+var vexDialog = require('vex-dialog');
+
 (function (root, factory) { 
 	if (typeof define === 'function' && define.amd) {
 		define(factory);
@@ -19,7 +23,7 @@
 
 	'use strict';
 
-
+	vex.registerPlugin(vexDialog)
 
 var PhotoSwipeUI_Default =
  function(pswp, framework) {
@@ -543,6 +547,7 @@ var PhotoSwipeUI_Default =
 		_listen('bindEvents', function() {
 			framework.bind(_controls, 'pswpTap click', _onControlsTap);
 			framework.bind(pswp.scrollWrap, 'pswpTap', ui.onGlobalTap);
+			framework.bind(pswp.container, 'contextmenu', ui.onContextMenu);
 
 			if(!pswp.likelyTouchDevice) {
 				framework.bind(pswp.scrollWrap, 'mouseover', ui.onMouseOver);
@@ -559,6 +564,7 @@ var PhotoSwipeUI_Default =
 			framework.unbind(_controls, 'pswpTap click', _onControlsTap);
 			framework.unbind(pswp.scrollWrap, 'pswpTap', ui.onGlobalTap);
 			framework.unbind(pswp.scrollWrap, 'mouseover', ui.onMouseOver);
+			framework.unbind(pswp.container, 'contextmenu', ui.onContextMenu);
 
 			if(_fullscrenAPI) {
 				framework.unbind(document, _fullscrenAPI.eventK, ui.updateFullscreen);
@@ -710,6 +716,30 @@ var PhotoSwipeUI_Default =
 
 		// add class when mouse is over an element that should close the gallery
 		_togglePswpClass(_controls, 'ui--over-close', _hasCloseClass(target));
+	};
+
+	ui.onContextMenu = function(e) {
+		if (e.target.tagName === 'IMG') {
+			const storageKey = 'downloadNotificationNaggedAt';
+			const nagAgainAfter = 30 * 24 * 60 * 60 * 1000;
+			const lastNagged = parseInt(localStorage.getItem(storageKey) ?? 0, 10);
+
+			if (!lastNagged || (lastNagged + nagAgainAfter) < Date.now()) {
+				// force the toolbar to be open all the time
+				_togglePswpClass(_controls, 'ui--no-idle', true);
+
+				vex.dialog.alert({
+					unsafeMessage: 'Wait! If you are saving the image, use this download button <i class="fa fa-download"></i> up here to get the full size.',
+					className: 'vex-theme-default vex-download-notification',
+					appendLocation: '.pswp__top-bar',
+					callback: () => {
+						// allow the toolbar to go idle again
+						_togglePswpClass(_controls, 'ui--no-idle', false);
+						localStorage.setItem(storageKey, Date.now());
+					}
+				});
+			}
+		}
 	};
 
 	ui.hideControls = function() {

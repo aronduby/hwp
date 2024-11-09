@@ -1,0 +1,21 @@
+.vex-download-notification.vex {
+	top: 44px;
+	left: auto;
+	bottom: auto;
+	padding: 0;
+	font-size: .85rem;
+	overflow: visible;
+
+	.vex-overlay,
+	.vex-dialog-form .vex-dialog-input {
+		display: none;
+	}
+
+	.vex-content {
+		width: 100%;
+		max-width: 350px;
+		box-shadow: 0 4px 5px 0 rgba(0,0,0,0.5);
+	}
+
+
+}
