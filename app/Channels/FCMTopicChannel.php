@@ -24,9 +24,12 @@ class FCMTopicChannel
 
     public function send($notifiable, SendsToFCMTopic $notification)
     {
-        $message = $notification->toFCMTopic();
         $topic = $notifiable->routeNotificationFor('FCMTopic', $notification);
+        $analyticsLabel = $topic .'.'. strtolower(class_basename($notification));
+
+        $message = $notification->toFCMTopic();
         $message = $message->withChangedTarget('topic', $topic);
+        $message = $message->withFcmOptions(['analytics_label' => $analyticsLabel]);
 
         $this->messaging->send($message);
     }
