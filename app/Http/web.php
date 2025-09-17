@@ -170,23 +170,30 @@ Route::get('cloudinary', function(ActiveSeason $season) {
     ]);
 
     // undocumented folder search, but I don't think we're going to need it because we're planning on importing those
-    // $data = $cloudinary->searchFoldersApi()->execute();
+    // $rootFolder = $settings['root_folder'];
+    // $data = $cloudinary->searchFoldersApi()->expression('folder:"'.$rootFolder.'/*"')->execute();
+    // $data = $cloudinary->adminApi()->subFolders($rootFolder);
 
     // list everything in a folder
-    $data = $cloudinary->searchApi()
-        ->expression('folder:23-24/* && folder:"23-24/Test Subfolder"')
-        ->withField('metadata')
-        ->withField('tags')
-        ->maxResults(MediaService::PER_PAGE)
-        ->execute();
+    // $data = $cloudinary->searchApi()
+    //     ->expression('folder:23-24/* && folder:"23-24/Test Subfolder"')
+    //     ->withField('metadata')
+    //     ->withField('tags')
+    //     ->maxResults(MediaService::PER_PAGE)
+    //     ->execute();
 
     // list everything with player tag
     // $data = $cloudinary->searchApi()
-    //     ->expression('metadata.players:rylan_mcdowell')
-    //     ->withField('metadata')
-    //     ->withField('tags')
+    //     ->expression('folder:"24-25/*" AND metadata.players=matthew_lawrence')
     //     ->maxResults(\App\Services\MediaServices\MediaService::PER_PAGE)
     //     ->execute();
+
+    $player = \App\Models\Player::nameKey('MatthewLawrence')->firstOrFail();
+    $playerDataService = new \App\Services\PlayerData\PlayerDataService($player, $season->id);
+    $data = $playerDataService->getAllPhotos();
+
+    // players field
+    // $data = $cloudinary->adminApi()->metadataFieldByFieldId('players');
 
     return response()->json($data);
 });
