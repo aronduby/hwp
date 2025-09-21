@@ -18,7 +18,10 @@ let size = localStorage.getItem('shareableSize') || 'square';
 let canvas, defs, lastClicked;
 
 function init() {
-    if (canvas) return Promise.resolve();
+    if (canvas) {
+        canvas.clear();
+        return Promise.resolve();
+    }
 
     return new Promise((resolve, reject) => {
         fabric.Object.prototype.set({
@@ -125,6 +128,7 @@ $(document).ready(function () {
         ])
             .then(function ([_, data]) {
                 canvas.setDimensions(data.dimensions);
+                canvas.setBackgroundColor('#ff0000');
 
                 types[type][size](data, defs, e);
 

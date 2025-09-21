@@ -27,7 +27,7 @@
 
       mentions.forEach((match, i) => {
         for(var j = 0; j < match[0].length; j++) {
-          obj[j + match.index] = {fill: colors[i]};
+          obj[j + match.index] = {fill: colors[i] ?? colors[colors.length - 1]};
         }
       });
 
