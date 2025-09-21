@@ -3,6 +3,7 @@
 namespace App\Services\MediaServices;
 
 use App\Models\Contracts\PhotoSource;
+use App\Models\Game;
 use App\Models\PhotoAlbum;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
@@ -76,4 +77,20 @@ interface MediaService
      * @return PhotoSource
      */
     public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource;
+
+    /**
+     * Get all the photos for the supplied game, optionally filtered by player season
+     *
+     * @param Game $game
+     * @param PlayerSeason|null $playerSeason
+     * @return Collection<PhotoSource>
+     */
+    public function forGame(Game $game, PlayerSeason $playerSeason = null): Collection;
+
+    /**
+     * Get a random photo
+     *
+     * @return PhotoSource|null
+     */
+    public function randomPhoto(): ?PhotoSource;
 }

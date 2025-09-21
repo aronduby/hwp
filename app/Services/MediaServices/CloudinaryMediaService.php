@@ -4,6 +4,7 @@ namespace App\Services\MediaServices;
 
 use App\Models\Cloudinary\Photo;
 use App\Models\Contracts\PhotoSource;
+use App\Models\Game;
 use App\Models\PhotoAlbum;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
@@ -11,6 +12,7 @@ use App\Models\Season;
 use Cloudinary\Api\ApiResponse;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class CloudinaryMediaService implements MediaService
@@ -200,6 +202,41 @@ class CloudinaryMediaService implements MediaService
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function forGame(Game $game, PlayerSeason $playerSeason = null): Collection
+    {
+        $album = $game->album;
+        if (!$album) {
+            return collect();
+        }
+
+        $gamePhotos = collect($this->forAlbum($album));
+        if (!$playerSeason) {
+            return $gamePhotos;
+        }
+
+        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+        return $gamePhotos
+            ->filter(function($photo) use ($playerTag) {
+                return in_array($playerTag, array_get($photo, 'metadata.players') ?? []);
+            })
+            ->map(function($photo) {
+                return new Photo($photo, $this->cloudinary);
+            });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function randomPhoto(): ?PhotoSource
+    {
+        // Cloudinary doesn't support random photos well, so instead of trying to query for all of them, we're just
+        // going to piggyback off of the home tags
+        return $this->forHome();
+    }
+
 
     /**
      * Does the query for the recent photos, shared between the listing and the gallery setup
@@ -278,7 +315,7 @@ class CloudinaryMediaService implements MediaService
     const CACHE_KEY_FOR_HOME = 'forHome.%d';
 
     /**
-     * The cache key for the albums covers - to be used with sprintf for the season id
+     * The cache key for the album covers - to be used with sprintf for the season id
      */
     const CACHE_KEY_FOR_COVERS = 'forCovers.%d';
 

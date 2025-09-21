@@ -44,6 +44,11 @@ class Photo extends Model implements PhotoSource
 {
     use BelongsToTenants;
 
+    /**
+     * The accessors/mutators to append to the model's array form.
+     */
+    protected $appends = ['photo', 'thumb', 'banner'];
+
     public function getPhotoAttribute(): string
     {
         return config('urls.photos') . '/' . $this->file . '.jpg';

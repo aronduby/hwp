@@ -27,7 +27,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::pattern('shape', '(square|rectangle)');
-        Route::pattern('ext', '(\.svg)?');
+        Route::pattern('ext', '(\.svg|\.json)?');
 
         Route::bind('game', function ($value) {
             return \App\Models\Game::withCount(['album', 'stats', 'updates'])

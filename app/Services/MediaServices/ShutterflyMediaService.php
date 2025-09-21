@@ -2,9 +2,11 @@
 
 namespace App\Services\MediaServices;
 
+use App\Models\Game;
 use App\Models\PhotoAlbum;
 use App\Models\PlayerSeason;
 use App\Models\Recent;
+use Illuminate\Support\Collection;
 
 class ShutterflyMediaService extends LocalMediaService implements MediaService
 {
@@ -32,6 +34,12 @@ class ShutterflyMediaService extends LocalMediaService implements MediaService
     {
         return $this->mergeServiceData(parent::forPlayerSeason($playerSeason));
     }
+
+    public function forGame(Game $game, PlayerSeason $playerSeason = null): Collection
+    {
+        return $this->mergeServiceData(parent::forGame($game, $playerSeason));
+    }
+
 
     protected function mergeServiceData($items) {
         foreach ($items as &$item) {

@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Exceptions\ShareableHandler;
-use App\Models\ActiveSeason;
-use App\Models\Contracts\Shareable;
+use App\Models\Contracts\PhotoSource;
 use App\Models\Game;
-use App\Models\Photo;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
-use App\Services\PlayerData\PlayerDataService;
+use App\Services\MediaServices\MediaService;
 use App\Services\PlayerListService;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Http\Response;
 
 class ShareableController extends Controller
 {
@@ -24,28 +25,32 @@ class ShareableController extends Controller
     protected $playerListService;
 
     /**
+     * @var MediaService
+     */
+    protected $mediaService;
+
+    /**
      * ShareableController constructor.
      *
      * @param PlayerListService $playerListService
+     * @param MediaService $mediaService
      */
-    public function __construct(PlayerListService $playerListService)
+    public function __construct(PlayerListService $playerListService, MediaService $mediaService)
     {
         $this->playerListService = $playerListService;
+        $this->mediaService = $mediaService;
 
         // set exceptions to be handled by the shareable handler
-        \App::singleton(
-            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+        App::singleton(
+            ExceptionHandler::class,
             ShareableHandler::class
         );
     }
 
     /**
      * Gets data for the game shareable, with optional player
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function game(Request $request, $shape, $ext = null)
+    public function game(Request $request, string $shape, string $ext = null)
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
@@ -54,17 +59,15 @@ class ShareableController extends Controller
         $stats = null;
         $charts = null;
         $photo = null;
-        $pattern = null;
 
         if ($player) {
             $stats = $this->getStats($player, $game);
             $photo = $this->getGamePlayerPhoto($game, $player);
-            $charts = $this->getCharts($player, $stats ? $stats : new Stat());
+            $charts = $this->getCharts($player, $stats ?: new Stat());
         }
 
         if (!$photo) { $photo = $this->getGamePhoto($game); }
         if (!$photo) { $photo = $this->getRandomPhoto(); }
-        if ($photo) { $photo->photo = $photo->getPhotoAttribute(); }
 
         $game->us = 'Hudsonville' . ($game->team === 'JV' ? ' JV' : '');
 
@@ -79,11 +82,8 @@ class ShareableController extends Controller
 
     /**
      * Gets data for the player shareable
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function player(Request $request, $shape, $ext = null)
+    public function player(Request $request, string $shape, string $ext = null)
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
@@ -91,11 +91,11 @@ class ShareableController extends Controller
         $stats = $this->getStats($player);
         $photo = $this->getPlayerPhoto($player);
         $badges = $this->getBadges($player);
-        $charts = $this->getCharts($player, $stats ? $stats : new Stat());
-        $pattern = null;
+        $charts = $this->getCharts($player, $stats ?: new Stat());
 
-        if (!$photo) { $photo = $this->getRandomPhoto(); }
-        if ($photo) { $photo->photo = $photo->getPhotoAttribute(); }
+        if (!$photo) {
+            $photo = $this->getRandomPhoto();
+        }
 
         $data = compact('dimensions', 'player', 'stats', 'charts', 'photo', 'badges');
 
@@ -107,34 +107,27 @@ class ShareableController extends Controller
     }
 
     /**
-     * Gets data for the update shareable
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Gets the shareable for the update message shareable
      */
-    public function update(Request $request, $shape, $ext = null)
+    public function update(Request $request, string $shape, string $ext = null)
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
         $photo = null;
         $game = $this->getGame($request);
-        $namekeys = json_decode($request->mentions);
-        $players = collect($namekeys)
-            ->map(function($namekey) use ($request) {
-                return $this->getPlayer($request, $namekey);
+        $nameKeys = json_decode($request->mentions);
+        $players = collect($nameKeys)
+            ->map(function($nameKey) use ($request) {
+                return $this->getPlayer($request, $nameKey);
             });
 
         $players->first(function($player) use (&$photo, $game) {
-           $photo = $this->getGamePlayerPhoto($game, $player);
-           if ($photo) {
-               $photo->photo = $photo->getPhotoAttribute();
-           }
-           return $photo;
+           return $this->getGamePlayerPhoto($game, $player);
         });
 
         if (!$photo) { $photo = $this->getGamePhoto($game); }
 
-        // no game player photos
+        // no game player photos,
         // no game photos
         // check for player photos
         $iterator = $players->getIterator();
@@ -149,10 +142,11 @@ class ShareableController extends Controller
         // none of the above, just grab a random one
         if (!$photo) { $photo = $this->getRandomPhoto(); }
 
-
-        if ($photo) { $photo->photo = $photo->getPhotoAttribute(); }
-
         $data = compact('dimensions', 'game', 'photo');
+
+        if ($ext == '.svg') {
+            return $this->outputSVG('shareables.' . $shape . '.update', $data);
+        }
 
         return $this->outputData($data);
     }
@@ -164,16 +158,17 @@ class ShareableController extends Controller
             return null;
         }
 
-        return Game::with('badge')->findOrFail($id ? $id : $request->input('game_id'));
+        return Game::with('badge')->findOrFail($id ?: $request->input('game_id'));
     }
 
-    protected function getPlayer(Request $request, $namekey = null)
+    /** @noinspection SpellCheckingInspection */
+    protected function getPlayer(Request $request, $nameKey = null): ?PlayerSeason
     {
-        if (!$request->has('namekey') && !$namekey) {
+        if (!$request->has('namekey') && !$nameKey) {
             return null;
         }
 
-        return $this->playerListService->getPlayerForNameKey($namekey ? $namekey : $request->get('namekey'));
+        return $this->playerListService->getPlayerForNameKey($nameKey ?: $request->get('namekey'));
     }
 
     protected function getStats(PlayerSeason $playerSeason = null, Game $game = null)
@@ -189,74 +184,38 @@ class ShareableController extends Controller
         }
     }
 
-    protected function getBadges(PlayerSeason $playerSeason)
+    protected function getBadges(PlayerSeason $playerSeason): Collection
     {
         return $playerSeason->badges()->orderBy('display_order')->get();
     }
 
-    protected function getGamePlayerPhoto(Game $game, PlayerSeason $playerSeason)
+    protected function getGamePlayerPhoto(Game $game, PlayerSeason $playerSeason): ?PhotoSource
     {
-        $album_id = $game->album_id;
-        $player_id = $playerSeason->player_id;
-        $season_id = $playerSeason->season_id;
-
-        if (!$album_id) {
-            return null;
-        }
-
-        return Photo::query()
-            ->join('photo_player', function($join) use($player_id, $season_id) {
-                $join->on('photos.id', '=', 'photo_player.photo_id')
-                    ->where('photo_player.player_id', '=', $player_id)
-                    ->where('photo_player.season_id', '=', $season_id);
-            })
-            ->join('album_photo', function($join) use($album_id) {
-                $join->on('photos.id', '=', 'album_photo.photo_id')
-                    ->where('album_photo.album_id', '=', $album_id);
-            })
-            ->inRandomOrder()
-            ->take(1)
-            ->first();
+        $items = $this->mediaService->forGame($game, $playerSeason);
+        return $items->count() > 0 ? $items->random() : null;
     }
 
-    protected function getGamePhoto(Game $game)
+    protected function getGamePhoto(Game $game): ?PhotoSource
     {
-        if (!$game->album_id) {
-            return null;
-        }
-
-        return $game->album->photos()
-            ->inRandomOrder()
-            ->take(1)
-            ->first();
+        $items = $this->mediaService->forGame($game);
+        return $items->count() > 0 ? $items->random() : null;
     }
 
-    protected function getPlayerPhoto(PlayerSeason $playerSeason)
+    protected function getPlayerPhoto(PlayerSeason $playerSeason): ?PhotoSource
     {
-        $player_id = $playerSeason->player_id;
-        $season_id = $playerSeason->season_id;
-
-        return Photo::query()
-            ->join('photo_player', function($join) use($player_id, $season_id) {
-                $join->on('photos.id', '=', 'photo_player.photo_id')
-                    ->where('photo_player.player_id', '=', $player_id)
-                    ->where('photo_player.season_id', '=', $season_id);
-            })
-            ->inRandomOrder()
-            ->take(1)
-            ->first();
+        return $this->mediaService->headerForPlayerSeason($playerSeason);
     }
 
-    protected function getRandomPhoto() {
-        return Photo::inRandomOrder()
-            ->take(1)
-            ->first();
+    protected function getRandomPhoto(): ?PhotoSource
+    {
+        return $this->mediaService->randomPhoto();
     }
 
-    protected function chunkName($name) {
+    protected function chunkName($name)
+    {
         $name = trim($name);
 
-        if (count($name) < 15 || !strpos($name,  ' ')) {
+        if (strlen($name) < 15 || !strpos($name,  ' ')) {
             return $name;
         }
 
@@ -272,7 +231,7 @@ class ShareableController extends Controller
         }, $chunks);
     }
 
-    protected function getCharts(PlayerSeason $player, Stat $stats)
+    protected function getCharts(PlayerSeason $player, Stat $stats): array
     {
         switch ($player->position) {
             case PlayerSeason::GOALIE:
@@ -286,7 +245,7 @@ class ShareableController extends Controller
         }
     }
 
-    protected function makeFieldCharts(Stat $stats, PlayerSeason $playerSeason)
+    protected function makeFieldCharts(Stat $stats, PlayerSeason $playerSeason): array
     {
         $chartData = [];
 
@@ -395,7 +354,7 @@ class ShareableController extends Controller
         return $chartData;
     }
 
-    protected function makeGoalieCharts($stats)
+    protected function makeGoalieCharts(Stat $stats): array
     {
         $chartData = [];
 
@@ -483,14 +442,15 @@ class ShareableController extends Controller
     }
 
 
-    protected function outputData($items)
+    protected function outputData($items): JsonResponse
     {
         return response()->json($items);
     }
 
-    protected function outputSVG($view, $data) {
+    protected function outputSVG($view, $data): Response
+    {
         return response()
-            ->view($view, $data, 200)
+            ->view($view, $data)
             ->header('Content-Type', 'image/svg+xml');
     }
 }
