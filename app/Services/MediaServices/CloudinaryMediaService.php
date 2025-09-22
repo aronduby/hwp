@@ -213,18 +213,18 @@ class CloudinaryMediaService implements MediaService
         }
 
         $gamePhotos = collect($this->forAlbum($album));
-        if (!$playerSeason) {
-            return $gamePhotos;
+
+        if ($playerSeason) {
+            $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
+            $gamePhotos = $gamePhotos->filter(function($photo) use ($playerTag) {
+                return in_array($playerTag, array_get($photo, 'metadata.players') ?? []);
+            });
         }
 
-        $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
-        return $gamePhotos
-            ->filter(function($photo) use ($playerTag) {
-                return in_array($playerTag, array_get($photo, 'metadata.players') ?? []);
-            })
-            ->map(function($photo) {
-                return new Photo($photo, $this->cloudinary);
-            });
+
+        return $gamePhotos->map(function($photo) {
+            return new Photo($photo, $this->cloudinary);
+        });
     }
 
     /**
