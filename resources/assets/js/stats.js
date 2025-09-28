@@ -86,10 +86,11 @@
         firstDay: 0,
         numberOfMonths: 4,
         numberOfColumns: 4,
-        minDate: data.start,
-        maxDate: data.end,
+        minDate: data.minDate,
+        maxDate: data.maxDate,
         startDate: data.start,
         endDate: data.end,
+        switchingMonths: 1,
         highlightedDays: Array.from(new Set(data.stats.map(z => z.start))),
         plugins: ['mobilefriendly'],
         mobilefriendly: {
@@ -100,6 +101,7 @@
     dateRangePicker.on('selected', (start, end) => {
         drawDateRange(start.timestamp(), end.timestamp());
     });
+    window.drp = dateRangePicker;
 
     /**
      * Date range auto selector buttons
@@ -110,8 +112,8 @@
         switch(btn.dataset.range) {
             case 'allSeason':
             default:
-                start = data.start;
-                end = data.end;
+                start = data.minDate;
+                end = data.maxDate;
                 break;
 
             case 'thisWeek':
@@ -127,8 +129,8 @@
         }
 
         if (
-            start < data.start || start > data.end
-            || end < data.start || end > data.end
+            start < data.minDate || start > data.maxDate
+            || end < data.minDate || end > data.maxDate
         ) {
             btn.disabled = true;
         }

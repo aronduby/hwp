@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Collections\BoxscoreQuarterIterator;
+use App\Http\Requests\Request;
 use App\Http\Requests\StatsRequest;
 use App\Models\ActiveSeason;
 use App\Models\Advantage;
@@ -207,7 +208,7 @@ class StatController extends Controller
             ->with('status', trans('misc.saveSuccessful'));
     }
 
-    public function aggregateView(ActiveSeason $season)
+    public function aggregateView(Request $request, ActiveSeason $season)
     {
         $players = $this->playerListService->all();
 
@@ -217,8 +218,11 @@ class StatController extends Controller
             ->where('season_id', $season->id)
             ->first();
 
-        $start = $dates->start * 1000;
-        $end = $dates->end * 1000;
+        $minDate = $dates->start * 1000;
+        $maxDate = $dates->end * 1000;
+
+        $start = (int) $request->query('start', $minDate);
+        $end = (int) $request->query('end', $maxDate);
 
         // get all of the stats for this season
         // don't use models, we will break the memory limit
@@ -229,6 +233,8 @@ class StatController extends Controller
             ->get();
 
         $data = [
+            'minDate' => $minDate,
+            'maxDate' => $maxDate,
             'start' => $start,
             'end' => $end,
             'stats' => $stats
