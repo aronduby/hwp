@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $team
  * @property mixed $position
  * @property string|null $number
+ * @property array|null $other_numbers
  * @property string|null $media_tag
  * @property int|null $sort
  * @property Carbon|null $created_at
@@ -64,6 +65,15 @@ class PlayerSeason extends Model
     protected $tenantColumns = ['site_id'];
 
     /**
+     * Casts the specific columns to specific types
+     *
+     * @var string[]
+     */
+    protected $casts = [
+        'other_numbers' => 'array',
+    ];
+
+    /**
      * Shortcut to get the name for the attached player
      *
      * @return string
@@ -87,6 +97,44 @@ class PlayerSeason extends Model
         return $this->player ?
             $this->player->name_key :
             null;
+    }
+
+    /**
+     * Gets the players number, optionally limited to a team in the other_numbers array
+     *
+     * @param string|null $team
+     * @return string
+     */
+    public function getNumber(string $team = null): ?string
+    {
+        if (!$team || !isset($this->other_numbers[$team])) {
+            return $this->number;
+        } else {
+            return $this->other_numbers[$team];
+        }
+    }
+
+    /**
+     * Gets all the numbers, separated by the supplied separator
+     *
+     * @param string $separator
+     * @return string
+     */
+    public function getAllNumbers(string $separator = '/'): string
+    {
+        if (!empty($this->other_numbers)) {
+            $allNumbers = array_merge(
+                [
+                    $this->other_numbers['V'],
+                    $this->other_numbers['JV']
+                ],
+                ($this->other_numbers['other'] ?? [])
+            );
+            $allNumbers = array_filter($allNumbers);;
+            return implode($separator, $allNumbers);
+        } else {
+            return $this->number;
+        }
     }
 
     /**

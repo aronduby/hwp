@@ -58,11 +58,20 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's number
      *
+     * @param string|null $team
      * @return string
      */
-    public function getNumber(): string
+    public function getNumber(string $team = null): string
     {
-        return $this->provider->getNumber();
+        return $this->provider->getNumber($team);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAllNumbers(string $separator = '/'): string
+    {
+        return $this->provider->getAllNumbers($separator);
     }
 
     /**

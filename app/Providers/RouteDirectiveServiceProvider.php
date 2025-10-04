@@ -57,7 +57,7 @@ class RouteDirectiveServiceProvider extends ServiceProvider
         return preg_replace('/(ht|s?f)tps?/', $protocol, route($routeName, $params));
     }
     
-    static public function playerLink($player)
+    static public function playerLink($player, string $team = null)
     {
         if (!$player instanceof Player) {
             try {
@@ -67,12 +67,12 @@ class RouteDirectiveServiceProvider extends ServiceProvider
             }
         }
 
-        return '<a href="'.route('players', ['name_key'=>$player->name_key]).'">#' . $player->seasons->first()->number. ' ' . $player->first_name . ' ' .$player->last_name.'</a>';
+        return '<a href="'.route('players', ['name_key'=>$player->name_key]).'">#' . $player->seasons->first()->getNumber($team). ' ' . $player->first_name . ' ' .$player->last_name.'</a>';
     }
 
-    static public function playerSeasonLink(PlayerSeason $ps)
+    static public function playerSeasonLink(PlayerSeason $ps, string $team = null)
     {
-        return '<a href="'.route('players', ['name_key'=>$ps->name_key]).'">#' . $ps->number. ' ' . $ps->name.'</a>';
+        return '<a href="'.route('players', ['name_key'=>$ps->name_key]).'">#' . $ps->getNumber($team). ' ' . $ps->name.'</a>';
     }
 
     /**

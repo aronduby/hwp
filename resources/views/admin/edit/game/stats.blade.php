@@ -133,10 +133,10 @@
                                 <option></option>
                                 @foreach(['V', 'JV'] as $team)
                                     <optgroup label="@lang('misc.'.$team)">@lang('misc.'.$team)</optgroup>
-                                    @foreach($playerlist->team($team)->sortBy('number') as $playerSeason)
+                                    @foreach($playerlist->team($team)->sortByNumber($team) as $playerSeason)
                                         <option value="{{$playerSeason->player_id}}"
-                                                @if($playerSeason->player_id == $goalieStats->player_id)selected @endif
-                                        >#{{$playerSeason->number}} {{$playerSeason->name}}</option>
+                                            @if($playerSeason->player_id == $goalieStats->player_id)selected @endif
+                                        >#{{$playerSeason->getNumber($team)}} {{$playerSeason->name}}</option>
                                     @endforeach
                                 @endforeach
                             </select>
@@ -204,14 +204,14 @@
                     <tr>
                         <th rowspan="2">@lang('stats.name')</th>
                         <th rowspan="2">@lang('stats.shots')</th>
-                        <th   colspan="7">@lang('stats.goals')</th>
+                        <th colspan="7">@lang('stats.goals')</th>
                         <th rowspan="2">@lang('stats.assists')</th>
                         <th rowspan="2">@lang('stats.steals')</th>
                         <th rowspan="2">@lang('stats.blocks')</th>
                         <th rowspan="2">@lang('stats.tos')</th>
-                        <th   colspan="3">@lang('stats.kickouts')</th>
-                        <th   colspan="2">@lang('stats.sprints')</th>
-                        <th   colspan="4">@lang('stats.five_meters')</th>
+                        <th colspan="3">@lang('stats.kickouts')</th>
+                        <th colspan="2">@lang('stats.sprints')</th>
+                        <th colspan="4">@lang('stats.five_meters')</th>
                         <th rowspan="2"></th>
                     </tr>
                     <tr>
@@ -250,10 +250,10 @@
                                 <option></option>
                                 @foreach(['V', 'JV'] as $team)
                                     <optgroup label="@lang('misc.'.$team)">@lang('misc.'.$team)</optgroup>
-                                    @foreach($playerlist->team($team)->sortBy('number') as $playerSeason)
+                                    @foreach($playerlist->team($team)->sortByNumber($team) as $playerSeason)
                                         <option value="{{$playerSeason->player_id}}"
-                                                @if($playerSeason->player_id == $playerStats->player_id)selected @endif
-                                        >#{{$playerSeason->number}} {{$playerSeason->name}}</option>
+                                                @if($playerSeason->player_id == $playerStats->player_id && $game->team === $playerSeason->team)selected @endif
+                                        >#{{$playerSeason->getNumber($team)}} {{$playerSeason->name}}</option>
                                     @endforeach
                                 @endforeach
                             </select>

@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Collections\CustomCollection;
 use App\Models\ActiveSeason;
 use App\Models\PlayerSeason;
 use Illuminate\Support\Facades\Cache;
@@ -17,7 +18,7 @@ class PlayerListService
 {
 
     /**
-     * @var [PlayerSeason] players
+     * @var PlayerSeason[] players
      */
     protected $playerList;
 
@@ -30,7 +31,7 @@ class PlayerListService
     public function __construct(PlayerSeason $players, ActiveSeason $activeSeason)
     {
         $this->playerList = Cache::remember('playerlist-' . $activeSeason->id, 60 * 12, function() use ($players, $activeSeason) {
-            return $players->with('player')
+            $players->with('player')
                 ->select('player_season.*')
                 ->join('players', 'players.id', '=', 'player_season.player_id')
                 ->where('season_id', '=', $activeSeason->id)

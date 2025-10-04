@@ -37,7 +37,7 @@ class PlayerController extends Controller
 
         $player = $data->getPlayer();
         $title = $data->getTitle();
-        $number = $data->getNumber();
+        $number = $data->getAllNumbers();
         $team = $data->getTeam();
         $position = $data->getPosition();
         $headerPhoto = $data->getHeaderPhoto();

@@ -34,9 +34,18 @@ interface DataProvider
     /**
      * Get the player's number
      *
+     * @param string|null $team
      * @return string
      */
-    public function getNumber(): string;
+    public function getNumber(string $team = null): string;
+
+    /**
+     * Get all the numbers, separated by the separator
+     *
+     * @param string $separator
+     * @return mixed
+     */
+    public function getAllNumbers(string $separator = '/'): string;
 
     /**
      * Gets the player's team

@@ -54,8 +54,8 @@ class StatController extends Controller
                 $statusUs = $statusThem = Game::TIE;
         }
 
-        $stats = $game->stats->sortBy(function($stat) {
-            return $stat->player->sort > 0 ? $stat->player->sort : $stat->player->number;
+        $stats = $game->stats->sortBy(function($stat) use ($game) {
+            return $stat->player->sort > 0 ? $stat->player->sort : $stat->player->getNumber($game->team);
         });
 
         $players = $stats->players();
@@ -122,12 +122,10 @@ class StatController extends Controller
 
         $hasBoxscores = $boxscores->us()->count();
 
-        $players = $players->sortBy(function(&$stat) use ($hasBoxscores) {
+        $players = $players->sortBy(function(&$stat) use ($hasBoxscores, $game) {
             $stat->goalsPerQuarter = [null, !$hasBoxscores ? $stat->goals : 0, 0, 0, 0, 0, 0, 0];
 
-            return isset($stat->player->sort) && $stat->player->sort != 0
-                ? $stat->player->sort
-                : intval($stat->player->number);
+            return $stat->player->getNumber($game->team);
         });
 
         $boxscores->us()->each(function($bs) use (&$players) {

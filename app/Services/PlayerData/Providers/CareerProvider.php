@@ -63,13 +63,19 @@ class CareerProvider implements DataProvider
     }
 
     /**
-     * Get the player's number
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getNumber(): string
+    public function getNumber(string $team = null): string
     {
-        return $this->latestSeason->number;
+        return $this->latestSeason->getNumber($team);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAllNumbers(string $separator = '/'): string
+    {
+        return $this->latestSeason->getAllNumbers($separator);
     }
 
     /**

@@ -61,4 +61,15 @@ class CustomCollection extends Collection
         return $this->groupBy($groupKey, $preserveKeys);
     }
 
+    /**
+     * @param string|null $team
+     * @return CustomCollection
+     */
+    public function sortByNumber(string $team = null)
+    {
+        return $this->sortBy(function($ps) use ($team) {
+            return $ps->getNumber($team);
+        });
+    }
+
 }

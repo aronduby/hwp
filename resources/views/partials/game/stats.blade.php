@@ -99,7 +99,7 @@
                 <tbody>
                     @foreach($goalies as $stat)
                         <tr>
-                            <th>@playerSeasonLink($stat->player)</th>
+                            <th>@playerSeasonLink($stat->player, $game->team)</th>
                             @foreach($fields as $key => &$sum)
                                 <td class="stat--{{$key}}" data-title="@lang('stats.'.$key)">
                                     <span>@number($stat->$key)</span></td>
@@ -177,10 +177,10 @@
                     <th rowspan="2">@lang('stats.tos')</th>
                     <th rowspan="2" style="width: 30px;">@lang('stats.steals_to_tos')</th>
                     <th rowspan="2">@lang('stats.blocks')</th>
-                    <th   colspan="3">@lang('stats.kickouts')</th>
-                    <th   colspan="4">@lang('stats.five_meters')</th>
-                    <th   colspan="2">@lang('stats.sprints')</th>
-                    <th   colspan="2">@lang('stats.shoot_outs')</th>
+                    <th colspan="3">@lang('stats.kickouts')</th>
+                    <th colspan="4">@lang('stats.five_meters')</th>
+                    <th colspan="2">@lang('stats.sprints')</th>
+                    <th colspan="2">@lang('stats.shoot_outs')</th>
                     <th rowspan="2"></th>
                 </tr>
                 <tr>
@@ -204,7 +204,7 @@
                 <tbody>
                     @foreach($players as $stat)
                         <tr>
-                            <th class="player-name">@playerSeasonLink($stat->player)</th>
+                            <th class="player-name">@playerSeasonLink($stat->player, $game->team)</th>
                             @foreach($fields as $key => &$sum)
                                 <td class="stat--{{$key}}" data-title="@lang('stats.'.$key)">
                                     <span>@numberOrNothing($stat->$key)</span>
@@ -267,7 +267,7 @@
                                         </tr>
                                         @forelse($us as $goal)
                                             <tr>
-                                                <th>@playerSeasonLink($goal->player)</th>
+                                                <th>@playerSeasonLink($goal->player, $game->team)</th>
                                                 <td>{{$goal->goals}}</td>
                                             </tr>
                                         @empty
