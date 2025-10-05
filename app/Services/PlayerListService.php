@@ -31,7 +31,7 @@ class PlayerListService
     public function __construct(PlayerSeason $players, ActiveSeason $activeSeason)
     {
         $this->playerList = Cache::remember('playerlist-' . $activeSeason->id, 60 * 12, function() use ($players, $activeSeason) {
-            $players->with('player')
+            return $players->with('player')
                 ->select('player_season.*')
                 ->join('players', 'players.id', '=', 'player_season.player_id')
                 ->where('season_id', '=', $activeSeason->id)
