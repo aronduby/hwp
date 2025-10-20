@@ -24,7 +24,7 @@
 
         <section class="page-section">
             <div class="container">
-                <div class="note-content">
+                <div class="note note-content">
                     {!! $note->content !!}
                 </div>
             </div>
