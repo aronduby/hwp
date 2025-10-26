@@ -106,7 +106,7 @@ class Player extends Model implements Shareable
      */
     public function badges(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Badge');
+        return $this->belongsToMany('App\Models\Badge')->withTimestamps()->withPivot('id', 'season_id');
     }
 
     public function photos(): BelongsToMany

@@ -147,7 +147,10 @@ class CareerProvider implements DataProvider
      */
     public function getBadges()
     {
-        return $this->player->badges;
+        // we need to include the id from the glue to be able to do the markup
+        return $this->player->badges()
+            ->select(['badges.*', 'badge_player.id AS uid'])
+            ->get();
     }
 
     /**

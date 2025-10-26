@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $title
  * @property string $image
  * @property string|null $description
+ * @property bool $shiny
  * @property int|null $display_order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -32,6 +33,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Badge extends Model
 {
+    protected $casts = [
+        'shiny' => 'boolean',
+    ];
+
     public function players(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Player');

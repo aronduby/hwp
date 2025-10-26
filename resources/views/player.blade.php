@@ -89,7 +89,7 @@
         @if($badges->count())
             <section class="page-section badges bg--smoke">
                 <div class="container">
-                    <div class="row center-xs">
+                    <div class="row center-xs middle-xs gap--md">
                         @each('partials.badge', $badges, 'badge')
                     </div>
                 </div>

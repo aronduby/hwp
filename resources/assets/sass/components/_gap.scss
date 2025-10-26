@@ -1,0 +1,13 @@
+@each $name, $size in $gaps {
+	.gap--#{$name} {
+		gap: $size;
+	}
+
+	.gap-x--#{$name} {
+		gap: 0 $size;
+	}
+
+	.gap-y--#{$name} {
+		gap: $size 0;
+	}
+}

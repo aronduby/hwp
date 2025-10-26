@@ -23,13 +23,22 @@ $code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
 $text-color: $color-black-text;
 
 // sizing
+$gap-extra-small: .1em;
+$gap-small: .25em;
 $gap: .5em;
 $gap-bigger: .75em;
 $gap-large: 1em;
 $gap-extra-large: 1.25em;
 $gap-extra-extra-large: 2em;
-$gap-small: .25em;
-$gap-extra-small: .1em;
+$gaps: (
+	'xs': $gap-extra-small,
+	'sm': $gap-small,
+	'md': $gap,
+	'plus': $gap-bigger,
+	'lg': $gap-large,
+	'xl': $gap-extra-large,
+	'xxl': $gap-extra-extra-large,
+);
 
 
 

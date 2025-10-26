@@ -139,7 +139,7 @@ class SeasonProvider implements DataProvider
      */
     public function getBadges()
     {
-        return Badge::select('badges.*')
+        return Badge::select(['badges.*', 'badge_player.id AS uid'])
         ->join('badge_player', 'badges.id', '=', 'badge_player.badge_id')
         ->where('badge_player.season_id', '=', $this->playerSeason->season_id)
         ->where('badge_player.player_id', '=', $this->player->id)

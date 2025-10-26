@@ -1,43 +1,86 @@
 $_badge-height: 147;
 
 .badges {
-  padding: 0;
+	padding: 0;
 }
 
 
-
 .badge {
-  position: relative;
-  height: $_badge-height - 20px;
-  margin: 0 5px;
+	position: relative;
+	line-height: 0;
+	// breakout of the parent container
+	top: -10px;
+	margin-bottom: -20px;
 
-  img {
-    margin-top: -10px;
-  }
+	.hover {
+		@include box-shadow();
+		line-height: 1.4em;
+		display: block;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: max-content;
+		min-width: 125%;
+		max-width: 225%;
+		margin-top: -2.5em;
+		padding: $gap;
+		background: $color-white;
+		z-index: 1;
+		border-radius: 2px;
+		opacity: 0;
+		translate: -50% 80%;
+		pointer-events: none;
+		transition: all .5s;
 
-  .hover {
-    @include box-shadow();
-    display: block;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    width: 200px;
-    margin-left: -100px;
-    margin-top: -2.5em;
-    padding: $gap;
-    background: $color-white;
-    z-index: 1;
-    border-radius: 2px;
-    opacity: 0;
-    transition: all .5s;
+		p {
+			margin: 0;
+		}
+	}
+	&:hover .hover,
+	&:focus .hover {
+		opacity: 1;
+		translate: -50% 0;
+	}
+}
 
-    p {
-      margin: 0;
-    }
-  }
+.badge--shiny .shine {
+	--color-glow: #fbb03b;
+	mask-image: url(https://hudsonvillewaterpolo.com/badges/100-goals.svg);
+	mask-size: 100%;
+	mask-repeat: no-repeat;
+	mask-position: 50%;
+	mask-mode: luminance;
+	mix-blend-mode: color-dodge;
+	scale: 1.1;
+	transform-origin: 50%;
+	position: absolute;
+	overflow: hidden;
+	z-index: 0;
+	filter: blur(20px);
+	inset: 0;
 
-  &:hover .hover {
-    opacity: 1;
-    top: 50%;
-  }
+	&::before {
+		content: '';
+		z-index: -2;
+		text-align: center;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) rotate(0deg);
+		position: absolute;
+		width: 99999px;
+		height: 99999px;
+		background-repeat: no-repeat;
+		background-position: 0 0;
+		/*border color, change middle color*/
+		background-image: conic-gradient(rgba(0,0,0,0), var(--color-glow, #1976ed), rgba(0,0,0,0) 25%);
+		/* change speed here */
+		animation: shinyBadge-rotate 2.2s linear infinite;
+	}
+}
+
+
+@keyframes shinyBadge-rotate {
+	100% {
+		transform: translate(-50%, -50%) rotate(1turn);
+	}
 }
