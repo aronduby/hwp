@@ -70,6 +70,10 @@ Route::group(['middleware' => 'cors'], function() {
     Route::get('shareables/{shape}/update{ext}', ['uses' => 'ShareableController@update', 'as' => 'shareables.update']);
 });
 
+Route::get('top-ten', ['as' => 'topTen', function() {
+    return view('top-ten');
+}]);
+
 /*
  * Scavenger Hunt Related
  */

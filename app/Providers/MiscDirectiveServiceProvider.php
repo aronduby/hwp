@@ -13,13 +13,6 @@ class MiscDirectiveServiceProvider extends ServiceProvider
 {
 
     /**
-     * Houses the variables for the forimplode/implode directives
-     * @var array
-     */
-    static protected $implodes = [];
-    static protected $implodeStacks = [];
-
-    /**
      * Bootstrap the application services.
      *
      * @return void
@@ -37,10 +30,6 @@ class MiscDirectiveServiceProvider extends ServiceProvider
         Blade::directive('ordinal', $partial('ordinal'));
         Blade::directive('number', $partial('number'));
         Blade::directive('numberOrNothing', $partial('numberOrNothing'));
-
-        Blade::directive('forimplode', $partial('forImplode'));
-        Blade::directive('endforimplode', $partial('endForImplode'));
-        Blade::directive('implode', $partial('implode'));
         
         Blade::directive('val', $partial('val'));
 
@@ -55,16 +44,18 @@ class MiscDirectiveServiceProvider extends ServiceProvider
                 ?>
             ';
         });
+
+        Blade::directive('mutedHeading', $partial('mutedHeading'));
     }
 
     /**
      * Returns a string of PHP code to use for the directive
      *
-     * @param $d
-     * @param $format
+     * @param $func
+     * @param $expression
      * @return string
      */
-    public function outputPhp($func, $expression)
+    public function outputPhp($func, $expression): string
     {
         return "<?php echo ".__CLASS__."::$func($expression); ?>";
     }
@@ -76,7 +67,7 @@ class MiscDirectiveServiceProvider extends ServiceProvider
      * @param $int
      * @return string
      */
-    static public function ordinal($int)
+    static public function ordinal($int): string
     {
         $s = ["th","st","nd","rd"];
         $v = $int%100;
@@ -96,27 +87,54 @@ class MiscDirectiveServiceProvider extends ServiceProvider
      * @param $number
      * @param int $decimals = 0
      * @param string $decimalPoint = .
-     * @param string $thousandsSeperator = ,
+     * @param string $thousandsSeparator = ,
      * @return string
      */
-    static public function number($number, $decimals = 0, $decimalPoint = '.', $thousandsSeperator = ',')
+    static public function number($number, int $decimals = 0, string $decimalPoint = '.', string $thousandsSeparator = ','): string
     {
-        return number_format($number, $decimals, $decimalPoint, $thousandsSeperator);
+        return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
     }
 
-    static public function numberOrNothing($number, $decimals = 0, $decimalPoint = '.', $thousandsSeperator = ',')
+    static public function numberOrNothing($number, $decimals = 0, $decimalPoint = '.', $thousandsSeparator = ','): string
     {
         if ($number) {
-            return self::number($number, $decimals, $decimalPoint, $thousandsSeperator);
+            return self::number($number, $decimals, $decimalPoint, $thousandsSeparator);
         } else {
             return '';
         }
     }
     
-    static public function val($name, $default = '')
+    static public function val($name, $default = ''): string
     {
         $val = old($name, $default);
         return $val !== 0 ? $val : '';
+    }
+
+    /**
+     * Helper to create heading text matching the pattern for doing muted text with a portion of the text
+     *
+     * @param string $title
+     * @param bool $overflowHead if the title is more than 2 words, when `true` the front slice will contain more
+     * @return string
+     */
+    static public function mutedHeading(string $title, bool $overflowHead = true): string {
+        $parts = explode(' ', $title);
+        if (count($parts) > 2) {
+            if ($overflowHead) {
+                $tail = array_pop($parts);
+                $head = implode(' ', $parts);
+            } else {
+                $head = array_shift($parts);
+                $tail = implode(' ', $parts);
+            }
+            $parts = [$head, $tail];
+        }
+
+        if (count($parts) === 1) {
+            return $parts[0];
+        } else {
+            return '<span class="text--muted">'.$parts[0].'</span> '.$parts[1];
+        }
     }
 
     // just needed to satisfy the provider

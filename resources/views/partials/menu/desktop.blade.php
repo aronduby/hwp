@@ -19,6 +19,9 @@
         <li class="stats">
             <a href="@route('stats')" title="@lang('menu.stats')">@lang('menu.stats')</a>
         </li>
+        <li class="topTen">
+            <a href="@route('topTen')" title="@lang('menu.topTen')">@lang('menu.topTen')</a>
+        </li>
         <li class="parents">
             <a href="@route('files')" title="@lang('menu.files')">@lang('menu.files')</a>
         </li>

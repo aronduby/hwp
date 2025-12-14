@@ -25,4 +25,5 @@ return [
     'parents' => 'Parents',
     'stats' => 'Stats',
     'files' => 'Files',
+    'topTen' => 'Top Ten',
 ];

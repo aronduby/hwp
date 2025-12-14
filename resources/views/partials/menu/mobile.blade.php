@@ -66,6 +66,10 @@
             </li>
 
             <li>
+                <a href="@route('topTen')" title="@lang('menu.topTen')">@lang('menu.topTen')</a>
+            </li>
+
+            <li>
                 <a href="@route('files')" title="@lang('menu.files')">@lang('menu.files')</a>
             </li>
 
