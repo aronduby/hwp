@@ -20,7 +20,7 @@
     ])
 
     @include('shareables.parts.url', [
-        'x' => '701.167',
+        'x' => '1539',
         'y' => '1001.226'
     ])
 
@@ -31,7 +31,7 @@
     ])
 
     @include('shareables.parts.scores', [
-        'x' => 208,
+        'x' => 627,
         'y' => 267,
         'game' => $game
     ])

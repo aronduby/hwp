@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::pattern('shape', '(square|rectangle)');
+        Route::pattern('shape', '(square|rectangle|hd)');
         Route::pattern('ext', '(\.svg|\.json)?');
 
         Route::bind('game', function ($value) {
