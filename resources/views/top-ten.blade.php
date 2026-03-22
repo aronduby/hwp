@@ -34,10 +34,10 @@
                             <tbody>
                             @foreach($topTen->getDataForStatAndType($stat, $type) as $row)
                                 <tr>
-                                    <th>{{ $row['rank'] }}</th>
-                                    <td>{{ $row['player'] }}</td>
-                                    @if($type === \App\Services\TopTenService::SEASON)<td>{{ $row['season'] }}</td>@endif
-                                    <td>{{ $row['value'] }}</td>
+                                    <th>{{ $row->rank }}</th>
+                                    <td>{{ $row->player }}</td>
+                                    @if($type === \App\Services\TopTenService::SEASON)<td>{{ $row->season }}</td>@endif
+                                    <td>{{ $row->val }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

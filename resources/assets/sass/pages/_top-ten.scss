@@ -4,6 +4,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
+		align-items: start;
 		gap: 3em;
 		padding-bottom: 3em;
 
@@ -17,6 +18,12 @@
 			@include responsive('sm') {
 				max-width: 50vw;
 			}
+		}
+
+		// the 3rd and the last column = season and value, or just value
+		td:nth-child(2n + 1),
+		td:last-child {
+			text-align: right;
 		}
 	}
 }
