@@ -271,7 +271,7 @@ class CloudinaryMediaService implements MediaService
         if (!empty($playerSeason->media_tag)) {
             return $playerSeason->media_tag;
         } else {
-            return strtolower($playerSeason->player->first_name.'_'.$playerSeason->player->last_name);
+            return strtolower(str_replace('_', ' ', $playerSeason->player->first_name.' '.$playerSeason->player->last_name));
         }
     }
 
@@ -288,6 +288,21 @@ class CloudinaryMediaService implements MediaService
 
         return $items;
     }
+
+    // region NAMED TRANSFORMATIONS
+    /**
+     * These are the named transformations we have on cloudinary side, make sure the names match
+     */
+    const T_MAIN = 'media_lib_main';
+    const T_THUMB = 'media_lib_thumb';
+    const T_BANNER = 'banner';
+
+    const DEFAULT_TRANSFORMATIONS = [
+        self::T_MAIN => 'c_limit,h_2500,w_2500/q_auto',
+        self::T_THUMB => 'c_limit,h_200,w_200/q_auto',
+        self::T_BANNER => 'ar_32:9,c_crop,g_faces,h_800/q_auto',
+    ];
+    // endregion
 
     /**
      * The maximum limit cloudinary supports, will be used as the default for non-paged items

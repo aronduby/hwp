@@ -4,6 +4,9 @@ namespace App\Console;
 
 use App\Console\Commands\ArticleImagesCommand;
 use App\Console\Commands\CloudinaryAddRecentPhotosCommand;
+use App\Console\Commands\CloudinaryNamedTransformations;
+use App\Console\Commands\CloudinaryPlayerMetadataCommand;
+use App\Console\Commands\CloudinaryTagsWebhook;
 use App\Console\Commands\GenerateJSPlayerListCommand;
 use App\Console\Commands\HudsonvilleAthleticsArticlesCommand;
 use App\Console\Commands\ManualArticleImportCommand;
@@ -29,6 +32,9 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         ArticleImagesCommand::class,
         CloudinaryAddRecentPhotosCommand::class,
+        CloudinaryNamedTransformations::class,
+        CloudinaryPlayerMetadataCommand::class,
+        CloudinaryTagsWebhook::class,
         GenerateJSPlayerListCommand::class,
         HudsonvilleAthleticsArticlesCommand::class,
         ManualArticleImportCommand::class,

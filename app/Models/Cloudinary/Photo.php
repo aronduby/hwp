@@ -3,6 +3,7 @@
 namespace App\Models\Cloudinary;
 
 use App\Models\Contracts\PhotoSource;
+use App\Services\MediaServices\CloudinaryMediaService;
 use Cloudinary\Cloudinary;
 use Cloudinary\Transformation\Delivery;
 use Cloudinary\Transformation\Format;
@@ -39,19 +40,19 @@ class Photo implements PhotoSource, JsonSerializable
         }
 
         $this->photo = $cloudinary->image($data['public_id'])
-            ->namedTransformation(NamedTransformation::name('media_lib_main'))
+            ->namedTransformation(NamedTransformation::name(CloudinaryMediaService::T_MAIN))
             ->delivery(Delivery::format(Format::auto()))
             ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
 
         $this->thumb = $cloudinary->image($data['public_id'])
-            ->namedTransformation(NamedTransformation::name('media_lib_thumb'))
+            ->namedTransformation(NamedTransformation::name(CloudinaryMediaService::T_THUMB))
             ->delivery(Delivery::format(Format::auto()))
             ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
 
         $this->banner = $cloudinary->image($data['public_id'])
-            ->namedTransformation(NamedTransformation::name('banner'))
+            ->namedTransformation(NamedTransformation::name(CloudinaryMediaService::T_BANNER))
             ->delivery(Delivery::format(Format::auto()))
             ->delivery(Delivery::quality(Quality::auto()))
             ->toUrl();
