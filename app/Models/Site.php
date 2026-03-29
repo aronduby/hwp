@@ -79,6 +79,19 @@ class Site extends Model
         return $this->hasMany('App\Models\Season', 'site_id');
     }
 
+    /**
+     * Gets whatever season is marked as the current one for this site
+     *
+     * @return Season
+     */
+    public function currentSeason(): Season
+    {
+        /**
+         * @var Season
+         */
+        return $this->seasons()->where('current', true)->first();
+    }
+
     public function picker(): BelongsTo
     {
         return $this->belongsTo('App\Models\Site', 'parent_id');
@@ -87,15 +100,6 @@ class Site extends Model
     public function sites(): HasMany
     {
         return $this->hasMany('App\Models\Site', 'parent_id');
-    }
-
-    /** @noinspection PhpUnused */
-    public function featuredPhotos(): HasMany
-    {
-        return $this->hasMany('App\Models\Photo', 'site_id')
-            ->withoutGlobalScopes(['season_id', 'site_id'])
-            ->where('featured', '=', true)
-            ->orderBy('season_id', 'desc');
     }
 
     public function jobs(): HasMany

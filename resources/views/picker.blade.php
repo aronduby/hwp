@@ -25,25 +25,25 @@
 </head>
 <body>
 
-    <main class="picker picker--{{$sites->count()}}">
+    <main class="picker picker--{{$sitesWithPhoto->count()}}">
         <header>
             <h1 class="site-name text--shadow text--white">Hudsonville<wbr><span class="text--accent">Water</span><wbr>Polo</h1>
         </header>
 
-        @foreach($sites as $site)
+        @foreach($sitesWithPhoto as $entry)
             <section class="picker-site">
-                <a href="//{{$site->domain}}.{{$tld}}">
+                <a href="//{{$entry['site']->domain}}.{{$tld}}">
                     <div class="bg-elements">
                         <div class="bg--gradient"></div>
                         <div class="bg--img"
-                             @if($site->featuredPhotos->isNotEmpty())
-                                style="background-image: url({{ $site->featuredPhotos->random()->photo }})"
+                             @if($entry['photo'])
+                                style="background-image: url({{ $entry['photo']->photo }})"
                              @endif
                         ></div>
                     </div>
 
                     <div class="picker-content">
-                        <h2 class="text--shadow-small"><span>{{$site->subtitle}}</span></h2>
+                        <h2 class="text--shadow-small"><span>{{$entry['site']->subtitle}}</span></h2>
                     </div>
                 </a>
             </section>

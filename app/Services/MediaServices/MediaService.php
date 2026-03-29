@@ -93,4 +93,11 @@ interface MediaService
      * @return PhotoSource|null
      */
     public function randomPhoto(): ?PhotoSource;
+
+    /**
+     * Get a single photo for use with the picker page
+     *
+     * @return PhotoSource|null
+     */
+    public function forPicker(): ?PhotoSource;
 }

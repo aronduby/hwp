@@ -60,6 +60,9 @@ class CloudinaryMediaService implements MediaService
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function forHome(): ?PhotoSource
     {
         $resources = Cache::rememberForever(sprintf(self::CACHE_KEY_FOR_HOME, $this->season->id), function() {
@@ -80,6 +83,15 @@ class CloudinaryMediaService implements MediaService
             return null;
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function forPicker(): ?PhotoSource
+    {
+        return $this->forHome();
+    }
+
 
     /**
      * @param Recent $recent

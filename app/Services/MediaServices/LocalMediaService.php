@@ -19,6 +19,15 @@ abstract class LocalMediaService implements MediaService
         return Photo::inRandomOrder()->first();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function forPicker(): ?PhotoSource
+    {
+        return $this->forHome();
+    }
+
+
     public function forRecentListing(Recent $recent, string $content): ?array
     {
         $photo_ids = json_decode($content);
