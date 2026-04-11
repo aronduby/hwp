@@ -30,7 +30,7 @@ class CloudinarySetup extends Command
      *
      * @var string
      */
-    protected $description = 'Adds/updates named transformations for the current season';
+    protected $description = 'Runs all the cloudinary tasks to setup a new env';
 
     /**
      * Execute the console command.
