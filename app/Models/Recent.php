@@ -25,7 +25,6 @@ use NunoMazer\Samehouse\BelongsToTenants;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $rendered
- * @method static Builder|Recent latest($page)
  * @method static Builder|Recent total()
  * @method static Builder|Recent whereContent($value)
  * @method static Builder|Recent whereCreatedAt($value)
@@ -69,7 +68,7 @@ class Recent extends Model
      * @return void
      */
     #[Scope]
-    protected function latest(Builder $query, int $page): void
+    protected function latestWithSticky(Builder $query, int $page): void
     {
         $query
             ->orderBy('sticky', 'desc')

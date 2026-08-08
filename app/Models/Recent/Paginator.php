@@ -29,7 +29,7 @@ class Paginator extends AbstractPaginator
         $take = $this->getTake($this->currentPage);
         $skip = $this->getSkip($this->currentPage);
 
-        $this->items = Recent::latest($this->currentPage)
+        $this->items = Recent::latestWithSticky($this->currentPage)
             ->skip($skip)
             ->take($take + 1) // need an additional for paginator to know there's additional pages
             ->get();
