@@ -14,11 +14,11 @@ use App\Models\Recent;
 abstract class Renderer
 {
 
-    protected $data;
+    protected mixed $data;
 
-    protected $view;
+    protected string $view;
 
-    protected $recent;
+    protected Recent $recent;
 
     public function __construct($content, Recent $recent)
     {
@@ -26,15 +26,16 @@ abstract class Renderer
         $this->process($content);
     }
 
-    public function render() {
+    public function render(): string
+    {
         return view($this->view, $this->data)->render();
     }
 
     /**
      * Go from string $content to the $this->data for the render call
      *
-     * @param $content
+     * @param string $content
      * @return void
      */
-    abstract public function process($content);
+    abstract public function process(string $content): void;
 }

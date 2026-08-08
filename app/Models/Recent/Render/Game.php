@@ -12,14 +12,14 @@ class Game extends Renderer
      *
      * @var string
      */
-    protected $view = 'recent.game';
+    protected string $view = 'recent.game';
 
     /**
      * Process the content and save to $this->data
      *
      * @param $content string
      */
-    public function process($content)
+    public function process(string $content): void
     {
         $ids = json_decode($content);
         $id = array_pop($ids);

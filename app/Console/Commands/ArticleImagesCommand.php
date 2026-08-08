@@ -1,26 +1,21 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Models\Article;
+use Exception;
+use Fusonic\OpenGraph\Objects\ObjectBase;
+use Fusonic\OpenGraph\Objects\Website;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Fusonic\OpenGraph\Consumer;
+use StdClass;
 
+#[Signature('parsers:articles:images')]
+#[Description("Attempts to get images for articles that don't have any")]
 class ArticleImagesCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'parsers:articles:images';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Attempts to get images for articles that don\'t have any';
 
     /**
      * Create a new command instance.
@@ -35,9 +30,9 @@ class ArticleImagesCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $articles = Article::allTenants()->whereNull('photo')->get();
         $articles->each(function($article) {
@@ -55,14 +50,14 @@ class ArticleImagesCommand extends Command
         });
     }
 
-    public function parse($url)
+    public function parse($url): Website|ObjectBase|StdClass
     {
         $consumer = new Consumer();
         try {
             return $consumer->loadUrl($url);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
-            return new \StdClass();
+            return new StdClass();
         }
     }
 }

@@ -137,11 +137,11 @@
 
 @push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="{{mix('js/player.js')}}"></script>
+    @vite(['resources/js/player.js'])
     @if($player->name_key == 'NathanPorter')
-        <script src="{{mix('js/porter.js')}}"></script>
+        @vite(['resources/js/porter.js'])
     @endif
     @if($player->name_key == 'DeclanEdema')
-        <script src="{{mix('js/declan.js')}}"></script>
+        @vite(['resources/js/declan.js'])
     @endif
 @endpush

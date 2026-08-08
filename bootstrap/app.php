@@ -1,55 +1,73 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+use App\Models\ActiveSite;
+use App\Models\JobInstance;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use \Illuminate\Support\Facades\Schedule;
+use NunoMazer\Samehouse\Facades\Landlord;
 
-$app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
-);
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        using: function() {
+            $site = App::make(ActiveSite::class);
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
+            if ($site->is_picker) {
+                // picker routes
+                Route::middleware('web')
+                    ->group(base_path('routes/picker.php'));
+            } else {
+                // api routes
+                Route::middleware('api')
+                    ->prefix('api')
+                    ->group(base_path('routes/api.php'));
 
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
+                // normal web routes
+                Route::middleware('web')
+                    ->group(base_path('routes/web.php'));
 
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
+            }
+        },
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up'
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->preventRequestForgery(except: [
+            'shook',
+            'twilio/incoming/*',
+            'cloudinary/webhooks/*'
+        ]);
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        $schedule->call(function () {
+            $group = \App\Jobs\JobGroups::Hourly;
 
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
+            $groupJobs = [];
+            $jobData = config('jobs');
+            foreach($jobData as $data) {
+                if ($data['group'] === $group) {
+                    $groupJobs[] = $data['job'];
+                }
+            }
 
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
+            Landlord::disable();
 
-return $app;
+            $groupInstances = JobInstance::whereIn('job', $groupJobs)->get();
+
+            foreach($groupInstances as $instance) {
+                call_user_func([$instance->job, 'dispatch'], $instance);
+            }
+
+            Landlord::enable();
+        })->everyMinute();
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*'),
+        );
+    })
+    ->create();

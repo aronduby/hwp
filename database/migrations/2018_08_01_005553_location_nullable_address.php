@@ -11,7 +11,7 @@ class LocationNullableAddress extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('locations', function(Blueprint $table) {
             $table->string('street')->nullable()->change();
@@ -26,7 +26,7 @@ class LocationNullableAddress extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('locations', function(Blueprint $table) {
             $table->string('street')->change();

@@ -2,11 +2,9 @@
 
 namespace App\Services\PlayerData;
 
-use App\Models\Article;
-use App\Models\Badge;
+use App\Collections\CustomCollection;
 use App\Models\Contracts\PhotoSource;
 use App\Models\Player;
-use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Services\PlayerData\Contracts\DataProvider;
 use App\Services\PlayerData\Providers\CareerProvider;
@@ -19,7 +17,7 @@ class PlayerDataService implements DataProvider
     /**
      * @var DataProvider
      */
-    protected $provider;
+    protected DataProvider $provider;
 
     /**
      * PlayerDataService constructor.
@@ -107,15 +105,15 @@ class PlayerDataService implements DataProvider
     /**
      * Get ALL the player's photos without any pagination
      *
-     * @return mixed
+     * @return ?array
      */
-    public function getAllPhotos()
+    public function getAllPhotos(): ?array
     {
         return $this->provider->getAllPhotos();
     }
 
     /**
-     * @return PhotoSource
+     * @return PhotoSource|null
      */
     public function getHeaderPhoto(): ?PhotoSource
     {
@@ -126,9 +124,9 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's badges
      *
-     * @return Collection|Badge[]
+     * @return Collection
      */
-    public function getBadges()
+    public function getBadges(): Collection
     {
         return $this->provider->getBadges();
     }
@@ -136,9 +134,9 @@ class PlayerDataService implements DataProvider
     /**
      * Get the player's articles
      *
-     * @return Collection|Article[]
+     * @return Collection
      */
-    public function getArticles()
+    public function getArticles(): Collection
     {
         return $this->provider->getArticles();
     }
@@ -156,9 +154,9 @@ class PlayerDataService implements DataProvider
     /**
      * Get all the player's seasons
      *
-     * @return Collection|PlayerSeason[]
+     * @return CustomCollection
      */
-    public function getSeasons()
+    public function getSeasons(): CustomCollection
     {
         return $this->provider->getSeasons();
     }

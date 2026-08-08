@@ -6,10 +6,10 @@ namespace App\Models\Contracts;
 interface Shareable
 {
 
-    const SQUARE = 'square';
-    const RECTANGLE = 'rectangle';
+    const string SQUARE = 'square';
+    const string RECTANGLE = 'rectangle';
 
-    public function isShareable();
+    public function isShareable(): bool;
 
-    public function getShareableUrl();
+    public function getShareableUrl(): string;
 }

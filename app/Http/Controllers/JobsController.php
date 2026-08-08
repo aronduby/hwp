@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\ActiveSite;
 use App\Models\JobInstance;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Throwable;
 
 class JobsController extends Controller
@@ -15,9 +17,9 @@ class JobsController extends Controller
      * Display a listing of the resource.
      *
      * @param ActiveSite $site
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|Response|\Illuminate\View\View
+     * @return View
      */
-    public function index(ActiveSite $site)
+    public function index(ActiveSite $site): View
     {
         $jobs = config('jobs');
         $instances = $site->jobs()->with(['logs' => function($query) {
@@ -34,9 +36,9 @@ class JobsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return JsonResponse|Response
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $input = $request->all();
 
@@ -67,7 +69,7 @@ class JobsController extends Controller
 
         try {
             // create a new instance and fill settings
-            // return json with a key of html of instance view
+            // return JSON with a key of HTML of instance view
             $instance = new JobInstance();
             $instance->job = $jobData['job'];
 
@@ -101,9 +103,9 @@ class JobsController extends Controller
      *
      * @param Request $request
      * @param JobInstance $jobInstance
-     * @return Response|JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, JobInstance $jobInstance)
+    public function update(Request $request, JobInstance $jobInstance): JsonResponse
     {
         $jobData = config('jobs.'. $jobInstance->job::KEY);
 
@@ -149,9 +151,9 @@ class JobsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param JobInstance $jobInstance
-     * @return Response|JsonResponse
+     * @return JsonResponse
      */
-    public function destroy(JobInstance $jobInstance)
+    public function destroy(JobInstance $jobInstance): JsonResponse
     {
         $jobData = config('jobs.'. $jobInstance->job::KEY);
 
@@ -172,10 +174,10 @@ class JobsController extends Controller
                 ];
             }
 
-            return \response()->json($rsp);
+            return response()->json($rsp);
 
         } catch (Throwable $exception) {
-            return \response()->json([
+            return response()->json([
                 'errorType' => 'server',
                 'message' => __('jobs.errors.saving')
             ], 500);
@@ -213,8 +215,8 @@ class JobsController extends Controller
                 'html' => $html
             ]);
 
-        } catch (\Exception $exception) {
-            return \response()->json([
+        } catch (Exception $exception) {
+            return response()->json([
                 'errorType' => 'server',
                 'message' => __('jobs.errors.saving')
             ], 500);

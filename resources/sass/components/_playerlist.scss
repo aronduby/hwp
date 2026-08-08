@@ -1,0 +1,10 @@
+@use "../abstracts/variables";
+
+.player-list ul,
+ul.player-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: variables.$gap-extra-large;
+}

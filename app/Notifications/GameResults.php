@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php /** @noinspection PhpUnused */
+
+/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
@@ -19,7 +21,7 @@ class GameResults extends Notification implements ShouldQueue, SendsToFCMTopic
     /**
      * @var Game $game
      */
-    protected $game;
+    protected Game $game;
 
     /**
      * Create a new notification instance.
@@ -68,7 +70,7 @@ class GameResults extends Notification implements ShouldQueue, SendsToFCMTopic
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable): array
+    public function via(mixed $notifiable): array
     {
         return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
@@ -85,7 +87,7 @@ class GameResults extends Notification implements ShouldQueue, SendsToFCMTopic
     public function toFCMTopic(): CloudMessage
     {
         // using withNotification results in fcm code triggering a less nice notification
-        // and data can only be a single level with string values, so json encode
+        // and data can only be a single level with string values, so JSON encode
         return CloudMessage::new()
             ->withData([
                 'notification' => json_encode([

@@ -1,0 +1,21 @@
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.table--fancyCaption {
+
+  caption {
+    @include mixins.grid();
+
+    font-family: variables.$heading-font-stack;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: white;
+    background-color: colors.$color-dark;
+    border-radius: 5px 5px 0 0;
+    padding: .3em;
+    border-bottom: 2px solid colors.$color-white-darker;
+  }
+
+}

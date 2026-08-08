@@ -7,6 +7,6 @@ namespace App\Jobs;
 abstract class JobGroups
 {
 
-    const Hourly = 'hourly';
+    const string Hourly = 'hourly';
 
 }

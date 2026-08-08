@@ -16,24 +16,19 @@ class MiscDirectiveServiceProvider extends ServiceProvider
      * Houses the variables for the forimplode/implode directives
      * @var array
      */
-    static protected $implodes = [];
-    static protected $implodeStacks = [];
+    static protected array $implodes = [];
+    static protected array $implodeStacks = [];
 
     /**
      * Bootstrap the application services.
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        // Add our date directives to Blade
-        $self = $this;
-        $partial = function($func) use ($self) {
-            return function($val) use ($func, $self) {
-                return $self->outputPhp($func, $val);
-            };
-        };
-        
+        // factory function for the directive methods
+        $partial = fn(string $func) => fn (string $expression) => $this->outputPhp($func, $expression);
+
         Blade::directive('ordinal', $partial('ordinal'));
         Blade::directive('number', $partial('number'));
         Blade::directive('numberOrNothing', $partial('numberOrNothing'));
@@ -41,7 +36,7 @@ class MiscDirectiveServiceProvider extends ServiceProvider
         Blade::directive('forimplode', $partial('forImplode'));
         Blade::directive('endforimplode', $partial('endForImplode'));
         Blade::directive('implode', $partial('implode'));
-        
+
         Blade::directive('val', $partial('val'));
 
         Blade::directive('warn', function($expression) {
@@ -60,11 +55,11 @@ class MiscDirectiveServiceProvider extends ServiceProvider
     /**
      * Returns a string of PHP code to use for the directive
      *
-     * @param $d
-     * @param $format
+     * @param string $func
+     * @param string $expression
      * @return string
      */
-    public function outputPhp($func, $expression)
+    public function outputPhp(string $func, string $expression): string
     {
         return "<?php echo ".__CLASS__."::$func($expression); ?>";
     }
@@ -74,9 +69,9 @@ class MiscDirectiveServiceProvider extends ServiceProvider
      * Takes a cardinal number (1) and returns ordinal (1st)
      *
      * @param $int
-     * @return string
+     * @return int|string
      */
-    static public function ordinal($int)
+    static public function ordinal($int): int|string
     {
         $s = ["th","st","nd","rd"];
         $v = $int%100;
@@ -93,18 +88,18 @@ class MiscDirectiveServiceProvider extends ServiceProvider
     /**
      * Shortcut for number format
      *
-     * @param $number
+     * @param float|int $number
      * @param int $decimals = 0
      * @param string $decimalPoint = .
      * @param string $thousandsSeperator = ,
      * @return string
      */
-    static public function number($number, $decimals = 0, $decimalPoint = '.', $thousandsSeperator = ',')
+    static public function number(float|int $number, int $decimals = 0, string $decimalPoint = '.', string $thousandsSeperator = ','): string
     {
         return number_format($number, $decimals, $decimalPoint, $thousandsSeperator);
     }
 
-    static public function numberOrNothing($number, $decimals = 0, $decimalPoint = '.', $thousandsSeperator = ',')
+    static public function numberOrNothing($number, $decimals = 0, $decimalPoint = '.', $thousandsSeperator = ','): string
     {
         if ($number) {
             return self::number($number, $decimals, $decimalPoint, $thousandsSeperator);
@@ -112,8 +107,8 @@ class MiscDirectiveServiceProvider extends ServiceProvider
             return '';
         }
     }
-    
-    static public function val($name, $default = '')
+
+    static public function val($name, $default = ''): array|string|null
     {
         $val = old($name, $default);
         return $val !== 0 ? $val : '';

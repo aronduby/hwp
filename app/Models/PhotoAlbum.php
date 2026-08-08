@@ -4,15 +4,15 @@ namespace App\Models;
 
 use App\Collections\CustomCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\PhotoAlbum
@@ -37,13 +37,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|PhotoAlbum whereSiteId($value)
  * @method static Builder|PhotoAlbum whereTitle($value)
  * @method static Builder|PhotoAlbum whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[Table('albums')]
 class PhotoAlbum extends Model
 {
     use BelongsToTenants;
-    
-    protected $table = 'albums';
 
     public function cover(): BelongsTo
     {

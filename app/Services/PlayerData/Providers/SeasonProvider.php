@@ -9,6 +9,7 @@
 namespace App\Services\PlayerData\Providers;
 
 
+use App\Collections\CustomCollection;
 use App\Models\Article;
 use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
@@ -24,12 +25,12 @@ class SeasonProvider implements DataProvider
     /**
      * @var Player
      */
-    protected $player;
+    protected Player $player;
 
     /**
      * @var PlayerSeason
      */
-    protected $playerSeason;
+    protected PlayerSeason $playerSeason;
 
     /**
      * SeasonProvider constructor.
@@ -135,16 +136,16 @@ class SeasonProvider implements DataProvider
     /**
      * Get the player's badges
      *
-     * @return Collection|Badge[]
+     * @return Collection<Badge>
      */
-    public function getBadges()
+    public function getBadges(): Collection
     {
         return Badge::select(['badges.*', 'badge_player.id AS uid'])
-        ->join('badge_player', 'badges.id', '=', 'badge_player.badge_id')
-        ->where('badge_player.season_id', '=', $this->playerSeason->season_id)
-        ->where('badge_player.player_id', '=', $this->player->id)
-        ->orderBy('badge_player.created_at', 'desc')
-        ->get();
+            ->join('badge_player', 'badges.id', '=', 'badge_player.badge_id')
+            ->where('badge_player.season_id', '=', $this->playerSeason->season_id)
+            ->where('badge_player.player_id', '=', $this->player->id)
+            ->orderBy('badge_player.created_at', 'desc')
+            ->get();
     }
 
     /**
@@ -177,9 +178,9 @@ class SeasonProvider implements DataProvider
     /**
      * Gets all the player's seasons
      *
-     * @return Collection|PlayerSeason[]
+     * @return CustomCollection<PlayerSeason>
      */
-    public function getSeasons()
+    public function getSeasons(): CustomCollection
     {
         return $this->player->seasons;
     }

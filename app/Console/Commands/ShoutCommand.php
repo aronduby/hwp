@@ -1,30 +1,20 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Notifications\Shout as ShoutNotification;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 /**
  * Used to "shout" notifications
  *
  */
+#[Signature('events:shout {message}')]
+#[Description('Sends a notification with the supplied message')]
 class ShoutCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'events:shout {message}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Sends a notification with the supplied message';
-
     /**
      * Create a new command instance.
      *
@@ -38,9 +28,9 @@ class ShoutCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $message = $this->argument('message');
         $notification = new ShoutNotification($message);

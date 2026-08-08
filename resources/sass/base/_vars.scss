@@ -1,0 +1,7 @@
+@use "../abstracts/colors";
+
+:root {
+  @each $name, $hex in colors.$colors {
+    --color-#{"" + $name}: #{$hex};
+  }
+}

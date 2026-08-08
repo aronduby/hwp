@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Contracts\PhotoSource;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use NunoMazer\Samehouse\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,10 +25,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $height
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|PhotoAlbum[] $albums
+ * @property-read Collection<PhotoAlbum> $albums
  * @property-read mixed $photo
  * @property-read mixed $thumb
- * @property-read Collection|Player[] $players
+ * @property-read Collection<Player> $players
  * @method static Builder|Photo whereCreatedAt($value)
  * @method static Builder|Photo whereFeatured($value)
  * @method static Builder|Photo whereFile($value)
@@ -38,36 +39,34 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Photo whereSiteId($value)
  * @method static Builder|Photo whereUpdatedAt($value)
  * @method static Builder|Photo whereWidth($value)
- * @mixin Eloquent
+ * @method static Builder|Photo inRandomOrder()
+ * @method static Builder|Photo whereIn($needle,$haystack)
  */
+#[Appends('photo', 'thumb', 'banner')]
 class Photo extends Model implements PhotoSource
 {
     use BelongsToTenants;
 
-    /**
-     * The accessors/mutators to append to the model's array form.
-     */
-    protected $appends = ['photo', 'thumb', 'banner'];
-
-    public function getPhotoAttribute(): string
+    protected function photo(): Attribute
     {
-        return config('urls.photos') . '/' . $this->file . '.jpg';
+        return Attribute::make(
+            get: fn () => config('urls.photos') . '/' . $this->file . '.jpg',
+        );
     }
 
-    /** @noinspection PhpUnused */
-    public function getThumbAttribute(): string
+    protected function thumb(): Attribute
     {
-        return config('urls.photos') . '/thumbs/' . $this->file . '.jpg';
+        return Attribute::make(
+            get: fn() => config('urls.photos') . '/thumbs/' . $this->file . '.jpg',
+        );
     }
 
-    /** @noinspection PhpUnused */
-    public function getBannerAttribute(): string
+    protected function banner(): Attribute
     {
-        return $this->getPhotoAttribute();
+        return $this->photo();
     }
 
-    /** @noinspection PhpUnused */
-    public function getJSONData(Player $player = null)
+    public function getJSONData(Player $player = null): false|string
     {
         $json = ['main'=>null, 'also'=>[]];
         $playersTemp = $this->players;

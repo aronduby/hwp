@@ -32,5 +32,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{mix('js/recap.js')}}"></script>
+    @vite(['resources/js/recap.js'])
 @endpush

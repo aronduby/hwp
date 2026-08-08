@@ -10,7 +10,7 @@ class CreateGameStatDumps extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('game_stat_dumps', function (Blueprint $table) {
             $table->increments('id');
@@ -31,7 +31,7 @@ class CreateGameStatDumps extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('game_stat_dumps');
     }

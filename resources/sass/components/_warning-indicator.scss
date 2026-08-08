@@ -1,0 +1,12 @@
+@use "../abstracts/colors";
+
+.warning-indicator {
+  color: colors.$color-accent;
+  text-shadow: 0 0 2px rgba(0,0,0,.5);
+}
+
+@mixin warningIndicatorPinned {
+  font-size: .8em;
+  vertical-align: super;
+  margin-left: -.6em;
+}

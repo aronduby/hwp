@@ -1,0 +1,66 @@
+@use "sass:map";
+@use "../abstracts/colors";
+@use "../abstracts/variables";
+
+.table.table--collapse {
+  // can't use responsive mixin because this is desktop first (don't give me that look)
+  @media (max-width: map.get(variables.$breakpoints, 'lg')) {
+    font-size: 1.0625em;
+
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tfoot {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 90%;
+      margin: auto;
+      justify-content: space-around;
+    }
+
+    tr {
+      display: table;
+      margin-bottom: variables.$gap-extra-large;
+      width: 100%;
+    }
+
+    td,
+    th {
+      display: table-row;
+      text-align: left !important;
+      width: 100%;
+      opacity: 1 !important;
+
+      &[data-title]::before {
+        content: attr(data-title) ':';
+        display: table-cell;
+        font-family: variables.$text-font-stack;
+        color: colors.$color-black-text;
+        padding: variables.$gap-small variables.$gap;
+        font-weight: bold;
+        letter-spacing: -.04em;
+        text-align: left;
+      }
+
+      span.right {
+        display: table-cell;
+        text-align: right;
+        padding: variables.$gap-small variables.$gap;
+      }
+    }
+
+    th::after {
+      content: '';
+      display: table-cell;
+    }
+
+    th:first-child {
+      font-size: 2em;
+      background: none;
+      border-bottom: 1px solid colors.$color-white-darker;
+    }
+  }
+}

@@ -8,19 +8,18 @@
 
 namespace App\Services;
 
-
-use App\Collections\CustomCollection;
 use App\Models\ActiveSeason;
 use App\Models\PlayerSeason;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class PlayerListService
 {
 
     /**
-     * @var PlayerSeason[] players
+     * @var Collection<PlayerSeason> players
      */
-    protected $playerList;
+    protected Collection $playerList;
 
     /**
      * PlayerListService constructor.
@@ -53,21 +52,17 @@ class PlayerListService
         return $this->playerList;
     }
 
-    public function getIdForNameKey($nameKey)
+    public function getIdForNameKey($nameKey): ?int
     {
         $player = $this->getPlayerForNameKey($nameKey);
-        if ($player) {
-            return $player->id;
-        } else {
-            return null;
-        }
+        return $player?->id;
     }
 
     /**
      * @param $nameKey
      * @return PlayerSeason
      */
-    public function getPlayerForNameKey($nameKey)
+    public function getPlayerForNameKey($nameKey): PlayerSeason
     {
         return $this->playerList->flatten()->first(function($playerSeason) use ($nameKey) {
             return $playerSeason->player->name_key === $nameKey;

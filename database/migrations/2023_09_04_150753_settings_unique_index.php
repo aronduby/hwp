@@ -10,7 +10,7 @@ class SettingsUniqueIndex extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->table('settings', function(Blueprint $table) {
             $table->unique(['has_settings_type', 'has_settings_id']);
@@ -22,7 +22,7 @@ class SettingsUniqueIndex extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->table('settings', function(Blueprint $table) {
             $table->dropUnique(['has_settings_type', 'has_settings_id']);

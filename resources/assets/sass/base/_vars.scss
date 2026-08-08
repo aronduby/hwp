@@ -1,5 +1,0 @@
-:root {
-  @each $name, $hex in $colors {
-    --color-#{"" + $name}: #{$hex};
-  }
-}

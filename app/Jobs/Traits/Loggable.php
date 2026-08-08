@@ -3,8 +3,6 @@
 
 namespace App\Jobs\Traits;
 
-
-use App\Jobs\Contracts\ILoggable;
 use App\Models\JobLog;
 use App\Models\JobInstance;
 

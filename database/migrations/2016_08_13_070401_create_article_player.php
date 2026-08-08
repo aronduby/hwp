@@ -10,7 +10,7 @@ class CreateArticlePlayer extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('article_player', function (Blueprint $table) {
             $table->increments('id');
@@ -33,7 +33,7 @@ class CreateArticlePlayer extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('article_player');
     }

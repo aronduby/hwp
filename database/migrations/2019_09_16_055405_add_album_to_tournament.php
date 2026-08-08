@@ -12,7 +12,7 @@ class AddAlbumToTournament extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('tournaments', function(Blueprint $table) {
             $table->integer('album_id')->nullable()->unsigned();
@@ -32,7 +32,7 @@ class AddAlbumToTournament extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('tournaments', function(Blueprint $table) {
             $table->dropForeign(['album_id']);

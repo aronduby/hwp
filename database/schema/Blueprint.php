@@ -9,9 +9,12 @@
 namespace App\Database\Schema;
 
 
+use Illuminate\Support\Fluent;
+
 class Blueprint extends \Illuminate\Database\Schema\Blueprint
 {
-    public function site() {
+    public function site(): void
+    {
         $this->integer('site_id')->unsigned();
 
         $this->foreign('site_id')
@@ -20,7 +23,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
             ->onUpdate('cascade');
     }
 
-    public function season()
+    public function season(): void
     {
         $this->integer('season_id')->unsigned();
 
@@ -30,7 +33,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
             ->onUpdate('cascade');
     }
 
-    public function player()
+    public function player(): void
     {
         $this->integer('player_id')->unsigned();
         $this->foreign('player_id')
@@ -44,9 +47,9 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      *
      * @param  string  $column
      * @param  array   $allowed
-     * @return \Illuminate\Support\Fluent
+     * @return Fluent
      */
-    public function set($column, array $allowed)
+    public function set($column, array $allowed): Fluent
     {
         return $this->addColumn('set', $column, compact('allowed'));
     }

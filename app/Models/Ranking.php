@@ -6,17 +6,16 @@ use App\Models\Scopes\RankingScope;
 use App\Models\Traits\HasSiteAndSeason;
 use App\Models\Traits\HasTotal;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Ranking
  *
- * @mixin Eloquent
  * @property int $id
  * @property int $site_id
  * @property int $season_id
@@ -43,27 +42,29 @@ class Ranking extends Model
 {
     use HasTotal, BelongsToTenants, HasSiteAndSeason;
 
-    protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'start' => 'datetime',
+            'end' => 'datetime'
+        ];
+    }
 
     /**
      * The "booting" method of the model. Adds our ranking scope to always include the ranks
      *
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
-
         static::addGlobalScope(new RankingScope);
     }
 
-    /** @noinspection PhpUnused */
-    public function scopeLatest(Builder $query)
+    #[Scope]
+    protected function latest(Builder $query): void
     {
-        return $query->take(1);
+        $query->take(1);
     }
 
     public function ranks(): HasMany

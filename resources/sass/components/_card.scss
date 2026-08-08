@@ -1,0 +1,91 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.card {
+  @include mixins.box-shadow();
+  position: relative;
+  margin-bottom: variables.$gap-large;
+
+  &.card--no-shadow {
+    box-shadow: none;
+  }
+
+  header {
+    text-align: center;
+    color: colors.$color-white;
+    background-color: colors.$color-white-darker;
+    padding: variables.$gap-extra-large;
+
+    &.has-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: functions.em(30);
+      line-height: .8em;
+      margin-top: 3px; // ?
+
+
+      small {
+        font-size: .5em;
+        line-height: .5em;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .body {
+    position: relative;
+    color: colors.$color-black-lighter;
+    padding: variables.$gap-large variables.$gap-extra-extra-large;
+    background: colors.$color-white-bg;
+    z-index: 1;
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+
+      li + li {
+        padding-top: variables.$gap-large;
+        border-top: 1px solid colors.$color-smoke;
+        margin-top: variables.$gap-large;
+
+        i.fa {
+          color: colors.$color-white-darker;
+          margin-right: variables.$gap-small;
+        }
+      }
+    }
+  }
+
+  table.body {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+
+    tr > td,
+    tr > th {
+      &:first-child {
+        padding-left: variables.$gap-extra-large !important;
+      }
+      &:last-child {
+        padding-right: variables.$gap-extra-large !important;
+      }
+    }
+  }
+
+  > footer {
+    background: colors.$color-white-darker;
+    padding: variables.$gap;
+
+    &.btn-group {
+      padding: 0;
+      border-top: 1px solid colors.$color-white-darker;
+      border-bottom: 1px solid colors.$color-white-darker;
+    }
+  }
+}

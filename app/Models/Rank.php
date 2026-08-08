@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\WithoutTimestamps;
 use Illuminate\Database\Eloquent\Builder;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Rank
@@ -28,25 +29,27 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Rank whereTeam($value)
  * @method static Builder|Rank whereTied($value)
  * @method static Builder|Rank wherePoints($value)
- * @mixin Eloquent
  */
+#[Fillable('rank', 'team', 'tied', 'self', 'points')]
+#[WithoutTimestamps]
 class Rank extends Model
 {
     use BelongsToTenants;
-    
-    protected $fillable = ['rank', 'team', 'rank', 'tied', 'self', 'points'];
-    
-    protected $casts = [
-        'site_id' => 'integer',
-        'season_id' => 'integer',
-        'ranking_id' => 'integer',
-        'rank' => 'integer',
-        'self' => 'boolean',
-        'tied' => 'boolean',
-        'points' => 'integer'
-    ];
 
-    public $timestamps = false;
-    
-    
+    /**
+     * @return array<string,string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'site_id' => 'integer',
+            'season_id' => 'integer',
+            'ranking_id' => 'integer',
+            'rank' => 'integer',
+            'self' => 'boolean',
+            'tied' => 'boolean',
+            'points' => 'integer'
+        ];
+    }
+
 }

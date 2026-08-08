@@ -1,0 +1,32 @@
+@use "sass:color";
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the header of the site/application.
+// -----------------------------------------------------------------------------
+.page-header {
+  padding: variables.$gap-extra-extra-large * 2.5 0;
+
+  h1 {
+    @include mixins.text-shadow();
+    color: colors.$color-white;
+    font-size: functions.em(80);
+  }
+
+  h2 {
+    @include mixins.text-shadow();
+    color: colors.$color-white-darker;
+    font-size: functions.em(40);
+  }
+
+  &.header--small {
+    padding: variables.$gap-extra-extra-large 0;
+  }
+
+  .text--muted {
+    color: color.adjust(colors.$color-white, $lightness: -25%);
+  }
+}

@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Jobs\Traits\Loggable;
-use App\Models\JobInstance;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

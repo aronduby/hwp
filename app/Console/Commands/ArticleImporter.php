@@ -1,4 +1,6 @@
-<?php /** @noinspection SqlResolve */
+<?php /** @noinspection SqlNoDataSourceInspection */
+
+/** @noinspection SqlResolve */
 
 namespace App\Console\Commands;
 
@@ -13,7 +15,10 @@ use App\Models\Site;
 use App\Services\PlayerListService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-
+use NunoMazer\Samehouse\Facades\Landlord;
+use PDO;
+use PDOStatement;
+use Throwable;
 
 abstract class ArticleImporter extends LoggedCommand
 {
@@ -31,55 +36,55 @@ abstract class ArticleImporter extends LoggedCommand
     /**
      * @var Site
      */
-    protected $site;
+    protected Site $site;
 
     /**
      * @var Season
      */
-    protected $season;
+    protected Season $season;
 
     /**
      * @var Collection|Player[]
      */
-    protected $playerlist;
+    protected array|Collection $playerlist;
 
     /**
      * The key in the settings file for the site
      *
      * @var string
      */
-    protected $settingKey;
+    protected string $settingKey;
 
     /**
      * The url to parse
      *
      * @var string
      */
-    protected $url;
+    protected string $url;
 
     /**
-     * @var \PDO
+     * @var PDO
      */
-    protected $pdo;
+    protected PDO $pdo;
 
     /**
-     * @var \PDOStatement
+     * @var PDOStatement
      */
-    protected $articleInsertStmt;
+    protected PDOStatement $articleInsertStmt;
 
     /**
-     * @var \PDOStatement
+     * @var PDOStatement
      */
-    protected $playerToArticleInsertStmt;
+    protected PDOStatement $playerToArticleInsertStmt;
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        \Landlord::disable();
+        Landlord::disable();
 
         $jobInstance = $this->getJobInstance();
         $jobLog = $this->getJobLog();
@@ -116,7 +121,7 @@ abstract class ArticleImporter extends LoggedCommand
             $jobInstance->last_ran = now();
             $jobLog->state = JobLog::SUCCESS;
 
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->error('Caught exception: ' . $exception->getMessage());
             $jobLog->state = JobLog::ERROR;
         }
@@ -125,7 +130,7 @@ abstract class ArticleImporter extends LoggedCommand
         $jobInstance->save();
         $jobInstance->logs()->save($jobLog);
 
-        \Landlord::enable();
+        Landlord::enable();
     }
 
     /**
@@ -133,33 +138,33 @@ abstract class ArticleImporter extends LoggedCommand
      *
      * return void
      */
-    protected function preparePdo()
+    protected function preparePdo(): void
     {
         $this->pdo = DB::connection()->getPdo();
 
         $this->articleInsertStmt = $this->pdo->prepare("
-          INSERT INTO 
-            articles 
-          SET 
+          INSERT INTO
+            articles
+          SET
             site_id = ".$this->site->id.",
-            season_id = ".$this->season->id.", 
-            title = :title, 
-            url = :url, 
+            season_id = ".$this->season->id.",
+            title = :title,
+            url = :url,
             photo = :photo,
-            description = :description, 
+            description = :description,
             published = :published,
             created_at = :created_at,
             updated_at = :updated_at
         ");
 
         $this->playerToArticleInsertStmt = $this->pdo->prepare("
-            INSERT INTO 
-              article_player 
+            INSERT INTO
+              article_player
             SET
               site_id = ".$this->site->id.",
-              player_id = :player_id, 
-              season_id = ".$this->season->id.", 
-              article_id = :article_id, 
+              player_id = :player_id,
+              season_id = ".$this->season->id.",
+              article_id = :article_id,
               highlight = :highlight,
               created_at = :created_at,
               updated_at = :updated_at
@@ -206,7 +211,7 @@ abstract class ArticleImporter extends LoggedCommand
     {
         // addition 7-20 AD
         // if input doesn't start with a p tag, add it
-        if (strpos($input, '<p>') !== 0)
+        if (!str_starts_with($input, '<p>'))
             $input = '<p>' . $input;
 
         $opened = $closed = []; // tally opened and closed tags in order
@@ -234,12 +239,12 @@ abstract class ArticleImporter extends LoggedCommand
         }
         // close tags that are still open
         if ($opened) {
-            $tagstoclose = array_reverse($opened);
-            foreach ($tagstoclose as $tag)
+            $tagsToClose = array_reverse($opened);
+            foreach ($tagsToClose as $tag)
                 $input .= "</$tag>";
         }
 
         return $input;
     }
-    
+
 }

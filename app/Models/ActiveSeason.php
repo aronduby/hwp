@@ -5,18 +5,18 @@ namespace App\Models;
 
 use App\Collections\StatCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Easy way for dependency inject to get the season being viewed
  * Note - This is the actively viewed season, not the current season
- * 
+ *
  * Class ActiveSeason
  *
  * @package App\Models
- * @mixin Eloquent
  * @property int $id
  * @property int $site_id
  * @property string $title
@@ -29,10 +29,10 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string $media_service
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Badge[] $badges
- * @property-read Collection|Player[] $players
- * @property-read Collection|Recent[] $recent
- * @property-read StatCollection|Stat[] $stats
+ * @property-read Collection<Badge> $badges
+ * @property-read Collection<Player> $players
+ * @property-read Collection<Recent> $recent
+ * @property-read StatCollection<Stat> $stats
  * @property-read Settings $settings
  * @method static Builder|Season current()
  * @method static Builder|ActiveSeason whereCreatedAt($value)
@@ -48,16 +48,16 @@ use Illuminate\Database\Eloquent\Collection;
  * @method static Builder|ActiveSeason whereMediaService($value)
  * @method static Builder|ActiveSeason whereRankingTitle($value)
  */
+
+#[Table('seasons')]
+#[Unguarded]
 class ActiveSeason extends Season
 {
-    protected $table = 'seasons';
-
-    protected $guarded = [];
 
     /**
-     * This is used with polymorphic relationships to tell what class name should be used with the relationships
+     * This is used with polymorphic relationships to tell what class name should be used with the relationships.
      * Normally this comes from a morphMap or just the calling classes name, but since we want every Season/ActiveSeason
-     * to share this relationship properly we overload it here to always be the season class
+     * to share this relationship properly we overload it here to always be the season class.
      *
      * @return string
      */

@@ -7,11 +7,14 @@ use App\Jobs\MWPARankingsJob;
 /**
  * The list of the different available jobs
  *
- * @param string title - the title of the job
- * @param string description - description of the job
- * @param string job - the PHP Job class
- * @param string group - the group key for that job
- * @param string settings - the name of the view for settings, relative to admin.jobs.partials
+ * @var array<string, array{
+ *     title: string, // the title of the job
+ *     description: string, // description of the job
+ *     job: string, // the PHP Job class
+ *     group: string, // the group key for that job
+ *     settings: string, // the name of the view for settings, relative to admin.jobs.partials
+ *     disabled: bool, // is the job disabled
+ * }>
  */
 return [
     HudsonvilleAthleticsArticlesJob::KEY => [

@@ -8,7 +8,7 @@ use App\Models\ActiveSite;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
-use Torzer\Awesome\Landlord\Facades\Landlord;
+use NunoMazer\Samehouse\Facades\Landlord;
 
 class TenantServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,7 @@ class TenantServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Get our site and season data from the proper locations
         if (App::runningInConsole()) {
@@ -88,10 +88,11 @@ class TenantServiceProvider extends ServiceProvider
     /**
      * Parse the selected value from argv command line
      *
-     * @param $option
-     * @return array|mixed|null
+     * @param string $option
+     * @return string|null
      */
-    protected function getFromCLI($option) {
+    protected function getFromCLI(string $option): string|null
+    {
         $searchFor = '--' . $option;
 
         // new ones use --arg value
@@ -101,7 +102,7 @@ class TenantServiceProvider extends ServiceProvider
             if ($arg === $searchFor) {
                 return $args[$i + 1];
 
-            } elseif (starts_with($arg, $searchFor.'=')) {
+            } elseif (str_starts_with($arg, $searchFor.'=')) {
                 $value = explode('=', $arg);
                 return array_pop($value);
             }
@@ -115,7 +116,8 @@ class TenantServiceProvider extends ServiceProvider
      *
      * @param ActiveSite $site
      */
-    protected function updateSiteBasedConfig(ActiveSite $site) {
+    protected function updateSiteBasedConfig(ActiveSite $site): void
+    {
         // DEFAULT_DOMAIN=hudsonvillewaterpolo
         // APP_URL=https://www.hudsonvillewaterpolo.local
         // PHOTOS_URL=https://photos.hudsonvillewaterpolo.com

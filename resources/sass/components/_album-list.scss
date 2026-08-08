@@ -1,0 +1,23 @@
+@use "../abstracts/mixins";
+
+.album-list {
+  @include mixins.responsive(sm) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.album-list .photo-album {
+  height: 200px;
+  margin: 15px;
+  position: relative;
+
+  @include mixins.responsive(sm) {
+    min-width: 40%;
+  }
+
+  @include mixins.responsive(md) {
+    min-width: 30%;
+  }
+}

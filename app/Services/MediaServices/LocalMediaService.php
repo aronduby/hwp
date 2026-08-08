@@ -96,7 +96,6 @@ abstract class LocalMediaService implements MediaService
 
     /**
      * @inheritDoc
-     * @noinspection PhpParamsInspection
      */
     public function forGame(Game $game, PlayerSeason $playerSeason = null): Collection
     {

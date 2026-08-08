@@ -12,14 +12,14 @@ class Tournament extends Renderer
      *
      * @var string
      */
-    protected $view = 'recent.tournament';
+    protected string $view = 'recent.tournament';
 
     /**
      * Process the content and save to $this->data
      *
      * @param $content string
      */
-    public function process($content)
+    public function process(string $content): void
     {
         $ids = json_decode($content);
         $id = array_pop($ids);

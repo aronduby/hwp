@@ -2,7 +2,6 @@
 
 namespace App\Collections;
 
-
 class StatCollection extends CustomCollection
 {
 
@@ -11,7 +10,7 @@ class StatCollection extends CustomCollection
      *
      * @return StatCollection
      */
-    public function players()
+    public function players(): static
     {
         return $this;
     }
@@ -22,7 +21,7 @@ class StatCollection extends CustomCollection
      *
      * @return StatCollection
      */
-    public function goalies()
+    public function goalies(): StatCollection
     {
         return $this->filter(function($stat) {
             return ($stat->saves > 0 || $stat->goals_allowed > 0) ||

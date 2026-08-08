@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
@@ -10,34 +10,23 @@ use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Notifications\GameResults;
 use App\Services\PlayerListService;
-use Landlord;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+use NunoMazer\Samehouse\Facades\Landlord;
 
+#[Signature('scoring:save-stats {game_id : The ID of the game to convert}')]
+#[Description('Creates the Stats entries for players for the supplied game from the stats dump')]
 class SaveScoringStatsCommand extends LoggedCommand
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'scoring:save-stats {game_id : The ID of the game to convert}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates the Stats entries for players for the supplied game from the stats dump';
-
-
-    /**
      * @var PlayerListService
      */
-    protected $playerList;
+    protected PlayerListService $playerList;
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         Landlord::disable();
 
@@ -66,7 +55,7 @@ class SaveScoringStatsCommand extends LoggedCommand
             $stats['game_id'] = $dump->game_id;
 
             $this->logDebug('converted stats', $stats);
-            
+
             Stat::updateOrCreate(
                 [
                     'site_id' => $dump->site_id,
@@ -75,7 +64,7 @@ class SaveScoringStatsCommand extends LoggedCommand
                 ],
                 $stats
             );
-            
+
             $this->logInfo(sprintf('success inserting game #%s for %s', $dump->game_id, $nameKey));
         }
 

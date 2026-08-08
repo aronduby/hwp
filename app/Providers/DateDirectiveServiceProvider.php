@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,34 +13,29 @@ use Illuminate\Support\ServiceProvider;
 class DateDirectiveServiceProvider extends ServiceProvider
 {
 
-    const DAY = 'l';
+    const string DAY = 'l';
 
-    const DAY_SHORT = 'D';
+    const string DAY_SHORT = 'D';
 
-    const DATE = 'n/j';
+    const string DATE = 'n/j';
 
-    const STAMP = 'M jS \@ g:ia';
+    const string STAMP = 'M jS \@ g:ia';
 
-    const DATE_SPAN = 'M j';
+    const string DATE_SPAN = 'M j';
 
-    const TIME = 'g:ia';
+    const string TIME = 'g:ia';
 
-    const ISO = 'c';
+    const string ISO = 'c';
 
     /**
      * Bootstrap the application services.
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        // Add our date directives to Blade
-        $self = $this;
-        $partial = function($func) use ($self) {
-            return function($date) use ($func, $self) {
-                return $self->outputPhp($func, $date);
-            };
-        };
+        // factory function for the directive method
+        $partial = fn(string $func) => fn (string $arguments) => $this->outputPhp($func, $arguments);
 
         Blade::directive('day', $partial('day'));
         Blade::directive('date', $partial('date'));
@@ -59,13 +54,13 @@ class DateDirectiveServiceProvider extends ServiceProvider
     /**
      * Returns a string of PHP code to use for the directive
      *
-     * @param $d
-     * @param $format
+     * @param string $func
+     * @param string $arguments
      * @return string
      */
-    public function outputPhp($func, $date)
+    public function outputPhp(string $func, string $arguments): string
     {
-        return "<?php echo ".__CLASS__."::$func($date); ?>";
+        return "<?php echo ".__CLASS__."::$func($arguments); ?>";
     }
 
     /**
@@ -76,7 +71,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param bool $full Use full text name. Pass false to get 3 letter. Default true.
      * @return string
      */
-    static public function day(Carbon $d, $full = true)
+    static public function day(Carbon $d, bool $full = true): string
     {
         if ($d->isToday()) {
             return trans('misc.today');
@@ -95,7 +90,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param Carbon $d
      * @return string
      */
-    static public function date(Carbon $d)
+    static public function date(Carbon $d): string
     {
         return $d->format(self::DATE);
     }
@@ -107,7 +102,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param bool $full Use full text name
      * @return string
      */
-    static public function dayWithDate(Carbon $d, $full = true)
+    static public function dayWithDate(Carbon $d, bool $full = true): string
     {
         $format = ($full ? self::DAY : self::DAY_SHORT) . ' ' . self::DATE;
         return $d->format($format);
@@ -120,7 +115,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param Carbon $d
      * @return string
      */
-    static public function dayWithDateTime(Carbon $d)
+    static public function dayWithDateTime(Carbon $d): string
     {
         $day = self::dayWithDate($d, false);
 
@@ -140,7 +135,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param Carbon $to
      * @return string
      */
-    static public function dateSpan(Carbon $from, Carbon $to)
+    static public function dateSpan(Carbon $from, Carbon $to): string
     {
         return $from->format(self::DATE_SPAN) . ' &ndash; ' . $to->format(self::DATE_SPAN);
     }
@@ -152,7 +147,7 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param boolean $treatMidnightAsAllDay replaces 12:00AM with all day
      * @return string
      */
-    static public function time(Carbon $d, $treatMidnightAsAllDay = true)
+    static public function time(Carbon $d, bool $treatMidnightAsAllDay = true): string
     {
         $str = $d->format(self::TIME);
         return $treatMidnightAsAllDay ? str_replace('12:00am', trans('misc.allDay'), $str) : $str;
@@ -164,18 +159,18 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * @param Carbon $d
      * @return string
      */
-    static public function stamp(Carbon $d)
+    static public function stamp(Carbon $d): string
     {
         return $d->format(self::STAMP);
     }
 
     /**
-     * Formats as 2004-02-12T15:19:21+00:00 for use with datettime attributes
+     * Formats as 2004-02-12T15:19:21+00:00 for use with datetime attributes
      *
      * @param Carbon $d
      * @return string
      */
-    static public function iso(Carbon $d)
+    static public function iso(Carbon $d): string
     {
         return $d->format(self::ISO);
     }
@@ -184,9 +179,9 @@ class DateDirectiveServiceProvider extends ServiceProvider
      * Takes a cardinal number (1) and returns ordinal (1st)
      *
      * @param $int
-     * @return string
+     * @return int|string
      */
-    static public function ordinal($int)
+    static public function ordinal($int): int|string
     {
         $s = ["th","st","nd","rd"];
         $v = $int%100;

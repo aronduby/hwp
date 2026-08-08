@@ -3,6 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\Request;
+use Throwable;
+use Illuminate\Http\Response as LaravelResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShareableHandler extends Handler
 {
@@ -10,19 +14,17 @@ class ShareableHandler extends Handler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Exception|Throwable $e
+     * @return LaravelResponse|Response
+     * @throws Throwable
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception|Throwable $e): LaravelResponse|Response
     {
-        // dd($request);
-        // dd($exception->getMessage());
-        // return view('shareables.error', []);
         if (env('APP_DEBUG') != true) {
             return response()->view('shareables.error', [], 500);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }

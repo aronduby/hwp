@@ -1,0 +1,182 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:string";
+
+@use "variables";
+
+$_browser-context: 16; // Default
+@function _em($pixels, $context: $_browser-context) {
+    @return #{math.div($pixels, $context)}em;
+}
+
+/// Returns the opposite direction of each direction in a list
+/// @author Hugo Giraudel
+/// @param {List} $directions - List of initial directions
+/// @return {List} - List of opposite directions
+@function opposite-direction($directions) {
+    $opposite-directions: ();
+    $direction-map: (
+        'top':    'bottom',
+        'right':  'left',
+        'bottom': 'top',
+        'left':   'right',
+        'center': 'center',
+        'ltr':    'rtl',
+        'rtl':    'ltr'
+    );
+
+    @each $direction in $directions {
+        $direction: string.to-lower-case($direction);
+
+        @if map.has-key($direction-map, $direction) {
+            $opposite-directions: list.append($opposite-directions, string.unquote(map.get($direction-map, $direction)));
+        } @else {
+            @warn "No opposite direction can be found for `#{$direction}`. Direction omitted.";
+        }
+    }
+
+    @return $opposite-directions;
+}
+
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass mixins.
+// -----------------------------------------------------------------------------
+
+/// Event wrapper
+/// @author Harry Roberts
+/// @param {Bool} $self [false] - Whether or not to include current selector
+/// @link https://twitter.com/csswizardry/status/478938530342006784 Original tweet from Harry Roberts
+@mixin on-event($self: false) {
+  @if $self {
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+      @content;
+    }
+  } @else {
+    &:hover,
+    &:active,
+    &:focus {
+      @content;
+    }
+  }
+}
+
+/// Make a context based selector a little more friendly
+/// @author Hugo Giraudel
+/// @param {String} $context
+@mixin when-inside($context) {
+  #{$context} & {
+    @content;
+  }
+}
+
+@mixin text-align($dir) {
+  text-align: $dir !important;
+}
+
+
+@mixin responsive($breakpoint) {
+  @if map.has-key(variables.$breakpoints, $breakpoint) {
+    @media (min-width: #{map.get(variables.$breakpoints, $breakpoint)}) {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+
+
+@mixin grid($size-key: 'md') {
+  @if map.has-key(variables.$grid-sizes, $size-key) {
+    background-size: #{map.get(variables.$grid-sizes, $size-key)} #{map.get(variables.$grid-sizes, $size-key)};
+    background-image: linear-gradient(to right, rgba(0,0,0,.08), transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,.08) 1px, transparent 1px);
+  }
+
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$size-key}`. "
+        + "Please make sure it is defined in `$grid-sizes` map.";
+  }
+}
+
+@mixin box-shadow() {
+  box-shadow: 0 2px 5px rgba(0,0,0,.75);
+}
+
+@mixin text-shadow($size: 'default') {
+  $sizes: (
+    'small': 0 2px 2px rgba(0,0,0,.5),
+    'default': 0 2px 5px rgba(0,0,0,.75),
+    'large': 0 5px 5px rgba(0,0,0,.9)
+  );
+  text-shadow: map.get($sizes, $size);
+}
+
+@mixin heading() {
+  font-family: variables.$heading-font-stack;
+  text-transform: uppercase;
+  font-size: 1.1em;
+}
+
+@mixin table-subhead() {
+  @include heading();
+  font-size: _em(20);
+  color: #3c3c3c;
+  background: #aaa;
+}
+
+@mixin clearfix() {
+  &::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+@mixin pinned() {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/// Triangle helper mixin
+/// https://css-tricks.com/snippets/sass/css-triangle-mixin/
+/// @param {Direction} $direction - Triangle direction, either `top`, `right`, `bottom` or `left`
+/// @param {Color} $color [currentcolor] - Triangle color
+/// @param {Length} $size [1em] - Triangle size
+@mixin triangle($direction, $color: currentcolor, $size: 1em) {
+  @if not list.index(top right bottom left, $direction) {
+    @error "Direction must be either `top`, `right`, `bottom` or `left`.";
+  }
+
+  width: 0;
+  height: 0;
+  content: '';
+  z-index: 2;
+  border-#{opposite-direction($direction)}: ($size) solid $color;
+
+  $perpendicular-borders: $size solid transparent;
+
+  @if $direction == top or $direction == bottom {
+    border-left:   $perpendicular-borders;
+    border-right:  $perpendicular-borders;
+  } @else if $direction == right or $direction == left {
+    border-bottom: $perpendicular-borders;
+    border-top:    $perpendicular-borders;
+  }
+}
+
+/// Helper for doing text overflow ellipsis
+@mixin ellipsis() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

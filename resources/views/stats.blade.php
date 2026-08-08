@@ -209,5 +209,5 @@
 
 @push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="{{mix('js/stats.js')}}"></script>
+    @vite(['resources/js/stats.js'])
 @endpush

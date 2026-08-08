@@ -13,7 +13,7 @@ class LogChannel
      * @param $notifiable
      * @param Notification $notification
      */
-    public function send($notifiable, Notification $notification)
+    public function send($notifiable, Notification $notification): void
     {
         $data = $notification->toLog($notifiable);
 

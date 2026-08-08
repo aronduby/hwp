@@ -5,8 +5,14 @@ namespace App\Models;
 use App\Collections\StatCollection;
 use App\Models\Contracts\Shareable;
 use App\Services\PlayerListService;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Stat
@@ -42,9 +48,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $shoot_out_allowed
  * @property int|null $advantage_goals
  * @property int|null $advantage_goals_allowed
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\Game|null $game
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Game|null $game
  * @property-read mixed $five_meters_missed
  * @property-read mixed $five_meters_percent
  * @property-read mixed $five_meters_save_percent
@@ -57,42 +63,42 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $shooting_percent
  * @property-read mixed $sprints_percent
  * @property-read mixed $steals_to_turnovers
- * @property-read \App\Models\Season $season
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAdvantageGoals($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAdvantageGoalsAllowed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereAssists($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereBlocks($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersAllowed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersBlocked($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersCalled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersDrawn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersMade($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersTaken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereFiveMetersTakenOn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGameId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGoals($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereGoalsAllowed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereKickouts($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereKickoutsDrawn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat wherePlayerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSaves($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSeasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutAllowed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutBlocked($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutMade($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutTaken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShootOutTakenOn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereShots($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSiteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSprintsTaken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSprintsWon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereSteals($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereTurnovers($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Stat whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property-read Season $season
+ * @method static Builder|Stat whereAdvantageGoals($value)
+ * @method static Builder|Stat whereAdvantageGoalsAllowed($value)
+ * @method static Builder|Stat whereAssists($value)
+ * @method static Builder|Stat whereBlocks($value)
+ * @method static Builder|Stat whereCreatedAt($value)
+ * @method static Builder|Stat whereFiveMetersAllowed($value)
+ * @method static Builder|Stat whereFiveMetersBlocked($value)
+ * @method static Builder|Stat whereFiveMetersCalled($value)
+ * @method static Builder|Stat whereFiveMetersDrawn($value)
+ * @method static Builder|Stat whereFiveMetersMade($value)
+ * @method static Builder|Stat whereFiveMetersTaken($value)
+ * @method static Builder|Stat whereFiveMetersTakenOn($value)
+ * @method static Builder|Stat whereGameId($value)
+ * @method static Builder|Stat whereGoals($value)
+ * @method static Builder|Stat whereGoalsAllowed($value)
+ * @method static Builder|Stat whereId($value)
+ * @method static Builder|Stat whereKickouts($value)
+ * @method static Builder|Stat whereKickoutsDrawn($value)
+ * @method static Builder|Stat wherePlayerId($value)
+ * @method static Builder|Stat whereSaves($value)
+ * @method static Builder|Stat whereSeasonId($value)
+ * @method static Builder|Stat whereShootOutAllowed($value)
+ * @method static Builder|Stat whereShootOutBlocked($value)
+ * @method static Builder|Stat whereShootOutMade($value)
+ * @method static Builder|Stat whereShootOutTaken($value)
+ * @method static Builder|Stat whereShootOutTakenOn($value)
+ * @method static Builder|Stat whereShots($value)
+ * @method static Builder|Stat whereSiteId($value)
+ * @method static Builder|Stat whereSprintsTaken($value)
+ * @method static Builder|Stat whereSprintsWon($value)
+ * @method static Builder|Stat whereSteals($value)
+ * @method static Builder|Stat whereTurnovers($value)
+ * @method static Builder|Stat whereUpdatedAt($value)
  */
+#[Unguarded]
 class Stat extends Model implements Shareable
 {
     use BelongsToTenants;
@@ -100,7 +106,7 @@ class Stat extends Model implements Shareable
     /**
      * List of the fields from the database
      */
-    const FIELDS = [
+    const array FIELDS = [
         'goals',
         'shots',
         'assists',
@@ -133,7 +139,7 @@ class Stat extends Model implements Shareable
      * @deprecated
      * @var array $fields
      */
-    public static $fields = [
+    public static array $fields = [
         'goals' => [
             'label' => 'Goals',
             'order' => 'high'
@@ -288,7 +294,7 @@ class Stat extends Model implements Shareable
      * @deprecated
      * @var array $goalie_only
      */
-    public static $goalie_only = [
+    public static array $goalie_only = [
         'saves',
         'goals_allowed',
         'save_percent',
@@ -310,8 +316,7 @@ class Stat extends Model implements Shareable
      * For editing stats, this is set to the goals they scored per quarter
      * @var array
      */
-    public $goalsPerQuarter = [];
-    
+    public array $goalsPerQuarter = [];
 
     /**
      * Specify the tenant columns to use for this model
@@ -319,55 +324,51 @@ class Stat extends Model implements Shareable
      *
      * @var array
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
-    /**
-     * The fields which CAN NOT be mass assigned
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    protected $casts = [
-        'goals' => 'real',
-        'shots' => 'real',
-        'assists' => 'real',
-        'steals' => 'real',
-        'turnovers' => 'real',
-        'blocks' => 'real',
-        'kickouts_drawn' => 'real',
-        'kickouts' => 'real',
-        'saves' => 'real',
-        'goals_allowed' => 'real',
-        'sprints_taken' => 'real',
-        'sprints_won' => 'real',
-        'five_meters_drawn' => 'real',
-        'five_meters_taken' => 'real',
-        'five_meters_made' => 'real',
-        'five_meters_called' => 'real',
-        'five_meters_taken_on' => 'real',
-        'five_meters_blocked' => 'real',
-        'five_meters_allowed' => 'real',
-        'shoot_out_taken' => 'real',
-        'shoot_out_made' => 'real',
-        'shoot_out_taken_on' => 'real',
-        'shoot_out_blocked' => 'real',
-        'shoot_out_allowed' => 'real',
-        'advantage_goals' => 'real',
-        'advantage_goals_allowed' => 'real'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'goals' => 'real',
+            'shots' => 'real',
+            'assists' => 'real',
+            'steals' => 'real',
+            'turnovers' => 'real',
+            'blocks' => 'real',
+            'kickouts_drawn' => 'real',
+            'kickouts' => 'real',
+            'saves' => 'real',
+            'goals_allowed' => 'real',
+            'sprints_taken' => 'real',
+            'sprints_won' => 'real',
+            'five_meters_drawn' => 'real',
+            'five_meters_taken' => 'real',
+            'five_meters_made' => 'real',
+            'five_meters_called' => 'real',
+            'five_meters_taken_on' => 'real',
+            'five_meters_blocked' => 'real',
+            'five_meters_allowed' => 'real',
+            'shoot_out_taken' => 'real',
+            'shoot_out_made' => 'real',
+            'shoot_out_taken_on' => 'real',
+            'shoot_out_blocked' => 'real',
+            'shoot_out_allowed' => 'real',
+            'advantage_goals' => 'real',
+            'advantage_goals_allowed' => 'real'
+        ];
+    }
 
     /**
      * The player for this stat
-     * 
+     *
      * @var PlayerSeason
      */
-    protected $player;
+    protected PlayerSeason $_player;
 
     /**
      * @var PlayerListService
      */
-    private $playerListService;
+    private PlayerListService $playerListService;
 
     public function __construct($attributes = [])
     {
@@ -376,113 +377,36 @@ class Stat extends Model implements Shareable
         $this->playerListService = app('App\\Services\\PlayerListService');
     }
 
-    public function getPlayerAttribute($val)
-    {
-        if (!$this->player) {
-            $this->player = $this->playerListService->getPlayerById($this->player_id);
-            if (!$this->player) {
-                $this->player = new PlayerSeason();
-            }
-        }
-
-        return $this->player;
-    }
-
-    public function setPlayerAttribute(PlayerSeason $player)
-    {
-        $this->player = $player;
-        // $this->attributes['player'] = $player;
-    }
-
-    public function season()
+    public function season(): BelongsTo
     {
         return $this->belongsTo('App\Models\Season');
     }
 
-    public function game()
+    public function game(): BelongsTo
     {
         return $this->belongsTo('App\Models\Game');
     }
 
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): StatCollection
     {
         return new StatCollection($models);
     }
 
-    /**
-     * Getters for calculated fields
-     */
-    public function getShootingPercentAttribute()
+    protected function ratio($part, $whole): float|int
     {
-        return $this->ratio($this->goals, $this->shots) * 100;
-    }
-
-    public function getStealsToTurnoversAttribute()
-    {
-        return $this->steals - $this->turnovers;
-    }
-
-    public function getKickoutsDrawnToCalledAttribute()
-    {
-        return $this->kickouts_drawn - $this->kickouts;
-    }
-
-    public function getSavePercentAttribute()
-    {
-        return $this->ratio($this->saves, ($this->saves + $this->goals_allowed)) * 100;
-    }
-
-    public function getSprintsPercentAttribute()
-    {
-        return $this->ratio($this->sprints_won, $this->sprints_taken) * 100;
-    }
-
-    public function getFiveMetersPercentAttribute()
-    {
-        return $this->ratio($this->five_meters_made, $this->five_meters_taken) * 100;
-    }
-
-    public function getFiveMetersMissedAttribute()
-    {
-        return $this->five_meters_taken_on - $this->five_meters_blocked - $this->five_meters_allowed;
-    }
-
-    public function getFiveMetersSavePercentAttribute()
-    {
-        $total_not_missed = $this->five_meters_missed + $this->five_meters_blocked;
-        return $this->ratio($total_not_missed, $this->five_meters_taken_on) * 100;
-    }
-
-    public function getShootOutPercentAttribute()
-    {
-        return $this->ratio($this->shoot_out_made, $this->shoot_out_taken) * 100;
-    }
-
-    public function getShootOutMissedAttribute()
-    {
-        return $this->shoot_out_taken_on - $this->shoot_out_blocked - $this->shoot_out_allowed;
-    }
-
-    public function getShootOutSavePercentAttribute()
-    {
-        $total_not_missed = $this->shoot_out_missed + $this->shoot_out_blocked;
-        return $this->ratio($total_not_missed, $this->shoot_out_taken_on) * 100;
-    }
-
-    protected function ratio($part, $whole) {
         try {
             return ($part / $whole);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return 0;
         }
     }
 
-    public function isShareable()
+    public function isShareable(): bool
     {
         return isset($this->game_id) && isset($this->player_id);
     }
 
-    public function getShareableUrl()
+    public function getShareableUrl(): string
     {
         return route('shareables.game', [
             'shape' => Shareable::SQUARE,
@@ -491,4 +415,84 @@ class Stat extends Model implements Shareable
             'game_id' => $this->game_id
         ]);
     }
+
+    # region Attributes
+
+    protected function player(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->_getPlayer(),
+            set: fn(PlayerSeason $playerSeason) => $this->_player = $playerSeason,
+        );
+    }
+
+    private function _getPlayer(): PlayerSeason
+    {
+        if (!$this->_player) {
+            $this->player = $this->playerListService->getPlayerById($this->player_id);
+            if (!$this->_player) {
+                $this->_player = new PlayerSeason();
+            }
+        }
+
+        return $this->_player;
+    }
+    protected function shootingPercent(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->ratio($this->goals, $this->shots) * 100
+        );
+    }
+
+    protected function stealsToTurnovers(): Attribute
+    {
+        return Attribute::get( fn() => $this->steals - $this->turnovers );
+    }
+
+    protected function kickoutsDrawnToCalled(): Attribute
+    {
+        return Attribute::get( fn() => $this->kickouts_drawn - $this->kickouts );
+    }
+
+    protected function savePercent(): Attribute
+    {
+        return Attribute::get( fn() => $this->ratio($this->saves, ($this->saves + $this->goals_allowed)) * 100 );
+    }
+
+    protected function sprintsPercent(): Attribute
+    {
+        return Attribute::get( fn() => $this->ratio($this->sprints_won, $this->sprints_taken) * 100 );
+    }
+
+    protected function fiveMetersPercent(): Attribute
+    {
+        return Attribute::get( fn() => $this->ratio($this->five_meters_made, $this->five_meters_taken) * 100 );
+    }
+
+    protected function fiveMetersMissed(): Attribute
+    {
+        return Attribute::get( fn() => $this->five_meters_taken_on - $this->five_meters_blocked - $this->five_meters_allowed );
+    }
+
+    protected function fiveMetersSavePercent(): Attribute
+    {
+        return Attribute::get(fn() => $this->ratio(($this->five_meters_missed + $this->five_meters_blocked), $this->five_meters_taken_on) * 100 );
+    }
+
+    protected function shootOutPercent(): Attribute
+    {
+        return Attribute::get(fn() => $this->ratio($this->shoot_out_made, $this->shoot_out_taken) * 100 );
+    }
+
+    protected function shootOutMissed(): Attribute
+    {
+        return Attribute::get(fn() => $this->shoot_out_taken_on - $this->shoot_out_blocked - $this->shoot_out_allowed );
+    }
+
+    protected function shootOutSavePercent(): Attribute
+    {
+        return Attribute::get(fn() => $this->ratio(($this->shoot_out_missed + $this->shoot_out_blocked), $this->shoot_out_taken_on) * 100 );
+    }
+
+    #endregion
 }

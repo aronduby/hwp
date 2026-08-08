@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Recent\Render\Renderer;
 use App\Models\Traits\HasTotal;
 use Carbon\Carbon;
-use Eloquent;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Recent
@@ -31,8 +35,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder|Recent whereSiteId($value)
  * @method static Builder|Recent whereSticky($value)
  * @method static Builder|Recent whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[Table('recent')]
+#[Appends('rendered')]
 class Recent extends Model
 {
     use BelongsToTenants, HasTotal;
@@ -40,45 +45,31 @@ class Recent extends Model
     /**
      * How long should titles be?
      */
-    const TITLE_LIMIT = 30;
+    const int TITLE_LIMIT = 30;
 
     /**
      * The different renderer types, match the renderer field in the db table
      *
      */
-    const TYPE_PHOTOS = 'photos';
+    const string TYPE_PHOTOS = 'photos';
 
-    const TYPE_ARTICLES = 'articles';
+    const string TYPE_ARTICLES = 'articles';
 
-    const TYPE_NOTE = 'note';
+    const string TYPE_NOTE = 'note';
 
-    const TYPE_GAME = 'game';
+    const string TYPE_GAME = 'game';
 
-    const TYPE_TOURNAMENT = 'tournament';
-
-
-    /**
-     * The table for Eloquent to use.
-     *
-     * @var string
-     */
-    protected $table = 'recent';
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['rendered'];
+    const string TYPE_TOURNAMENT = 'tournament';
 
     /**
      * Order the query to get the latest items
      *
      * @param Builder $query
-     * @param $page
-     * @return Builder
+     * @param int $page
+     * @return void
      */
-    public function scopeLatest(Builder $query, $page): Builder
+    #[Scope]
+    protected function latest(Builder $query, int $page): void
     {
         $query
             ->orderBy('sticky', 'desc')
@@ -88,19 +79,16 @@ class Recent extends Model
         if ($page === 1) {
             // TODO -- make sure we have enough items regardless of season?
         }
-
-        return $query;
     }
 
     /**
-     * Allows for rendered to be accessed as an attribute
-     *
-     * @return string
-     * @noinspection PhpUnused
+     * Allows for rendered to be accessed as an attribute     *
      */
-    public function getRenderedAttribute(): string
+    protected function rendered(): Attribute
     {
-        return $this->render();
+        return Attribute::make(
+            get: fn() => $this->render()
+        );
     }
 
     /**
@@ -116,9 +104,9 @@ class Recent extends Model
     /**
      * Gets the renderer for this type of recent
      *
-     * @return mixed Renderer class
+     * @return Renderer Renderer class
      */
-    public function getRenderer()
+    public function getRenderer(): Renderer
     {
         $class = '\\App\\Models\\Recent\\Render\\' . ucwords($this->renderer);
         return new $class($this->content, $this);

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActiveSeason;
-use App\Models\Photo;
 use App\Models\Player;
 use App\Services\PlayerData\PlayerDataService;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use Illuminate\View\View;
 
 class PlayerController extends Controller
 {
@@ -16,9 +15,9 @@ class PlayerController extends Controller
     /**
      * Displays the Player List (making a total of 3 player lists on this page)
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function playerList()
+    public function playerList(): View
     {
         return view('playerlist');
     }
@@ -29,9 +28,9 @@ class PlayerController extends Controller
      * @param Request $request
      * @param ActiveSeason $activeSeason
      * @param Player $player
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function player(Request $request, ActiveSeason $activeSeason, Player $player)
+    public function player(Request $request, ActiveSeason $activeSeason, Player $player): View
     {
         $data = $this->getDataProvider($request, $activeSeason, $player);
 
@@ -73,7 +72,7 @@ class PlayerController extends Controller
         ));
     }
 
-    protected function getDataProvider(Request $request, ActiveSeason $activeSeason, Player $player)
+    protected function getDataProvider(Request $request, ActiveSeason $activeSeason, Player $player): PlayerDataService
     {
         $activeSeasonId = $request->input('season');
         switch ($activeSeasonId) {

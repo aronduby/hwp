@@ -1,34 +1,23 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Models\ActiveSite;
 use App\Models\User;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
+#[Signature('auth:reset {email? : the email address to reset}')]
+#[Description('Resets a users password')]
 class ResetPasswordCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'auth:reset {email? : the email address to reset}
-    ';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Resets a users password';
 
     /**
      * @var ActiveSite
      */
-    private $site;
+    private ActiveSite $site;
 
     /**
      * Create a new command instance.
@@ -45,9 +34,9 @@ class ResetPasswordCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $email = $this->argument('email');
 

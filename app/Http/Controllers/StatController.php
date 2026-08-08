@@ -9,12 +9,13 @@ use App\Models\ActiveSeason;
 use App\Models\Advantage;
 use App\Models\Boxscore;
 use App\Models\Game;
-use App\Models\Player;
 use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Services\PlayerListService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class StatController extends Controller
 {
@@ -22,7 +23,7 @@ class StatController extends Controller
     /**
      * @var PlayerListService
      */
-    protected $playerListService;
+    protected PlayerListService $playerListService;
 
     /**
      * StatController constructor.
@@ -34,8 +35,9 @@ class StatController extends Controller
         $this->playerListService = $playerListService;
     }
 
-    public function view(Game $game)
+    public function view(Game $game): View
     {
+        /** @noinspection DuplicatedCode */
         $headerPhoto = $this->getCover($game);
 
         switch ($game->status()) {
@@ -76,8 +78,9 @@ class StatController extends Controller
         ));
     }
 
-    public function edit(Game $game)
+    public function edit(Game $game): View
     {
+        /** @noinspection DuplicatedCode */
         $headerPhoto = $this->getCover($game);
 
         switch ($game->status()) {
@@ -153,7 +156,7 @@ class StatController extends Controller
         ));
     }
 
-    public function save(StatsRequest $request, Game $game)
+    public function save(StatsRequest $request, Game $game): RedirectResponse
     {
         # STATS
         $statsData = array_merge(
@@ -206,7 +209,7 @@ class StatController extends Controller
             ->with('status', trans('misc.saveSuccessful'));
     }
 
-    public function aggregateView(Request $request, ActiveSeason $season)
+    public function aggregateView(Request $request, ActiveSeason $season): View
     {
         $players = $this->playerListService->all();
 
@@ -241,7 +244,7 @@ class StatController extends Controller
         return view('stats', compact('players','data'));
     }
 
-    private function getCover(Game $game)
+    private function getCover(Game $game): mixed
     {
         try {
             $headerPhoto = $game->album->cover->photo;
@@ -252,7 +255,7 @@ class StatController extends Controller
         return $headerPhoto;
     }
 
-    private function makeEmptyStat(PlayerSeason $playerSeason = null)
+    private function makeEmptyStat(?PlayerSeason $playerSeason = null): Stat
     {
         $stat = new Stat();
 
@@ -266,7 +269,7 @@ class StatController extends Controller
         return $stat;
     }
 
-    private function removeEmptyStats($array = [], $key = 'player_id')
+    private function removeEmptyStats(array $array = [], string $key = 'player_id'): array
     {
         $c = new Collection($array);
 
@@ -275,7 +278,8 @@ class StatController extends Controller
         })->all();
     }
 
-    private function processGoalsForStatsArray($array = []) {
+    private function processGoalsForStatsArray($array = []): array
+    {
         $c = new Collection($array);
 
         return $c->map(function($stat) {
@@ -287,7 +291,8 @@ class StatController extends Controller
         })->all();
     }
 
-    private function removeEmptyProperties($array = []) {
+    private function removeEmptyProperties($array = []): array
+    {
         $c = new Collection($array);
 
         return $c->map(function($data) {
@@ -301,7 +306,7 @@ class StatController extends Controller
         })->all();
     }
 
-    private function assignValue($array, $key, $value)
+    private function assignValue($array, $key, $value): array
     {
         return collect($array)->map(function($data) use ($key, $value) {
            $data[$key] = $value;
@@ -309,7 +314,8 @@ class StatController extends Controller
         })->all();
     }
 
-    private function getStatFromStatsArray($array = []) {
+    private function getStatFromStatsArray($array = []): array
+    {
         $stats = [];
 
         foreach($array as $stat) {
@@ -319,7 +325,7 @@ class StatController extends Controller
         return $stats;
     }
 
-    private function getBoxscoreFromStatsArray(Game $game, $stats = [], $team = 'US')
+    private function getBoxscoreFromStatsArray(Game $game, $stats = [], $team = 'US'): array
     {
         $scores = [];
 

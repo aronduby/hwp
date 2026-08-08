@@ -9,6 +9,6 @@ use App\Models\JobInstance;
 interface IUsesJobInstance
 {
 
-    static function runCommand(JobInstance $jobInstance);
+    static function runCommand(JobInstance $jobInstance): int;
 
 }

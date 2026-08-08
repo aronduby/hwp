@@ -13,12 +13,12 @@ use App\Models\Contracts\IPersistTo;
  */
 class PersistToObserver
 {
-    protected function useReadTable(IPersistTo $model)
+    protected function useReadTable(IPersistTo $model): void
     {
         $model->setTable($model->getReadTable());
     }
 
-    protected function useWriteTable(IPersistTo $model)
+    protected function useWriteTable(IPersistTo $model): void
     {
         $model->setTable($model->getWriteTable());
     }
@@ -27,7 +27,7 @@ class PersistToObserver
      * Switch the model to use the write table before it goes to the DB
      * @param IPersistTo $model
      */
-    public function creating(IPersistTo $model)
+    public function creating(IPersistTo $model): void
     {
         $this->useWriteTable($model);
     }
@@ -36,7 +36,7 @@ class PersistToObserver
      * Switch the model to use the write table before it goes to the DB
      * @param IPersistTo $model
      */
-    public function updating(IPersistTo $model)
+    public function updating(IPersistTo $model): void
     {
         $this->useWriteTable($model);
     }
@@ -45,7 +45,7 @@ class PersistToObserver
      * Switch the model to use the write table before it goes to the DB
      * @param IPersistTo $model
      */
-    public function saving(IPersistTo $model)
+    public function saving(IPersistTo $model): void
     {
         $this->useWriteTable($model);
     }
@@ -54,7 +54,7 @@ class PersistToObserver
      * Switch the model to use the write table before it goes to the DB
      * @param IPersistTo $model
      */
-    public function deleting(IPersistTo $model)
+    public function deleting(IPersistTo $model): void
     {
         $this->useWriteTable($model);
     }
@@ -63,7 +63,7 @@ class PersistToObserver
      * Switch the model to use the write table before it goes to the DB
      * @param IPersistTo $model
      */
-    public function restoring(IPersistTo $model)
+    public function restoring(IPersistTo $model): void
     {
         $this->useWriteTable($model);
     }
@@ -73,7 +73,7 @@ class PersistToObserver
      * Model has been written to the BD, switch back to the read table
      * @param IPersistTo $model
      */
-    public function created(IPersistTo $model)
+    public function created(IPersistTo $model): void
     {
         $this->useReadTable($model);
     }
@@ -82,7 +82,7 @@ class PersistToObserver
      * Model has been written to the BD, switch back to the read table
      * @param IPersistTo $model
      */
-    public function updated(IPersistTo $model)
+    public function updated(IPersistTo $model): void
     {
         $this->useReadTable($model);
     }
@@ -91,7 +91,7 @@ class PersistToObserver
      * Model has been written to the BD, switch back to the read table
      * @param IPersistTo $model
      */
-    public function saved(IPersistTo $model)
+    public function saved(IPersistTo $model): void
     {
         $this->useReadTable($model);
     }
@@ -100,7 +100,7 @@ class PersistToObserver
      * Model has been written to the BD, switch back to the read table
      * @param IPersistTo $model
      */
-    public function deleted(IPersistTo $model)
+    public function deleted(IPersistTo $model): void
     {
         $this->useReadTable($model);
     }
@@ -109,7 +109,7 @@ class PersistToObserver
      * Model has been written to the BD, switch back to the read table
      * @param IPersistTo $model
      */
-    public function restored(IPersistTo $model)
+    public function restored(IPersistTo $model): void
     {
         $this->useReadTable($model);
     }

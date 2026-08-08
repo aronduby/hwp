@@ -13,7 +13,7 @@ trait HasJobInstance
     /**
      * @var JobInstance
      */
-    protected $jobInstance ;
+    protected JobInstance $jobInstance;
 
     /**
      * Create a new job instance.
@@ -30,7 +30,7 @@ trait HasJobInstance
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         static::runCommand($this->jobInstance);
     }

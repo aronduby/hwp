@@ -1,26 +1,16 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Notifications\Test as TestNotification;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
+#[Signature('events:test-notification {message}')]
+#[Description('Sends a test notification with the supplied message')]
 class TestNotificationCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'events:test-notification {message}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Sends a test notification with the supplied message';
-
     /**
      * Create a new command instance.
      *
@@ -34,9 +24,9 @@ class TestNotificationCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $message = $this->argument('message');
         $notification = new TestNotification($message);

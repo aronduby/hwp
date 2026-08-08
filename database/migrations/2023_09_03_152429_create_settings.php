@@ -2,6 +2,8 @@
 
 use App\Database\Schema\Blueprint;
 use App\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 class CreateSettings extends Migration
 {
@@ -9,8 +11,9 @@ class CreateSettings extends Migration
      * Run the migrations.
      *
      * @return void
+     * @throws FilesystemException
      */
-    public function up()
+    public function up(): void
     {
         // make the settings model
         $this->schema->create('settings', function(Blueprint $table) {
@@ -47,11 +50,11 @@ class CreateSettings extends Migration
 
     /**
      * Reverse the migrations.
-     * NOTE! This won't work without a rollback of some code as well, specifically site settings from json files
+     * NOTE! This won't work without a rollback of some code as well, specifically site settings from JSON files
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         // add the job instance settings column
         $this->schema->table('job_instances', function(Blueprint $table) {

@@ -1,0 +1,39 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+$_active-border: 5px solid colors.$color-accent;
+
+nav.sub-nav {
+  @include mixins.heading();
+  position: relative;
+  font-size: functions.em(28);
+  margin-top: variables.$gap-small;
+
+  li {
+    display: inline-block;
+    margin-right: variables.$gap-extra-large;
+
+    &.active a,
+    &:hover a {
+      border-bottom: $_active-border;
+    }
+  }
+
+  a {
+    color: colors.$color-white;
+    transition: all .3s;
+
+    @include mixins.on-event() {
+      text-decoration: none;
+    }
+  }
+
+  i {
+    margin-right: variables.$gap-small;
+    font-size: functions.em(20, 28);
+    vertical-align: middle;
+    margin-top: -5px;
+  }
+}

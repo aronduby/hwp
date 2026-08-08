@@ -1,36 +1,23 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Models\ActiveSite;
 use App\Models\User;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
+#[Signature('auth:register {--domain= : The domain of the site to use} {--name : The users first and last name} {--email : the users email address}')]
+#[Description('Registers a user and sends the password reset')]
 class RegisterCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'auth:register
-        {--domain= : The domain of the site to use}
-        {--name : The users first and last name}
-        {--email : the users email address}
-    ';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Registers a user and sends the password reset';
-
-    /**
      * @var ActiveSite
      */
-    private $site;
+    private ActiveSite $site;
 
     /**
      * Create a new command instance.
@@ -47,9 +34,9 @@ class RegisterCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $name = $this->option('name');
         $email = $this->option('email');
@@ -62,11 +49,12 @@ class RegisterCommand extends Command
             $email = $this->ask('What is the users email address?');
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $user = User::create([
             'site_id' => $this->site->id,
             'name' => $name,
             'email' => $email,
-            'password' => bcrypt(str_random(10))
+            'password' => bcrypt(Str::random(10))
         ]);
 
         $token = Password::getRepository()->create($user);

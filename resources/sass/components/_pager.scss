@@ -1,0 +1,22 @@
+@use "../abstracts/variables";
+
+ul.pager {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: inline-block;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: .5;
+      pointer-events: none;
+    }
+
+    a {
+      display: block;
+      padding: variables.$gap;
+    }
+  }
+}

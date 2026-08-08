@@ -7,11 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Step 6</title>
 
-    <?php if (getenv('APP_ENV') == 'local'): ?>
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <?php else: ?>
-    <link rel="stylesheet" href="{{ mix('css/main.css') }}">
-    <?php endif ?>
+    @fonts
+    <!-- TODO -- not sure if this is right for sass -->
+    @vite(['resources/sass/main.scss'])
 
     <style type="text/css">
         @import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow);
@@ -96,8 +94,7 @@
 
     @include('partials.ga')
 
-    <script src="{{ mix('js/components.js') }}"></script>
-    <script src="{{ mix('js/scavenger/step6.js') }}"></script>
+    @vite(['resources/js/scavenger/step6.js'])
 
 </head>
 <body>

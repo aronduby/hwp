@@ -8,9 +8,9 @@ use App\Models\PlayerSeason;
 use App\Models\Stat;
 use App\Services\PlayerListService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 
-use App\Http\Requests;
 use Twilio\TwiML\VoiceResponse;
 
 class CallController extends Controller
@@ -19,14 +19,15 @@ class CallController extends Controller
     /**
      * @var PlayerListService
      */
-    protected $playerList;
+    protected PlayerListService $playerList;
 
     public function __construct(PlayerListService $playerList)
     {
         $this->playerList = $playerList;
     }
 
-    public function welcome() {
+    public function welcome(): \Illuminate\Http\Response
+    {
         $rsp = new VoiceResponse();
         $rsp
             ->gather([
@@ -35,16 +36,17 @@ class CallController extends Controller
             ])
                 ->say('Welcome to Hudsonville Water Polo. To hear a players stats enter their cap number followed by the pound sign');
 
-        $rsp->say('You didn\'t enter a value, goodbye.');
+        $rsp->say("You didn't enter a value, goodbye.");
 
-        return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
+        return Response::make($rsp, '200')->header('Content-Type', 'text/xml');
     }
 
-    public function userLookup(Request $request) {
+    public function userLookup(Request $request): \Illuminate\Http\Response
+    {
         if ($request->has('Digits')) {
             // treat 1 as lookups for 1 and 1a
             // treat 11 as 11 and 1a too?
-            $digits = [$request->get('Digits')];
+            $digits = [$request->input('Digits')];
             if ($digits[0] == 1) {
                 $digits[] = '1a';
                 $digits[] = '1A';
@@ -63,7 +65,7 @@ class CallController extends Controller
                         'method' => 'GET',
                         'action' => route('twilio.call.user.lookup')
                     ])
-                    ->say('Sorry, but we couldn\'t find anyone with that number, please try again');
+                    ->say("Sorry, but we couldn't find anyone with that number, please try again");
                 $rsp->redirect(url('twilio.call.welcome'));
 
             } elseif($found === 1) {
@@ -80,22 +82,22 @@ class CallController extends Controller
                 $rsp->redirect(route('twilio.call.welcome'));
             }
 
-            return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
+            return Response::make($rsp, '200')->header('Content-Type', 'text/xml');
 
         } else {
             return $this->welcome();
         }
     }
 
-    public function userStats(Request $request, PlayerSeason $player = null) {
+    public function userStats(Request $request, PlayerSeason $player = null): \Illuminate\Http\Response
+    {
         if (!$player->player_id) {
-            $id = $request->get('Digits');
+            $id = $request->input('Digits');
             $player = $this->playerList->getPlayerById($id);
         }
 
+        $rsp = new VoiceResponse();
         if ($player && $player->player_id) {
-            $rsp = new VoiceResponse();
-
             $stats = $player->statsTotal();
 
             $msg = '';
@@ -114,45 +116,46 @@ class CallController extends Controller
                 ->say('To hear another players stats enter their cap number followed by the pound sign, otherwise just hang up');
             $rsp->say('Goodbye');
         } else {
-            $rsp = new VoiceResponse();
-            $rsp->say('Sorry, we couldnt find that player');
+            $rsp->say("Sorry, we couldn't find that player");
             $rsp->redirect(route('twilio.call.welcome'));
         }
 
-        return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
+        return Response::make($rsp, '200')->header('Content-Type', 'text/xml');
     }
 
-    protected function getGoalieStatsMsg(Player $player, Stat $stats) {
+    protected function getGoalieStatsMsg(Player $player, Stat $stats): string
+    {
         $savePercent = round($stats->save_percent);
         $saves = Str::plural('save', $stats->saves);
         $goals = Str::plural('goal', $stats->goals_allowed);
 
         $str = <<<STR
-$player->first_name has a save percentage of $savePercent percent, with $stats->saves $saves and $stats->goals_allowed $goals allowed. $stats->advantage_goals_allowed of those goals were scored during kickouts. 
+$player->first_name has a save percentage of $savePercent percent, with $stats->saves $saves and $stats->goals_allowed $goals allowed. $stats->advantage_goals_allowed of those goals were scored during kickouts.
 STR;
         if ($stats->five_meters_taken_on > 0) {
             $fiveMeterSavePercent = round($stats->five_meters_save_percent);
             $str .= <<<STR
-Of the $stats->five_meters_taken_on five meters taken on them, they have blocked $stats->five_meters_blocked, allowed $stats->five_meters_allowed, and $stats->five_meters_missed have missed, giving them a $fiveMeterSavePercent percent save rate. 
+Of the $stats->five_meters_taken_on five meters taken on them, they have blocked $stats->five_meters_blocked, allowed $stats->five_meters_allowed, and $stats->five_meters_missed have missed, giving them a $fiveMeterSavePercent percent save rate.
 STR;
         }
 
         if ($stats->shoot_out_taken_on > 0) {
             $str .= <<<STR
-They have had $stats->shoot_out_taken_on shoot out shots taken on them, blocking $stats->shoot_out_blocked, allowing $stats->shoot_out_allowed, with $stats->shoot_out_missed missing, for a $stats->shoot_out_save_percent percent save rate. 
+They have had $stats->shoot_out_taken_on shoot out shots taken on them, blocking $stats->shoot_out_blocked, allowing $stats->shoot_out_allowed, with $stats->shoot_out_missed missing, for a $stats->shoot_out_save_percent percent save rate.
 STR;
         }
 
         return $str;
     }
 
-    protected function getFieldStatsMsg(Player $player, Stat $stats) {
+    protected function getFieldStatsMsg(Player $player, Stat $stats): string
+    {
         $str = $player->first_name . ' has ';
 
         if ($stats->sprints_taken > 0) {
             $sprintRounded = round($stats->sprints_percent);
             $str .= <<<STR
-won $sprintRounded percent of their sprints, going $stats->sprints_won for $stats->sprints_taken. They have 
+won $sprintRounded percent of their sprints, going $stats->sprints_won for $stats->sprints_taken. They have
 STR;
         }
 
@@ -166,7 +169,7 @@ STR;
         $kickouts = Str::plural('kickout', $stats->kickouts_drawn);
 
         $str .= <<<STR
-a $shootingPercent shooting percent with $stats->goals $goals for $stats->shots $shots, along with $stats->assists $assists. $stats->advantage_goals of those goals were scored on an advantage. They have $stats->steals $steals, $stats->turnovers $turnovers, and $stats->blocks field $blocks. They have drawn $stats->kickouts_drawn $kickouts and been called for $stats->kickouts. They have drawn $stats->five_meters_drawn five meters, been called for $stats->five_meters_called, taken $stats->five_meters_taken, and made $stats->five_meters_made. 
+a $shootingPercent shooting percent with $stats->goals $goals for $stats->shots $shots, along with $stats->assists $assists. $stats->advantage_goals of those goals were scored on an advantage. They have $stats->steals $steals, $stats->turnovers $turnovers, and $stats->blocks field $blocks. They have drawn $stats->kickouts_drawn $kickouts and been called for $stats->kickouts. They have drawn $stats->five_meters_drawn five meters, been called for $stats->five_meters_called, taken $stats->five_meters_taken, and made $stats->five_meters_made.
 STR;
 
         if ($stats->shoot_out_taken > 0) {

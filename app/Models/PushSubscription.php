@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\PushSubscription
@@ -21,11 +22,10 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  * @method static Builder|PushSubscription whereToken($value)
  * @method static Builder|PushSubscription whereUpdatedAt($value)
  */
+#[Fillable('token', 'site_id')]
 class PushSubscription extends Model
 {
     use BelongsToTenants;
 
-    public $tenantColumns = ['site_id'];
-
-    protected $fillable = ['token', 'site_id'];
+    public array $tenantColumns = ['site_id'];
 }

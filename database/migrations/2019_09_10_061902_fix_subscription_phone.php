@@ -11,7 +11,7 @@ class FixSubscriptionPhone extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('subscriptions', function(Blueprint $table) {
             $table->string('phone', 11)->change();
@@ -23,7 +23,7 @@ class FixSubscriptionPhone extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('subscriptions', function(Blueprint $table) {
             $table->integer('phone')->change();

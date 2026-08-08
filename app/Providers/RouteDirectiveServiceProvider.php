@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Player;
 use App\Models\PlayerSeason;
+use Exception;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +16,7 @@ class RouteDirectiveServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Blade::directive('route', function($expression) {
             return "<?php echo route($expression); ?>";
@@ -32,7 +33,7 @@ class RouteDirectiveServiceProvider extends ServiceProvider
         Blade::directive('active', function($expression) {
             return "<?php echo ".__CLASS__."::active($expression); ?>";
         });
-        
+
         Blade::directive('playerLink', function($expression) {
             return "<?php echo ".__CLASS__."::playerLink($expression); ?>";
         });
@@ -52,17 +53,17 @@ class RouteDirectiveServiceProvider extends ServiceProvider
         return '';
     }
 
-    public static function routeWithProtocol($routeName, $params, $protocol)
+    public static function routeWithProtocol($routeName, $params, $protocol): array|string|null
     {
         return preg_replace('/(ht|s?f)tps?/', $protocol, route($routeName, $params));
     }
-    
-    static public function playerLink($player, string $team = null)
+
+    static public function playerLink($player, string $team = null): string
     {
         if (!$player instanceof Player) {
             try {
                 $player = Player::nameKey($player)->with('seasons')->firstOrFail();
-            } catch(\Exception $e) {
+            } catch(Exception $e) {
                 return $player;
             }
         }
@@ -70,7 +71,7 @@ class RouteDirectiveServiceProvider extends ServiceProvider
         return '<a href="'.route('players', ['name_key'=>$player->name_key]).'">#' . $player->seasons->first()->getNumber($team). ' ' . $player->first_name . ' ' .$player->last_name.'</a>';
     }
 
-    static public function playerSeasonLink(PlayerSeason $ps, string $team = null)
+    static public function playerSeasonLink(PlayerSeason $ps, string $team = null): string
     {
         return '<a href="'.route('players', ['name_key'=>$ps->name_key]).'">#' . $ps->getNumber($team). ' ' . $ps->name.'</a>';
     }

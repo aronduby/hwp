@@ -11,11 +11,11 @@ class TwilioVerification
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @param  Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         if (!$request->headers->has('HTTP_X_TWILIO_SIGNATURE')) {
             die('nope');

@@ -54,8 +54,7 @@
 
     @include('partials.ga')
 
-    <script src="{{ mix('js/components.js') }}"></script>
-    <script src="{{ mix('js/scavenger/step8.js') }}"></script>
+    @vite(['resources/js/scavenger/step8.js'])
 
 </head>
 <body>

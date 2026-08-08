@@ -10,7 +10,7 @@ class CreatePhotoPlayer extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('photo_player', function (Blueprint $table) {
             $table->increments('id');
@@ -34,7 +34,7 @@ class CreatePhotoPlayer extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('photo_player');
     }

@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -24,15 +24,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|GameStatDump whereJson($value)
  * @method static Builder|GameStatDump whereSiteId($value)
  * @method static Builder|GameStatDump whereUpdatedAt($value)
- * @mixin Eloquent
  */
 class GameStatDump extends Model
 {
 
-    /** @noinspection PhpUnused */
-    public function getJsonAttribute($val)
+    /**
+     * Not sure why this wasn't a cast, but it wasn't so we're doing normal upgrade to attribute accessor
+     * TODO -- should this be cast instead of attribute?
+     *
+     * @return Attribute
+     */
+    protected function json(): Attribute
     {
-        return json_decode($val, false);
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, false),
+        );
     }
 
     public function game(): BelongsTo

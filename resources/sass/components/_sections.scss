@@ -1,0 +1,18 @@
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
+.page-section {
+  padding-top: variables.$gap-large;
+  padding-bottom: variables.$gap-large;
+
+  & > header,
+  & > .container > header {
+    margin-top: -(variables.$gap-large);
+    margin-bottom: variables.$gap-extra-extra-large;
+
+    h1 {
+      font-size: functions.em(72);
+      padding: variables.$gap 0;
+    }
+  }
+}

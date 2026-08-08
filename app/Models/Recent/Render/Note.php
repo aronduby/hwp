@@ -12,14 +12,14 @@ class Note extends Renderer
      *
      * @var string
      */
-    protected $view = 'recent.note';
+    protected string $view = 'recent.note';
 
     /**
      * Process the content and save to $this->data
      *
      * @param $content string
      */
-    public function process($content)
+    public function process(string $content): void
     {
         $ids = json_decode($content);
         $note = NoteModel::whereIn('id', $ids)->first();

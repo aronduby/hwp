@@ -19,7 +19,7 @@ class CloudinaryVerification
      * @return mixed
      * @throws Exception
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         // get the season from season_id and make sure it has cloudinary media service
         // get the seasons cloudinary media service so that we get the cloudinary service setup properly
@@ -29,7 +29,7 @@ class CloudinaryVerification
             throw new Exception('no season id specified');
         }
 
-        $seasonId = $request->get('season_id');
+        $seasonId = $request->input('season_id');
 
         /**
          * @var Season $season

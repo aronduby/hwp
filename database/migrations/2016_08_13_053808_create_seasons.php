@@ -10,7 +10,7 @@ class CreateSeasons extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('seasons', function (Blueprint $table) {
             $table->increments('id');
@@ -30,7 +30,7 @@ class CreateSeasons extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('seasons');
     }

@@ -12,7 +12,7 @@ class Migration extends \Illuminate\Database\Migrations\Migration
     /**
      * @var Builder
      */
-    protected $schema;
+    protected Builder $schema;
 
     public function __construct()
     {

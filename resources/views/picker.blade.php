@@ -15,11 +15,8 @@
     <meta name="msapplication-config" content="/icons/browserconfig.xml?v=69k3Ao4nqq">
     <meta name="theme-color" content="#ffffff">
 
-    <?php if (getenv('APP_ENV') == 'local'): ?>
-    <link rel="stylesheet" href="{{ asset('css/picker.css') }}">
-    <?php else: ?>
-    <link rel="stylesheet" href="{{ mix('css/picker.css') }}">
-    <?php endif ?>
+    <!-- TODO -- not sure this is right with sass -->
+    @vite(['resources/sass/picker.scss'])
 
     <link rel="stylesheet" href="/css/scratch.css" />
 </head>

@@ -1,0 +1,12 @@
+@use "../abstracts/colors";
+@use "../abstracts/variables";
+
+hr {
+  border: none;
+  border-bottom: 1px solid colors.$color-white-darker;
+  margin: variables.$gap-extra-extra-large 0;
+
+  &.clear {
+    clear: both;
+  }
+}

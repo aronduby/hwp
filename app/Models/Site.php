@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasSettings;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,6 @@ use Illuminate\Notifications\Notifiable;
 /**
  * App\Models\Site
  *
- * @mixin Eloquent
  * @property int $id
  * @property bool $is_picker
  * @property int|null $parent_id
@@ -27,12 +26,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Photo[] $featuredPhotos
- * @property-read Collection|JobInstance[] $jobs
+ * @property-read Collection<Photo> $featuredPhotos
+ * @property-read Collection<JobInstance> $jobs
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read Site|null $picker
- * @property-read Collection|Season[] $seasons
- * @property-read Collection|Site[] $sites
+ * @property-read Collection<Season> $seasons
+ * @property-read Collection<Site> $sites
  * @property-read Settings $settings
  * @method static Builder|Site domain($domain)
  * @method static Builder|Site whereCreatedAt($value)
@@ -47,28 +46,30 @@ use Illuminate\Notifications\Notifiable;
  */
 class Site extends Model
 {
-    use Notifiable,
-        HasSettings;
+    use Notifiable, HasSettings;
 
     /**
      * properties that should get type casted
-     * @var string[]
+     * @return array<string,string>
      */
-    protected $casts = [
-        'is_picker' => 'boolean'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_picker' => 'boolean'
+        ];
+    }
 
     /**
      * The (cached) FCM topic to route to
      *
      * @var string
      */
-    protected $fcmTopic;
+    protected string $fcmTopic;
 
-    /** @noinspection PhpUnused */
-    public function scopeDomain($query, $domain)
+    #[Scope]
+    protected function domain(Builder $query, string $domain): void
     {
-        return $query->where('domain', '=', $domain);
+        $query->where('domain', '=', $domain);
     }
 
     /**
@@ -108,7 +109,8 @@ class Site extends Model
     }
 
     /**
-     * Pull the twitter authorization from the site settings file
+     * Pull the Twitter authorization from the site settings file
+     * TODO -- probably could/should remove this?
      *
      * @return array
      * @noinspection PhpUnused

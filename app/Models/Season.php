@@ -6,19 +6,18 @@ use App\Collections\StatCollection;
 use App\Models\Traits\HasSettings;
 use App\Models\Traits\HasStats;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Season
  *
- * @mixin Eloquent
  * @property int $id
  * @property int $site_id
  * @property string $title
@@ -31,10 +30,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $media_service
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Badge[] $badges
- * @property-read Collection|Player[] $players
- * @property-read Collection|Recent[] $recent
- * @property-read StatCollection|Stat[] $stats
+ * @property-read Collection<Badge> $badges
+ * @property-read Collection<Player> $players
+ * @property-read Collection<Recent> $recent
+ * @property-read StatCollection<Stat> $stats
  * @property-read ActiveSeason $activeSeason
  * @property-read Site $site
  * @method static Builder|Season current()
@@ -57,16 +56,16 @@ class Season extends Model
 
     /**
      * Specify the tenant columns to use for this model
-     * This always ignores the season tenant check 
-     * 
-     * @var array
+     * This always ignores the season tenant check
+     *
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
-    /** @noinspection PhpUnused */
-    public function scopeCurrent($query)
+    #[Scope]
+    protected function current(Builder $query): void
     {
-        return $query->where('current', '=', 1);
+        $query->where('current', '=', 1);
     }
 
     public function players(): BelongsToMany

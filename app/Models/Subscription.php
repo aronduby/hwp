@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * Class Subscription
@@ -26,8 +26,8 @@ use Torzer\Awesome\Landlord\BelongsToTenants;
  * @method static Builder|Subscription whereSiteId($value)
  * @method static Builder|Subscription whereType($value)
  * @method static Builder|Subscription whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[Fillable('phone', 'type')]
 class Subscription extends Model
 {
 
@@ -39,14 +39,7 @@ class Subscription extends Model
      *
      * @var string[]
      */
-    public $tenantColumns = ['site_id'];
-
-    /**
-     * The attributes that are mass assignable
-     *
-     * @var string[]
-     */
-    protected $fillable = ['phone', 'type'];
+    public array $tenantColumns = ['site_id'];
 
     public function site(): BelongsTo
     {
@@ -56,7 +49,7 @@ class Subscription extends Model
     /**
      * Constants use for the type field
      */
-    const TYPE_ALL = 'ALL';
-    const TYPE_QUARTERS = 'QUARTERS';
-    const TYPE_FINAL = 'FINAL';
+    const string TYPE_ALL = 'ALL';
+    const string TYPE_QUARTERS = 'QUARTERS';
+    const string TYPE_FINAL = 'FINAL';
 }

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Duby
- * Date: 8/21/2016
- * Time: 11:25 PM
- */
 
 namespace App\Models\Traits;
-
 
 use App\Models\Stat;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +14,7 @@ trait HasStats
      *
      * @return Stat
      */
-    public function statsTotal()
+    public function statsTotal(): Stat
     {
         $sum = function($field) {
             return 'SUM(`'.$field.'`) AS `'.$field.'`';

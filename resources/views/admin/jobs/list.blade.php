@@ -62,5 +62,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ mix('js/jobs.js') }}"></script>
+    @vite(['resources/js/jobs.js'])
 @endpush

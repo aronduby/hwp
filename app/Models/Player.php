@@ -7,12 +7,14 @@ use App\Collections\StatCollection;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\HasStats;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\RouteKey;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use NunoMazer\Samehouse\BelongsToTenants;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,12 +31,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read PlayerSeason $activeSeason
- * @property-read Collection|Article[] $articles
- * @property-read Collection|Badge[] $badges
+ * @property-read Collection<Article> $articles
+ * @property-read Collection<Badge> $badges
  * @property-read mixed $name
- * @property-read Collection|Photo[] $photos
- * @property-read CustomCollection|PlayerSeason[] $seasons
- * @property-read StatCollection|Stat[] $stats
+ * @property-read Collection<Photo> $photos
+ * @property-read CustomCollection<PlayerSeason> $seasons
+ * @property-read StatCollection<Stat> $stats
  * @method static Builder|Player nameKey($nameKey)
  * @method static Builder|Player whereCreatedAt($value)
  * @method static Builder|Player whereFirstName($value)
@@ -44,8 +46,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Player wherePronouns($value)
  * @method static Builder|Player whereSiteId($value)
  * @method static Builder|Player whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[RouteKey('name_key')]
 class Player extends Model implements Shareable
 {
     use BelongsToTenants, HasStats;
@@ -54,28 +56,41 @@ class Player extends Model implements Shareable
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    public $tenantColumns = ['site_id'];
+    public array $tenantColumns = ['site_id'];
 
-    protected $_pronouns;
+    /**
+     * Array of the players different pronoun types to use
+     * @var object{
+     *     subject: string,
+     *     object: string,
+     *     possessive: string,
+     *     possessivePlural: string,
+     *     reflective: string
+     * }
+     */
+    protected object $_pronouns;
 
-    public function getNameAttribute(): string
+    protected function name(): Attribute
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return Attribute::make(
+            get: fn () => $this->first_name . ' ' . $this->last_name,
+        );
     }
 
-    public function scopeNameKey(Builder $query, $nameKey): Builder
+    /**
+     * Scope to query by the name key
+     * @noinspection PhpUnused
+     */
+    #[Scope]
+    protected function nameKey(Builder $query, string $nameKey): void
     {
-        return $query->where('name_key', '=', $nameKey);
+        $query->where('name_key', '=', $nameKey);
     }
 
-    public function getRouteKeyName(): string
+    public function getPronouns($type = null): array
     {
-        return 'name_key';
-    }
-
-    public function getPronouns($type = null) {
         if ($type) {
             return __('pronouns.' . $this->pronouns . '.' . $type);
         } else {
@@ -100,7 +115,7 @@ class Player extends Model implements Shareable
 
     /**
      * Gets the badge relationship.
-     * NOTE - this is not tenanted to the season, this get's everything
+     * NOTE - this is not tenanted to the season, this gets everything
      *
      * @return BelongsToMany
      */

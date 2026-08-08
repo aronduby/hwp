@@ -8,6 +8,7 @@
 
 namespace App\Services\PlayerData\Contracts;
 
+use App\Collections\CustomCollection;
 use App\Models\Article;
 use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
@@ -71,30 +72,30 @@ interface DataProvider
     /**
      * Get ALL the player's photos without any pagination
      *
-     * @return mixed
+     * @return array|null
      */
-    public function getAllPhotos();
+    public function getAllPhotos(): ?array;
 
     /**
      * Get a single photos for the players header image
      *
-     * @return PhotoSource
+     * @return ?PhotoSource
      */
     public function getHeaderPhoto(): ?PhotoSource;
 
     /**
      * Get the player's badges
      *
-     * @return Collection|Badge[]
+     * @return Collection<Badge>
      */
-    public function getBadges();
+    public function getBadges(): Collection;
 
     /**
      * Gets the player's articles
      *
-     * @return Collection|Article[]
+     * @return Collection<Article>
      */
-    public function getArticles();
+    public function getArticles(): Collection;
 
     /**
      * Gets the player's stats
@@ -106,7 +107,7 @@ interface DataProvider
     /**
      * Gets all the player's seasons
      *
-     * @return Collection|PlayerSeason[]
+     * @return CustomCollection<PlayerSeason>
      */
-    public function getSeasons();
+    public function getSeasons(): CustomCollection;
 }

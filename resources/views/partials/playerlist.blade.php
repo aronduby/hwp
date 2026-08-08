@@ -8,7 +8,7 @@
             <ul>
                 @foreach($playerList->team($team) as $player)
                     <li>
-                        <a href="@route('players', ['nameKey' => $player->nameKey])">
+                        <a href="@route('players', ['player' => $player])">
                             <span class="player--number">{{$player->getNumber($team)}}</span>
                             <span class="player--name">{{$player->name}}</span>
                         </a>

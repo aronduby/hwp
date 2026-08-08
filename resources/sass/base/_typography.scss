@@ -1,0 +1,76 @@
+@use "sass:color";
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+/**
+ * Basic typography style for copy text
+ */
+body {
+  color: colors.$color-black-text;
+  font: normal 100% / 1.4 variables.$text-font-stack;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: variables.$heading-font-stack;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1em;
+  margin: 0;
+  position: relative;
+}
+
+$textSizes: (
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 18,
+  xl: 20
+);
+@each $name, $size in $textSizes {
+  .text--#{$name} {
+    font-size: functions.em($size);
+  }
+}
+
+
+.text-align--left {
+  @include mixins.text-align(left);
+}
+
+.text-align--right {
+  @include mixins.text-align(right);
+}
+
+.text-align--center {
+  @include mixins.text-align(center);
+}
+
+
+@each $name, $color in colors.$colors {
+  .text--#{"" + $name} {
+    color: $color !important;
+  }
+}
+.text--warning {
+  @extend .text--warn;
+}
+
+.text--white-darker {
+  color: colors.$color-white-darker;
+}
+
+.text--shadow {
+  @include mixins.text-shadow();
+}
+$sizes: small, default, large;
+@each $size in $sizes {
+  .text--shadow-#{$size} {
+    @include mixins.text-shadow($size);
+  }
+}
+
+.text--muted {
+  color: color.adjust(colors.$color-black-text, $lightness: 15%);
+}

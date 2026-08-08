@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Exceptions\ShareableHandler;
 use App\Models\Contracts\PhotoSource;
 use App\Models\Game;
@@ -12,9 +11,11 @@ use App\Services\MediaServices\MediaService;
 use App\Services\PlayerListService;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 
 class ShareableController extends Controller
 {
@@ -22,12 +23,12 @@ class ShareableController extends Controller
     /**
      * @var PlayerListService
      */
-    protected $playerListService;
+    protected PlayerListService $playerListService;
 
     /**
      * @var MediaService
      */
-    protected $mediaService;
+    protected MediaService $mediaService;
 
     /**
      * ShareableController constructor.
@@ -50,7 +51,7 @@ class ShareableController extends Controller
     /**
      * Gets data for the game shareable, with optional player
      */
-    public function game(Request $request, string $shape, string $ext = null)
+    public function game(Request $request, string $shape, ?string $ext = null): Response|JsonResponse
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
@@ -83,7 +84,7 @@ class ShareableController extends Controller
     /**
      * Gets data for the player shareable
      */
-    public function player(Request $request, string $shape, string $ext = null)
+    public function player(Request $request, string $shape, ?string $ext = null): Response|JsonResponse
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
@@ -109,7 +110,7 @@ class ShareableController extends Controller
     /**
      * Gets the shareable for the update message shareable
      */
-    public function update(Request $request, string $shape, string $ext = null)
+    public function update(Request $request, string $shape, ?string $ext = null): Response|JsonResponse
     {
         $dimensions = config('shareable.dimensions.' . $shape);
 
@@ -152,7 +153,7 @@ class ShareableController extends Controller
     }
 
 
-    protected function getGame(Request $request, $id = null)
+    protected function getGame(Request $request, $id = null): Model|Collection|Game|null
     {
         if (!$request->has('game_id') && !$id) {
             return null;
@@ -161,17 +162,16 @@ class ShareableController extends Controller
         return Game::with('badge')->findOrFail($id ?: $request->input('game_id'));
     }
 
-    /** @noinspection SpellCheckingInspection */
     protected function getPlayer(Request $request, $nameKey = null): ?PlayerSeason
     {
         if (!$request->has('namekey') && !$nameKey) {
             return null;
         }
 
-        return $this->playerListService->getPlayerForNameKey($nameKey ?: $request->get('namekey'));
+        return $this->playerListService->getPlayerForNameKey($nameKey ?: $request->input('namekey'));
     }
 
-    protected function getStats(PlayerSeason $playerSeason = null, Game $game = null)
+    protected function getStats(?PlayerSeason $playerSeason = null, ?Game $game = null): ?Stat
     {
         if (!($playerSeason || $game)) {
             return null;
@@ -211,7 +211,7 @@ class ShareableController extends Controller
         return $this->mediaService->randomPhoto();
     }
 
-    protected function chunkName($name)
+    protected function chunkName($name): array|string
     {
         $name = trim($name);
 
@@ -233,16 +233,11 @@ class ShareableController extends Controller
 
     protected function getCharts(PlayerSeason $player, Stat $stats): array
     {
-        switch ($player->position) {
-            case PlayerSeason::GOALIE:
-                return $this->makeGoalieCharts($stats);
-
-            case PlayerSeason::FIELD:
-                return $this->makeFieldCharts($stats, $player);
-
-            default:
-                return [];
-        }
+        return match ($player->position) {
+            PlayerSeason::GOALIE => $this->makeGoalieCharts($stats),
+            PlayerSeason::FIELD => $this->makeFieldCharts($stats, $player),
+            default => [],
+        };
     }
 
     protected function makeFieldCharts(Stat $stats, PlayerSeason $playerSeason): array

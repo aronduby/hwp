@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
@@ -7,23 +7,14 @@ use App\Models\ActiveSite;
 use App\Models\Recent;
 use App\Notifications\PhotosAdded;
 use App\Services\MediaServices\CloudinaryMediaService;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+use Throwable;
 
+#[Signature('events:cloudinary-add-recent-photos {from?} {to?}')]
+#[Description('Creates the entry in the recent listing for new cloudinary photos and handles the events')]
 class CloudinaryAddRecentPhotosCommand extends LoggedCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'events:cloudinary-add-recent-photos {from?} {to?}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates the entry in the recent listing for new cloudinary photos and handles the events';
-
     /**
      * Create a new command instance.
      *
@@ -36,15 +27,16 @@ class CloudinaryAddRecentPhotosCommand extends LoggedCommand
 
     /**
      * Execute the console command.
+     * @throws Throwable
      */
-    public function handle()
+    public function handle(): void
     {
         /**
          * @var ActiveSite $site
          * @var ActiveSeason $season
          */
-        $site = resolve('App\Models\ActiveSite');
-        $season = resolve('App\Models\ActiveSeason');
+        $site = resolve(ActiveSite::class);
+        $season = resolve(ActiveSeason::class);
 
         if ($season->media_service !== CloudinaryMediaService::class) {
             $this->error('Active season must use cloudinary for this to work');

@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php /** @noinspection PhpUnused */
+
+/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
@@ -18,7 +20,7 @@ class Shout extends Notification implements ShouldQueue, SendsToFCMTopic
     /**
      * @var string
      */
-    public $message;
+    public string $message;
 
 
     /**
@@ -37,7 +39,7 @@ class Shout extends Notification implements ShouldQueue, SendsToFCMTopic
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable): array
+    public function via(mixed $notifiable): array
     {
         return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
@@ -48,7 +50,7 @@ class Shout extends Notification implements ShouldQueue, SendsToFCMTopic
      * @param  mixed $notifiable
      * @return array
      */
-    public function toLog($notifiable): array
+    public function toLog(mixed $notifiable): array
     {
         return [
             'message' => $this->message,
@@ -62,7 +64,7 @@ class Shout extends Notification implements ShouldQueue, SendsToFCMTopic
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable): array
+    public function toArray(mixed $notifiable): array
     {
         return [
             'message' => $this->message
@@ -72,7 +74,7 @@ class Shout extends Notification implements ShouldQueue, SendsToFCMTopic
     public function toFCMTopic(): CloudMessage
     {
         // using withNotification results in fcm code triggering a less nice notification
-        // and data can only be a single level with string values, so json encode
+        // and data can only be a single level with string values, so JSON encode
         return CloudMessage::new()
             ->withData([
                 'notification' => json_encode([

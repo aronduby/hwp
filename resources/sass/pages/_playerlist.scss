@@ -1,0 +1,15 @@
+@use "../abstracts/variables";
+
+.page--player-list {
+  ul.player-list {
+    position: relative;
+    columns: 3 250px;
+    font-size: 1.25em;
+    text-align: center;
+    margin-bottom: variables.$gap-large;
+
+    li {
+      margin-bottom: variables.$gap;
+    }
+  }
+}

@@ -1,10 +1,13 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\UsesCloudinary;
 use App\Models\ActiveSeason;
 use App\Services\MediaServices\CloudinaryMediaService;
+use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 /**
@@ -13,31 +16,18 @@ use Illuminate\Console\Command;
  *
  * Probably want to use this with the {@see Tenanted} command to specify which domain/season
  */
+#[Signature('cloudinary:named-transformations')]
+#[Description('Adds/updates named transformations for the current season')]
 class CloudinaryNamedTransformations extends Command
 {
-
     use UsesCloudinary;
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'cloudinary:named-transformations';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Adds/updates named transformations for the current season';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         /** @var ActiveSeason $season */
         $season = resolve(ActiveSeason::class);
@@ -77,7 +67,7 @@ class CloudinaryNamedTransformations extends Command
             }
             $this->info("Updated ".count($toUpdate)." transformations");
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to update Cloudinary transformations " . $e->getMessage());
             return 1;
         }

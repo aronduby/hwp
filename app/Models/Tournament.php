@@ -49,6 +49,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Tournament whereTeam($value)
  * @method static Builder|Tournament whereTitle($value)
  * @method static Builder|Tournament whereUpdatedAt($value)
+ * @method static Builder|Tournament withCount($value)
  * @mixin Eloquent
  */
 class Tournament extends Model

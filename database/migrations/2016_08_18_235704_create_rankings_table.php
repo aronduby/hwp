@@ -10,7 +10,7 @@ class CreateRankingsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('rankings', function(Blueprint $table) {
             $table->increments('id');
@@ -28,7 +28,7 @@ class CreateRankingsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('rankings');
     }

@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Collections\BoxscoresCollection;
 use App\Services\PlayerListService;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Boxscore
@@ -36,29 +36,29 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Boxscore whereSiteId($value)
  * @method static Builder|Boxscore whereTeam($value)
  * @method static Builder|Boxscore whereUpdatedAt($value)
- * @mixin Eloquent
  */
 class Boxscore extends Model
 {
+
     use BelongsToTenants;
 
     /**
      * @var PlayerListService
      */
-    protected $playerListService;
+    protected PlayerListService $playerListService;
 
     /**
      * @var Player
      */
-    protected $player;
+    protected Player $player;
 
     /**
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
     /**
      * Attributes that aren't mass assignable
@@ -80,27 +80,18 @@ class Boxscore extends Model
         $this->playerListService = app('App\\Services\\PlayerListService');
     }
 
-    public function getPlayerAttribute()
+    protected function player(): Attribute
     {
-        if (!$this->player && $this->player_id) {
-            $this->player = $this->playerListService->getPlayerById($this->player_id);
-        }
-
-        return $this->player;
+        return Attribute::make(
+            get: fn () => $this->_getPlayer(),
+        );
     }
 
-    /** @noinspection PhpUnused */
-    public function getNameAttribute($name)
+    protected function name(): Attribute
     {
-        if ($this->player_id) {
-            if (!$this->player) {
-                $this->getPlayerAttribute();
-            }
-
-            return $this->player->name;
-        }
-
-        return $name;
+        return Attribute::make(
+            get: fn () => $this->_getPlayer()->name
+        );
     }
 
     public function game(): BelongsTo
@@ -113,5 +104,12 @@ class Boxscore extends Model
         return new BoxscoresCollection($models);
     }
 
+    private function _getPlayer(): Player
+    {
+        if (!$this->player && $this->player_id) {
+            $this->player = $this->playerListService->getPlayerById($this->player_id);
+        }
 
+        return $this->player;
+    }
 }

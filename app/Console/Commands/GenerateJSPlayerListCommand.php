@@ -1,57 +1,46 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
-use App\Models\ActiveSeason;
 use App\Models\ActiveSite;
 use App\Models\Player;
-use App\Models\Site;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
+#[Signature('generate:js-player-list {--domain= : The domain to pull players from}')]
+#[Description('Creates the javascript file with the player list')]
 class GenerateJSPlayerListCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'generate:js-player-list {--domain= : The domain to pull players from}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates the javascript file with the player list';
 
     /**
      * The dot notation path to the template to use for the generated js file
      *
      * @var string
      */
-    protected $templatePath = 'partials.js-player-list';
+    protected string $templatePath = 'partials.js-player-list';
 
     /**
      * The base path to where we're saving the files
      *
      * @var string
      */
-    protected $basePath = 'js/playerlist/';
+    protected string $basePath = 'js/playerlist/';
 
     /**
      * The final file location
      *
      * @var string
      */
-    protected $filePath;
+    protected string $filePath;
 
     /**
      * The site we are running as
      *
      * @var ActiveSite
      */
-    protected $site;
+    protected ActiveSite $site;
 
     /**
      * Create a new command instance.
@@ -69,11 +58,12 @@ class GenerateJSPlayerListCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // don't need to handle domain, it's already handled in App\Providers\TenantServiceProvider
+        /** @noinspection PhpUndefinedMethodInspection */
         $players = Player::orderBy('name_key')->get();
 
         $byName = [];

@@ -5,22 +5,23 @@ namespace App\Http\Controllers\Twilio;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Twilio\TwiML\MessagingResponse;
 
 class SMSController extends Controller
 {
 
-    public function incoming(Request $request)
+    public function incoming(Request $request): \Illuminate\Http\Response
     {
         // catch the opt-in/out updates
         if ($request->has('OptOutType')) {
-            switch ($request->get('OptOutType')) {
+            switch ($request->input('OptOutType')) {
                 case 'START':
-                    $msg = $this->subscribe($request->get('From'), $request->get('Body'));
+                    $msg = $this->subscribe($request->input('From'), $request->input('Body'));
                     return $this->basicResponse($msg);
 
                 case 'STOP':
-                    $this->unsubscribe($request->get('From'));
+                    $this->unsubscribe($request->input('From'));
                     return $this->basicResponse();
 
                 case 'HELP':
@@ -32,7 +33,7 @@ class SMSController extends Controller
         return $this->basicResponse("Sorry, but I don't know how to handle that. Reply HELP for more information.");
     }
 
-    public function subscribe(string $phone, string $type)
+    public function subscribe(string $phone, string $type): false|string|null
     {
         $message = null;
 
@@ -67,13 +68,14 @@ class SMSController extends Controller
         return Subscription::where('phone', $phone)->delete();
     }
 
-    protected function basicResponse($message = null) {
+    protected function basicResponse($message = null): \Illuminate\Http\Response
+    {
         $rsp = new MessagingResponse();
         if ($message) {
             $rsp->message($message);
         }
 
-        return \Response::make($rsp, '200')->header('Content-Type', 'text/xml');
+        return Response::make($rsp, '200')->header('Content-Type', 'text/xml');
     }
 
 }

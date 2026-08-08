@@ -20,7 +20,7 @@ trait UsesCloudinary
      * @param Season $season
      * @return Cloudinary|false
      */
-    public function getCloudinaryForSeason(Season $season)
+    public function getCloudinaryForSeason(Season $season): Cloudinary|false
     {
         if ($season->media_service !== CloudinaryMediaService::class) {
             $this->error('Active season must use Cloudinary for this to work.');

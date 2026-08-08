@@ -1,0 +1,6 @@
+@use "sass:meta";
+@use 'header';
+
+@import "flexboxgrid/dist/flexboxgrid.css";
+@include meta.load-css('footer');
+@include meta.load-css("sticky-footer");

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddGameAlbumFallback extends Migration
@@ -12,7 +10,7 @@ class AddGameAlbumFallback extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         // Update and create the views to include the fallback
 
@@ -30,7 +28,7 @@ class AddGameAlbumFallback extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         // Drop the new view and rollback changes to the old one (ie, run the old create or replace
         DB::statement('DROP VIEW game_with_album_fallback');

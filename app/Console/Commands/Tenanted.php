@@ -4,27 +4,14 @@ namespace App\Console\Commands;
 
 use App\Models\ActiveSeason;
 use App\Models\ActiveSite;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
+#[Signature('tenanted {callStr} {--domain= : the site domain to tenant to} {--season= : the season to tenant to}')]
+#[Description('Enabled tenancy for the given command string and tenant options')]
 class Tenanted extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'tenanted {callStr}
-        {--domain= : the site domain to tenant to}
-        {--season= : the season to tenant to}
-    ';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Enabled tenancy for the given command string and tenant options';
-
     /**
      * Create a new command instance.
      *
@@ -38,9 +25,9 @@ class Tenanted extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $site = resolve(ActiveSite::class);
         $season = resolve(ActiveSeason::class);

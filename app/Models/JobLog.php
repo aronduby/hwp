@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * Class JobLog
  *
  * @package App\Models
- * @mixin Eloquent
  * @property int $id
  * @property int $job_instance_id
  * @property string|null $state
@@ -29,10 +27,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class JobLog extends Model
 {
-    const SUCCESS = 'success';
-    const WARNING = 'warning';
-    const ERROR = 'error';
-    const UNKNOWN = 'unknown';
+    const string SUCCESS = 'success';
+    const string WARNING = 'warning';
+    const string ERROR = 'error';
+    const string UNKNOWN = 'unknown';
 
     // note - not tenanted, should only be pulled per job
 }

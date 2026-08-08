@@ -9,9 +9,9 @@ class MWPARankingsJob extends Job implements IUsesJobInstance
 {
     use HasJobInstance;
 
-    const KEY = 'MWPARankings';
+    const string KEY = 'MWPARankings';
 
-    static $commandString = 'parsers:mwpa:rankings';
+    static string $commandString = 'parsers:mwpa:rankings';
 
     /**
      * Validates the given array of settings
@@ -19,7 +19,7 @@ class MWPARankingsJob extends Job implements IUsesJobInstance
      * @param array $settings
      * @return bool|string
      */
-    static function validateSettings(array $settings)
+    static function validateSettings(array $settings): bool|string
     {
         return
             array_key_exists('gender', $settings) && $settings['gender'] !== ''

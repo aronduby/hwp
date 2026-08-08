@@ -21,11 +21,9 @@ I DON'T THINK THIS IS USED ANYWHERE
     <meta name="msapplication-config" content="/icons/browserconfig.xml?v=69k3Ao4nqq">
     <meta name="theme-color" content="#ffffff">
 
-    <?php if (getenv('APP_ENV') == 'local'): ?>
-        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <?php else: ?>
-        <link rel="stylesheet" href="{{ mix('css/main.css') }}">
-    <?php endif ?>
+    @fonts
+    <!-- TODO -- not sure if this is right for sass -->
+    @vite(['resources/sass/main.scss'])
 
     <link rel="stylesheet" href="/css/scratch.css" />
 
@@ -60,9 +58,9 @@ I DON'T THINK THIS IS USED ANYWHERE
         @include('partials.photos.load-more-btn')
     </script>
 
+    <!-- TODO -- what to do with this playerlist? -->
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
-    <script src="{{ mix('js/components.js') }}"></script>
-    <script src="{{ mix('js/main.js') }}"></script>
+    @vite(['resources/js/main.js'])
 
     @stack('scripts')
 

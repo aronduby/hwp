@@ -1,0 +1,71 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.results-wrapper > .empty {
+  flex: 1;
+  text-align: center;
+}
+
+.result {
+
+  header h1 {
+    @include mixins.ellipsis;
+  }
+
+  .body {
+    font-size: .9em;
+    text-align: left;
+  }
+
+  .score {
+    font-family: variables.$heading-font-stack;
+    font-size: functions.em(80);
+    color: colors.$color-black-text;
+    display: flex;
+    justify-content: center;
+
+    > div {
+      text-align: center;
+      flex: 1;
+
+      &:first-child {
+        border-right: 1px solid colors.$color-smoke;
+      }
+    }
+  }
+
+
+  .box-score {
+    float: right;
+    margin: -.5em;
+
+    td {
+      padding: .5em .75em;
+      border-left: 1px solid hsl(0, 0%, 71%);
+
+      &:first-child,
+      &:nth-child(5),
+      &:nth-child(7) {
+        border-left-color: hsl(0, 0%, 65%);
+      }
+    }
+  }
+  
+}
+
+.result--win header,
+[data-result="win"] header {
+  background-color: colors.$color-win-bg;
+}
+
+.result--loss header,
+[data-result="loss"] header {
+  background-color: colors.$color-loss-bg;
+}
+
+.result--tie header,
+[data-result="tie"] header {
+  background-color: colors.$color-tie-bg;
+}

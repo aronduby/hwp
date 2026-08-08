@@ -234,5 +234,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ mix('js/schedule.js') }}"></script>
+    @vite(['resources/js/schedule.js'])
 @endpush

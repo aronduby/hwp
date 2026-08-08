@@ -1,0 +1,10 @@
+@use "../abstracts/variables";
+
+.page--note {
+
+	.note-content {
+		font-size: 1.1em;
+		margin: variables.$gap-extra-extra-large auto;
+		// max-width: 110ch;
+	}
+}

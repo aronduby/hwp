@@ -1,44 +1,38 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\HasOGPhoto;
+use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+use SimpleXMLElement;
 
+#[Signature('parsers:articles:hudsonvilleathletics  {instanceId : The ID of the JobInstance to use }')]
+#[Description('Parses articles from the hudsonville athletics website')]
 class HudsonvilleAthleticsArticlesCommand extends ArticleImporter
 {
+
     use HasOGPhoto;
 
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
-    protected $signature = 'parsers:articles:hudsonvilleathletics  {instanceId : The ID of the JobInstance to use }';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Parses articles from the hudsonville athletics website';
-
-    /**
-     * @var string
-     */
-    protected $url = "http://feeds.feedburner.com/hudsonvilleathletics?format=xml";
+    protected string $url = "http://feeds.feedburner.com/hudsonvilleathletics?format=xml";
 
     /**
      * Gets the last ran timestamp and does all the hard work
      *
      * @param int $lastRan
      * @return array [[article ids], # of tags]
+     * @throws Exception
      */
     protected function parse(int $lastRan): array
     {
         $this->logDebug('Last Ran', [$lastRan]);
         $this->info('Importing from ' . $this->url);
 
-        $feed = new \SimpleXMLElement($this->url, null, true);
+        $feed = new SimpleXMLElement($this->url, null, true);
         $imported_articles = [];
         $imported_tags = 0;
         foreach($feed->channel->item as $item){
@@ -51,7 +45,7 @@ class HudsonvilleAthleticsArticlesCommand extends ArticleImporter
                     'pubDateTS' => strtotime((string)$item->pubdate),
                 ]);
                 continue;
-                
+
             } else {
                 // search the article for players
                 $found_players = [];

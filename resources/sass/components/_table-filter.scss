@@ -1,0 +1,120 @@
+@use "sass:color";
+@use '~/flatpickr/dist/flatpickr.min.css';
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+
+$_panel-padding: 12px;
+
+.tableFilter {
+
+  .filter {
+    display: inline-block;
+    position: relative;
+    margin-left: .2em;
+    vertical-align: text-bottom;
+
+    .filter-btn {
+      background: none;
+      font-size: .6em;
+      padding: .2em;
+      color: white;
+      opacity: .5;
+      outline: 0;
+    }
+
+    .filter-panel {
+      @include mixins.box-shadow;
+      display: none;
+      position: absolute;
+      left: -.1em;
+      min-width: 200px;
+      z-index: 999;
+
+      font-size: 1em;
+      text-transform: none;
+      text-align: left;
+      color: colors.$color-black-text;
+      padding: $_panel-padding;
+      background: colors.$color-white-bg;
+      border-radius: 0 2px 2px 2px;
+
+      > header {
+        border-bottom: 1px solid color.adjust(colors.$color-black-text, $lightness: 50%);
+        margin-bottom: .25em;
+
+        > h2 {
+          font-size: 1.2em;
+          margin-bottom: .25em;
+        }
+      }
+
+      input.form-control,
+      select.form-control {
+        font-size: .8em;
+      }
+
+      &::before {
+        @include mixins.triangle(top, white, .5em);
+        position: absolute;
+        left: 0;
+        top: -.5em;
+      }
+
+      &.filter-panel--open {
+        display: block;
+        transform: translate3d(0, 10px, 0);
+      }
+    }
+
+    .filter-clear {
+      display: block;
+      font-size: .75em;
+      margin: -$_panel-padding;
+      margin-top: $_panel-padding;
+      padding: .5em;
+      width: calc(100% + #{$_panel-padding * 2});
+      outline: 0;
+    }
+
+    .list-group {
+      margin: 0;
+
+      label {
+        display: block;
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: .8em;
+        cursor: pointer;
+
+        input[type="checkbox"],
+        input[type="radio"]{
+          margin-right: .5em;
+        }
+      }
+    }
+
+    // date filters
+    .flatpickr-input {
+      display: none;
+    }
+
+    .flatpickr-calendar {
+      box-shadow: none;
+    }
+
+    // enabled
+    &.filter--enabled {
+
+      .filter-btn {
+        opacity: 1;
+      }
+
+    }
+  } // end .filter
+
+  .tableFilter--empty {
+    text-align: center;
+    font-size: 2em;
+    padding: 1em;
+  }
+}

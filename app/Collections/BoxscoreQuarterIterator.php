@@ -2,8 +2,10 @@
 
 namespace App\Collections;
 
+use Illuminate\Support\Collection;
+use Iterator;
 
-class BoxscoreQuarterIterator implements \Iterator
+class BoxscoreQuarterIterator implements Iterator
 {
 
     /**
@@ -11,21 +13,21 @@ class BoxscoreQuarterIterator implements \Iterator
      *
      * @var BoxscoresCollection
      */
-    protected $collection;
+    protected BoxscoresCollection $collection;
 
     /**
      * The max quarter number
      *
      * @var Integer
      */
-    protected $lastQuarter;
+    protected mixed $lastQuarter;
 
     /**
      * The currently looped quarter
      *
      * @var Integer
      */
-    private $quarter = 1;
+    private int $quarter;
 
     /**
      * BoxscoreQuarterIterator constructor.
@@ -39,7 +41,7 @@ class BoxscoreQuarterIterator implements \Iterator
         $this->quarter = 1;
     }
 
-    public function chunk($count)
+    public function chunk($count): Collection
     {
         return $this->collection
             ->chunk($count)
@@ -55,7 +57,7 @@ class BoxscoreQuarterIterator implements \Iterator
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->quarter = 1;
     }
@@ -64,10 +66,10 @@ class BoxscoreQuarterIterator implements \Iterator
      * Return the current element
      *
      * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
+     * @return BoxscoresCollection Can return any type.
      * @since 5.0.0
      */
-    public function current()
+    public function current(): BoxscoresCollection
     {
         return $this->collection->quarter($this->quarter);
     }
@@ -76,10 +78,10 @@ class BoxscoreQuarterIterator implements \Iterator
      * Return the key of the current element
      *
      * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     * @return int scalar on success, or null on failure.
      * @since 5.0.0
      */
-    public function key()
+    public function key(): int
     {
         return $this->quarter;
     }
@@ -91,7 +93,7 @@ class BoxscoreQuarterIterator implements \Iterator
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function next()
+    public function next(): void
     {
         ++$this->quarter;
     }
@@ -104,7 +106,7 @@ class BoxscoreQuarterIterator implements \Iterator
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->quarter <= $this->lastQuarter;
     }

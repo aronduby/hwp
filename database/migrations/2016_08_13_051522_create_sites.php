@@ -10,7 +10,7 @@ class CreateSites extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('sites', function (Blueprint $table) {
             $table->increments('id');
@@ -26,7 +26,7 @@ class CreateSites extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('sites');
     }

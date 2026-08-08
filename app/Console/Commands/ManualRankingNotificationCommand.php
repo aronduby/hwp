@@ -1,35 +1,25 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Models\Ranking;
 use App\Notifications\RankingsUpdated;
-use Illuminate\Console\Command;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+use NunoMazer\Samehouse\Facades\Landlord;
 
+#[Signature('events:manual-ranking-notification {rankingId : The ID of the new ranking to handle}')]
+#[Description('Manually triggers the ranking notification')]
 class ManualRankingNotificationCommand extends LoggedCommand
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'events:manual-ranking-notification {rankingId : The ID of the new ranking to handle}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Manually triggers the ranking notification';
-
-    /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        \Landlord::disable();
+        Landlord::disable();
 
         $rankingId = $this->argument('rankingId');
         $newRanking = Ranking::with(['ranks', 'site'])->findOrFail($rankingId);
@@ -56,6 +46,6 @@ class ManualRankingNotificationCommand extends LoggedCommand
         $notification = new RankingsUpdated($newRank, $lastRank);
         $newRanking->site->notify($notification);
 
-        \Landlord::enable();
+        Landlord::enable();
     }
 }

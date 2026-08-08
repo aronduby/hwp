@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Collections\CustomCollection;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Location
@@ -39,7 +38,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Location whereTitleShort($value)
  * @method static Builder|Location whereUpdatedAt($value)
  * @method static Builder|Location whereZipcode($value)
- * @mixin Eloquent
  */
 class Location extends Model
 {
@@ -49,9 +47,9 @@ class Location extends Model
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
     /**
      * Gets related games
@@ -86,7 +84,7 @@ class Location extends Model
 
 
     /**
-     * Generates an url to a static Google Map image for this location
+     * Generates a url to a static Google Map image for this location
      *
      * @param int $width
      * @param int $height

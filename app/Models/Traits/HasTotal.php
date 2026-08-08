@@ -21,7 +21,7 @@ trait HasTotal
      * @param Builder $query
      * @return integer
      */
-    public function scopeTotal(Builder $query)
+    public function scopeTotal(Builder $query): int
     {
         return $query->select([DB::Raw('COUNT(*) AS `total`')])
             ->first()

@@ -1,0 +1,161 @@
+@use "sass:color";
+@use "sass:map";
+@use "../abstracts/colors";
+@use "../abstracts/variables";
+
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the button component.
+// -----------------------------------------------------------------------------
+.btn,
+a.btn {
+  display: inline-block;
+  padding: variables.$gap-large;
+  font-family: variables.$heading-font-stack;
+  font-size: 1.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1.2em;
+  color: colors.$color-black-lighter;
+  background: colors.$color-smoke;
+  border: none;
+  transition: all .5s;
+  cursor: pointer;
+
+  i {
+    font-size: 1.1em;
+    line-height: 1.2em;
+    margin-right: .25em;
+
+    &:first-child:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &:hover {
+    background: color.adjust(colors.$color-smoke, $lightness: 10%);
+    color: color.adjust(colors.$color-bright-lighter, $lightness: 10%);
+    text-decoration: none;
+  }
+
+  &.disabled,
+  &[disabled] {
+    &:not(.btn--loader.loading) {
+      opacity: .5;
+    }
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.btn.btn--text {
+  background: none;
+  color: colors.$color-bright;
+  padding: variables.$gap variables.$gap-large;
+
+  &:hover {
+    background: colors.$color-smoke;
+    color: colors.$color-bright-darker;
+    text-decoration: none;
+  }
+}
+
+.btn.btn--small {
+  font-size: .8em;
+  padding: .6em .8em;
+}
+
+.btn.btn--lg {
+  font-size: 2em;
+}
+
+.btn.btn--submit {
+  margin: 0 0  0 variables.$gap;
+}
+
+.btn.btn--loader {
+  position: relative;
+
+  .loader-wrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+    backdrop-filter: brightness(0.6) grayscale(0.6);
+  }
+
+  &.loading .loader-wrapper {
+    opacity: 1;
+  }
+}
+
+.btn-group {
+  display: flex;
+
+  .btn {
+    text-align: center;
+
+    & + .btn {
+      border-left: 1px solid colors.$color-white-darker;
+    }
+  }
+}
+
+.btn-group--full {
+  .btn {
+    flex: 1;
+  }
+}
+
+.btn-group--end {
+  justify-content: flex-end;
+}
+
+table .action-btns {
+  text-align: right;
+
+  .btn {
+    font-size: 1em;
+    padding: variables.$gap-small;
+    border: none !important;
+    background: none;
+  }
+}
+
+
+@mixin _btnColor($bg, $hover, $active, $text) {
+  background: $bg !important;
+  color: $text !important;
+
+  &:hover {
+    background: $hover !important;
+    color: $text !important;
+  }
+
+  &:active {
+    background: $active !important;
+    color: $text !important;
+  }
+}
+
+$_success: map.get(colors.$colors, 'success');
+$_warn: map.get(colors.$colors, 'warn');
+$_danger: map.get(colors.$colors, 'danger');
+
+$variants: (
+  primary: colors.$color-primary colors.$color-primary-lighter colors.$color-primary-darker colors.$color-white-lighter,
+  accent:  colors.$color-accent colors.$color-accent-darker colors.$color-accent-darker colors.$color-white-lighter,
+  bright: colors.$color-bright colors.$color-bright-lighter colors.$color-bright-darker colors.$color-white-lighter,
+  bright-accent: colors.$color-bright-accent colors.$color-bright-accent-darker colors.$color-bright-accent-darker colors.$color-white-lighter,
+  bright-accent-alt: colors.$color-bright-accent-alt colors.$color-bright-accent-alt-lighter colors.$color-bright-accent-alt-darker colors.$color-white-lighter,
+  success: $_success color.adjust($_success, $lightness: -10%) color.adjust($_success, $lightness: -10%) colors.$color-white-lighter,
+  warn: $_warn color.adjust($_warn, $lightness: -10%) color.adjust($_warn, $lightness: -10%) colors.$color-white-lighter,
+  danger: $_danger color.adjust($_danger, $lightness: -10%) color.adjust($_danger, $lightness: -10%) colors.$color-white-lighter,
+);
+
+@each $name, $params in $variants {
+  .btn.btn--#{$name} {
+    @include _btnColor($params...);
+  }
+}

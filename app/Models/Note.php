@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +25,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Note whereSiteId($value)
  * @method static Builder|Note whereTitle($value)
  * @method static Builder|Note whereUpdatedAt($value)
- * @mixin Eloquent
  */
 class Note extends Model
 {

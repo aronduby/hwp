@@ -9,7 +9,7 @@
             @forelse($upcoming as $date => $events)
                 <tbody>
                 <tr class="upcoming-day">
-                    <td colspan="4">@day(new Carbon\Carbon($date))</td>
+                    <td colspan="4">@day(new Illuminate\Support\Carbon($date))</td>
                 </tr>
                 @foreach($events as $event)
                     <tr class="upcoming-event">

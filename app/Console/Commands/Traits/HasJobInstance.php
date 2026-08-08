@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Console\Commands\Traits;
-
 
 use App\Models\JobInstance;
 use App\Models\JobLog;
@@ -13,12 +11,12 @@ trait HasJobInstance
     /**
      * @var JobInstance
      */
-    protected $jobInstance;
+    protected JobInstance $jobInstance;
 
     /**
      * @var JobLog
      */
-    protected $jobLog;
+    protected JobLog $jobLog;
 
     abstract function argument(string $key);
 
@@ -31,7 +29,8 @@ trait HasJobInstance
     {
         if (!isset($this->jobInstance)) {
             $id = $this->argument('instanceId');
-            /** @noinspection PhpIncompatibleReturnTypeInspection */
+
+            /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
             $this->jobInstance = JobInstance::findOrFail(intval($id));
         }
 
@@ -53,19 +52,19 @@ trait HasJobInstance
     }
 
     /**
-     * Override line, which all of the other output methods direct to
+     * Override line, which all the other output methods direct to
      *
      * @param $string
      * @param null $style
      * @param null $verbosity
      */
-    public function line($string, $style = null, $verbosity = null)
+    public function line($string, $style = null, $verbosity = null): void
     {
         $this->addToLogOutput($style, $string);
         parent::line($string, $style, $verbosity);
     }
 
-    private function addToLogOutput(string $type, string $data)
+    private function addToLogOutput(string $type, string $data): void
     {
         $this->getJobLog()->output .= "[" . strtoupper($type) . "] " . $data . "\n";
     }

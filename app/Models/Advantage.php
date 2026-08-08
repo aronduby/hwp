@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Collections\AdvantagesCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Advantage
@@ -30,8 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Advantage whereSiteId($value)
  * @method static Builder|Advantage whereTeam($value)
  * @method static Builder|Advantage whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[Unguarded]
 class Advantage extends Model
 {
     use BelongsToTenants;
@@ -40,16 +40,9 @@ class Advantage extends Model
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
-
-    /**
-     * The fields which CAN NOT be mass assigned
-     *
-     * @var array
-     */
-    protected $guarded = [];
+    protected array $tenantColumns = ['site_id'];
 
     /**
      * @return BelongsTo

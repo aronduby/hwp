@@ -1,0 +1,29 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+@use "sass:math";
+
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass functions.
+// -----------------------------------------------------------------------------
+
+/// Native `url(..)` function wrapper
+/// @param {String} $base - base URL for the asset
+/// @param {String} $type - asset type folder (e.g. `fonts/`)
+/// @param {String} $path - asset path
+/// @return {Url}
+@function asset($base, $type, $path) {
+  @return url($base + $type + $path);
+}
+
+
+$browser-context: 16; // Default
+@function em($pixels, $context: $browser-context) {
+  @return #{math.div($pixels, $context)}em;
+}
+
+@function greyscale($percent) {
+    // needs the * 1% since unitless is deprecated now
+  @return color.adjust(#000, $lightness: $percent * 1%);
+}

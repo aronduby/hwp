@@ -10,7 +10,7 @@ class CreatePasswordResetsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
@@ -24,7 +24,7 @@ class CreatePasswordResetsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('password_resets');
     }

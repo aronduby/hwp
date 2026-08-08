@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 class ShutterflyMediaService extends LocalMediaService implements MediaService
 {
-    protected $service;
+    protected array $service;
 
     public function __construct()
     {

@@ -1,0 +1,90 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the footer of the site/application.
+// -----------------------------------------------------------------------------
+footer .follow-us h1 {
+  @include mixins.text-shadow();
+  font-size: functions.em(40);
+  padding: variables.$gap;
+}
+
+.footer-section {
+  padding-top: variables.$gap-extra-extra-large;
+  padding-bottom: variables.$gap-extra-extra-large;
+}
+
+.footer-section.main {
+  @include mixins.grid();
+  @include mixins.box-shadow();
+  background-color: #252738 !important;
+
+  a {
+    color: colors.$color-bright-muted;
+  }
+}
+
+.footer-section .twitter-embed {
+  margin-bottom: variables.$gap-large;
+  max-height: 420px;
+  overflow: hidden;
+}
+
+.footer-section .player-list {
+  .team {
+    margin-top: variables.$gap-large;
+    text-align: center;
+
+    h4 {
+      color: colors.$color-white-darker;
+      font-size: functions.em(26);
+      margin-bottom: variables.$gap;
+    }
+
+    ul li {
+      margin-bottom: variables.$gap-small;
+    }
+  }
+
+  .player--number {
+    display: none;
+  }
+
+  @include mixins.responsive(sm) {
+    display: flex;
+    gap: variables.$gap-large;
+    margin: variables.$gap-extra-large 0 variables.$gap-extra-extra-large 0;
+
+    .team {
+      text-align: left;
+      margin-top: 0;
+      flex: 2;
+
+      ul {
+        columns: 2;
+      }
+    }
+
+    .team--STAFF {
+      flex: 1;
+
+      ul {
+        columns: 1;
+      }
+    }
+  }
+
+}
+
+.footer-section.sub {
+  @include mixins.heading();
+  @include mixins.grid();
+  @include mixins.box-shadow();
+  font-size: functions.em(22);
+  color: #ccc;
+  padding: variables.$gap;
+  background-color: #1f202e !important;
+}

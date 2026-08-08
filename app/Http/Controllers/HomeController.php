@@ -1,22 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Duby
- * Date: 8/18/2016
- * Time: 5:57 PM
- */
 
 namespace App\Http\Controllers;
-
 
 use App\Models\ActiveSeason;
 use App\Models\Game;
 use App\Models\Ranking;
 use App\Models\Schedule;
 use App\Services\MediaServices\MediaService;
-use Illuminate\Contracts\View\Factory;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\Paginator;
 use Illuminate\View\View;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -26,14 +21,14 @@ class HomeController extends Controller
      *
      * @var MediaService
      */
-    protected $mediaService;
+    protected MediaService $mediaService;
 
     /**
      * The currently active season
      *
      * @var ActiveSeason
      */
-    protected $season;
+    protected ActiveSeason $season;
 
     /**
      * @param MediaService $mediaService
@@ -48,27 +43,27 @@ class HomeController extends Controller
     /**
      * Handle the entire homepage. Mostly just calls other protected functions
      *
-     * @return Factory|View
-     * @throws \Exception
-     * @throws \Throwable
+     * @return View
+     * @throws Exception
+     * @throws Throwable
      */
-    public function index()
+    public function index(): View
     {
         $header = $this->header()->render();
         $results = $this->latestResults()->render();
         $notifications = $this->notifications()->render();
         $badges = $this->badges()->render();
         $content = $this->content()->render();
-        
+
         return view('home', compact('header', 'results', 'notifications','badges', 'content'));
     }
 
     /**
      * Render the header section
      *
-     * @return Factory|View
+     * @return View
      */
-    public function header()
+    public function header(): View
     {
         // TODO - add site name?
         $photo = $this->mediaService->forHome();
@@ -84,9 +79,9 @@ class HomeController extends Controller
     /**
      * Render the latest results section
      *
-     * @return Factory|View
+     * @return View
      */
-    public function latestResults()
+    public function latestResults(): View
     {
         $results = Game::with('location')
             ->withCount(['album', 'stats', 'updates'])
@@ -100,9 +95,9 @@ class HomeController extends Controller
     /**
      * Render the badges section
      *
-     * @return Factory|View
+     * @return View
      */
-    public function badges()
+    public function badges(): View
     {
         $badges = $this->season->badges;
 
@@ -112,9 +107,9 @@ class HomeController extends Controller
     /**
      * Renders the notifications section
      *
-     * @return Factory|View
+     * @return View
      */
-    public function notifications()
+    public function notifications(): View
     {
         return view('partials.home.notifications', []);
     }
@@ -122,9 +117,9 @@ class HomeController extends Controller
     /**
      * Render the first page of the content
      *
-     * @return Factory|View
+     * @return View
      */
-    public function content()
+    public function content(): View
     {
         $upcoming = Schedule::with('location')
             ->upcoming()
@@ -139,9 +134,8 @@ class HomeController extends Controller
     /**
      * Handles the calls for paginating the recent content
      *
-     * @return Factory|View
      */
-    public function recent()
+    public function recent(): JsonResponse
     {
         $recent = new \App\Models\Recent\Paginator();
         return response()->json($recent->toArray());
@@ -150,9 +144,9 @@ class HomeController extends Controller
     /**
      * Handles the calls for paginating the rankings
      *
-     * @return Factory|View
+     * @return JsonResponse
      */
-    public function rankings()
+    public function rankings(): JsonResponse
     {
         return response()->json($this->getRankings()->toArray());
     }
@@ -162,7 +156,7 @@ class HomeController extends Controller
      *
      * @return Paginator
      */
-    protected function getRankings()
+    protected function getRankings(): Paginator
     {
         $rankings = Ranking::simplePaginate(1);
         $rankings->setPath(route('rankings'));

@@ -1,0 +1,28 @@
+@use "../abstracts/colors";
+
+// white text sections
+.bg--primary,
+.bg--accent,
+.bg--dark,
+.bg--win,
+.bg--loss,
+.bg--tie {
+  color: colors.$color-white-text;
+
+  .text--muted {
+    color: colors.$color-white-darker;
+  }
+}
+
+.bg--primary,
+.bg--dark {
+  a {
+    color: colors.$color-bright-text;
+  }
+}
+
+.bg--accent {
+  a {
+    color: colors.$color-white-darker;
+  }
+}

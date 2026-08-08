@@ -3,6 +3,8 @@
 namespace App\Channels;
 
 use App\Notifications\Contracts\SendsToFCMTopic;
+use Kreait\Firebase\Exception\FirebaseException;
+use Kreait\Firebase\Exception\MessagingException;
 use Kreait\Firebase\Messaging;
 
 class FCMTopicChannel
@@ -11,7 +13,7 @@ class FCMTopicChannel
     /**
      * @var Messaging $messaging
      */
-    protected $messaging;
+    protected Messaging $messaging;
 
     /**
      * @param Messaging $messaging
@@ -21,14 +23,20 @@ class FCMTopicChannel
         $this->messaging = $messaging;
     }
 
-
-    public function send($notifiable, SendsToFCMTopic $notification)
+    /**
+     * @param $notifiable
+     * @param SendsToFCMTopic $notification
+     * @return void
+     * @throws FirebaseException
+     * @throws MessagingException
+     */
+    public function send($notifiable, SendsToFCMTopic $notification): void
     {
         $topic = $notifiable->routeNotificationFor('FCMTopic', $notification);
         $analyticsLabel = $topic .'.'. strtolower(class_basename($notification));
 
         $message = $notification->toFCMTopic();
-        $message = $message->withChangedTarget('topic', $topic);
+        $message = $message->withTopic($topic);
         $message = $message->withFcmOptions(['analytics_label' => $analyticsLabel]);
 
         $this->messaging->send($message);

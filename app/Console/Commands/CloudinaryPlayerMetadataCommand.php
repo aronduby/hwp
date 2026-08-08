@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
@@ -7,8 +7,10 @@ use App\Models\ActiveSeason;
 use App\Models\PlayerSeason;
 use Cloudinary\Api\Exception\NotFound;
 use Cloudinary\Api\Metadata\SetMetadataField;
+use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use phpDocumentor\Reflection\Types\Self_;
 
 /**
  * # Cloudinary - Update Players Metadata Field
@@ -16,31 +18,19 @@ use phpDocumentor\Reflection\Types\Self_;
  *
  * Probably want to use this with the {@see Tenanted} command to specify which domain/season
  */
+#[Signature('cloudinary:player-metadata')]
+#[Description('Update the cloudinary players metadata field with all the players for the current season')]
 class CloudinaryPlayerMetadataCommand extends Command
 {
 
     use UsesCloudinary;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'cloudinary:player-metadata';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Update the cloudinary players metadata field with all the players for the current season';
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         /** @var ActiveSeason $season */
         $season = resolve(ActiveSeason::class);
@@ -112,7 +102,7 @@ class CloudinaryPlayerMetadataCommand extends Command
             }
 
             $this->info("Successfully updated '{$fieldId}' metadata field.");
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to update Cloudinary metadata: " . $e->getMessage());
             return 1;
         }
@@ -125,7 +115,8 @@ class CloudinaryPlayerMetadataCommand extends Command
      * @param string $name
      * @return string[]
      */
-    static protected function convertToDatasourceEntry(string $name) {
+    static protected function convertToDatasourceEntry(string $name): array
+    {
         return [ 'value' => $name ];
     }
 }

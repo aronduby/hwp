@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use App\Database\Schema\Blueprint;
 use App\Database\Migrations\Migration;
 
@@ -11,7 +10,7 @@ class CreateAdvantagesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('advantages', function(Blueprint $table) {
             $table->increments('id');
@@ -36,7 +35,7 @@ class CreateAdvantagesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('advantages');
     }

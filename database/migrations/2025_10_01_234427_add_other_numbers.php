@@ -11,7 +11,7 @@ class AddOtherNumbers extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('player_season', function(Blueprint $table) {
             $table->json('other_numbers')
@@ -25,7 +25,7 @@ class AddOtherNumbers extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('player_season', function(Blueprint $table) {
             $table->dropColumn('other_numbers');

@@ -10,7 +10,7 @@ class AddSiteToUsers extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->table('users', function (Blueprint $table) {
             $table->integer('site_id')
@@ -29,7 +29,7 @@ class AddSiteToUsers extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->table('users', function (Blueprint $table) {
             $table->dropColumn('site_id');

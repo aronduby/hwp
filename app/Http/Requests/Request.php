@@ -6,7 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class Request extends FormRequest
 {
-    function getTLD() {
+    function getTLD(): false|string
+    {
         $host = $this->getHost();
         $parts = explode('.', $host);
         return end($parts);
@@ -17,7 +18,7 @@ class Request extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -27,7 +28,7 @@ class Request extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             //

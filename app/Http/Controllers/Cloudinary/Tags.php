@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Cloudinary;
 
 use App\Services\MediaServices\CloudinaryMediaService;
-use Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class Tags extends Controller
 {
@@ -21,7 +21,7 @@ class Tags extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
-        $seasonId = $request->get('season_id');
+        $seasonId = $request->query('season_id');
 
         $changedHome = false;
         $changedCover = false;

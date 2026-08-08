@@ -4,7 +4,7 @@ namespace App\Models;
 
 
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\DatabaseNotification;
@@ -12,7 +12,7 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 
 /**
  * Easy way for dependency inject to get the site being viewed
- * 
+ *
  * Class ActiveSite
  *
  * @package App\Models
@@ -42,16 +42,14 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
  * @method static Builder|ActiveSite whereSubtitle($value)
  * @method static Builder|ActiveSite whereTitle($value)
  * @method static Builder|ActiveSite whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[Table('sites')]
 class ActiveSite extends Site
 {
-    protected $table = 'sites';
-
     /**
-     * This is used with polymorphic relationships to tell what class name should be used with the relationships
+     * This is used with polymorphic relationships to tell what class name should be used with the relationships.
      * Normally this comes from a morphMap or just the calling classes name, but since we want every Site/ActiveSite
-     * to share this relationship properly we overload it here to always be the site class
+     * to share this relationship properly we overload it here to always be the site class.
      *
      * @return string
      */

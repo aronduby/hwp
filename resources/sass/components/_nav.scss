@@ -1,0 +1,239 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+@use "warning-indicator";
+
+// make room for fixed nav
+.scroller-inner {
+  padding-top: 73px;
+
+  @include mixins.responsive('lg') {
+    padding-top: 85px;
+  }
+}
+
+.main-menu {
+  @include mixins.box-shadow();
+  @include mixins.grid();
+  background-color: colors.$color-dark-bg;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: variables.$gap variables.$gap-large;
+  z-index: 99999;
+  transition: all .5s;
+
+  div {
+    margin-right: variables.$gap;
+  }
+
+  &.ghosted {
+    background: none;
+    box-shadow: none;
+    opacity: .5;
+
+    &:hover {
+      @include mixins.grid();
+      background-color: colors.$color-dark-bg;
+      opacity: 1;
+    }
+  }
+
+  .team-picker {
+    display: none;
+  }
+
+  @include mixins.responsive('lg') {
+    padding: 0 variables.$gap-large;
+
+    .team-picker {
+      display: block;
+    }
+  }
+}
+
+#trigger {
+  color: colors.$color-white;
+  padding: variables.$gap;
+  font-size: 1.5em;
+  cursor: pointer;
+
+  @include mixins.responsive('lg') {
+    display: none;
+  }
+
+  .warning-indicator {
+    @include warning-indicator.warningIndicatorPinned();
+  }
+}
+
+.nav-brand {
+  margin-left: variables.$gap;
+
+  h1 {
+    @include mixins.text-shadow();
+    font-size: functions.em(42);
+  }
+
+  a {
+    @include mixins.on-event() {
+      color: colors.$color-white;
+      text-decoration: none;
+    }
+  }
+}
+
+#desktop-menu {
+  display: none;
+  flex: 1;
+
+
+  @include mixins.responsive('lg') {
+    display: block;
+  }
+
+  & > ul{
+    display: flex;
+    align-items: stretch;
+    font-family: variables.$heading-font-stack;
+    font-size: functions.em(22);
+    text-transform: uppercase;
+
+    & > li {
+      margin: 0 variables.$gap;
+      @include mixins.on-event() {
+        background: colors.$color-primary-darker;
+      }
+
+      & > a,
+      & > label {
+        display: block;
+        color: colors.$color-white;
+        padding: variables.$gap-extra-large variables.$gap-large;
+        font-weight: normal;
+        margin: 0;
+
+        @include mixins.on-event {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .has-subs {
+    position: relative;
+
+    &.subs--super {
+      position: static;
+
+      > section {
+        width: 100%;
+        border-radius: 0;
+      }
+
+      &:hover > section {
+        padding: 2em 2em 3em 2em;
+      }
+    }
+
+    &.subs--right {
+      section {
+        left: auto;
+        right: 0;
+        text-align: right;
+      }
+    }
+
+    > section {
+      @include mixins.grid();
+      display: none;
+      justify-content: space-around;
+      position: absolute;
+      left: 0;
+      background-color: colors.$color-black-bg;
+      z-index: 100;
+      padding: 0 2em;
+      box-shadow:
+        inset 0 2px 5px rgba(0,0,0,.5),
+        0 2px 5px rgba(0,0,0,.5);
+      border-radius: 0 0 2px 2px;
+      transition: all .5s;
+
+      li {
+        line-height: .8em;
+        margin-bottom: .6em;
+
+        a {
+          font-family: variables.$text-font-stack;
+          font-size: 1rem;
+          text-transform: none;
+          color: colors.$color-bright-muted;
+
+          @include mixins.on-event() {
+            color: colors.$color-bright;
+          }
+        }
+      }
+    }
+
+    &:hover > section {
+      display: flex;
+      padding: 1em 2em;
+    }
+  }
+
+  .player-list {
+    header {
+      margin-bottom: variables.$gap;
+
+      h4 {
+        color: colors.$color-white-darker;
+      }
+    }
+
+    .team--STAFF ul {
+      columns: 1;
+    }
+  }
+
+
+  .seasons {
+    margin-left: auto;
+    opacity: .3;
+    transition: all .5s;
+
+    &:hover,
+    &.seasons--not-current {
+      opacity: 1;
+    }
+
+    label {
+      .warning-indicator {
+        margin-right: .25em;
+      }
+
+      span {
+        display: inline-block;
+        margin-left: .25em;
+      }
+    }
+
+    li .fa.current-indicator {
+      position: absolute;
+      margin-left: -1.75em;
+      margin-top: .075em
+    }
+  }
+
+}
+
+// drop the opacity for the active season
+li.seasons {
+  li.season--active {
+    opacity: .5;
+    pointer-events: none;
+  }
+}

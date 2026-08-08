@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class RenameShutterfly extends Migration
 {
-    const MIGRATE = [
+    const array MIGRATE = [
         'photos' => [
             'shutterfly_id' => 'media_id'
         ],
@@ -23,7 +23,7 @@ class RenameShutterfly extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         foreach (self::MIGRATE as $table => $fields) {
             Schema::table($table, function (Blueprint $table) use ($fields) {
@@ -39,7 +39,7 @@ class RenameShutterfly extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         foreach (self::MIGRATE as $table => $fields) {
             Schema::table($table, function (Blueprint $table) use ($fields) {

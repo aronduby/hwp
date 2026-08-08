@@ -8,18 +8,17 @@
 
 namespace App\Models\Recent;
 
-
 use App\Models\Recent;
 use Illuminate\Pagination\AbstractPaginator;
 
 class Paginator extends AbstractPaginator
 {
 
-    public $perPageCustom= [0, 9, 13];
+    public array $perPageCustom= [0, 9, 13];
 
-    public $perPageDefault = 13;
+    public int $perPageDefault = 13;
 
-    protected $hasMore;
+    protected bool $hasMore;
 
     public function __construct($page = null, $pageName = 'page')
     {
@@ -46,13 +45,15 @@ class Paginator extends AbstractPaginator
     /**
      * Get the URL for the next page.
      *
-     * @return string|null
+     * @return ?string
      */
-    public function nextPageUrl()
+    public function nextPageUrl(): ?string
     {
         if ($this->hasMorePages()) {
             return $this->url($this->currentPage() + 1);
         }
+
+        return null;
     }
 
     /**
@@ -60,12 +61,12 @@ class Paginator extends AbstractPaginator
      *
      * @return bool
      */
-    public function hasMorePages()
+    public function hasMorePages(): bool
     {
         return $this->hasMore;
     }
 
-    
+
 
     protected function getTake($page) {
         $idx = $page;
@@ -76,7 +77,8 @@ class Paginator extends AbstractPaginator
         }
     }
 
-    protected function getSkip($page) {
+    protected function getSkip($page): float|int
+    {
         // get the total of custom numbered pages up to $page
         $custom = array_splice($this->perPageCustom, 0, $page);
         $total = array_sum($custom);
@@ -94,7 +96,7 @@ class Paginator extends AbstractPaginator
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'per_page' => $this->perPage(), 'current_page' => $this->currentPage(),
@@ -109,7 +111,7 @@ class Paginator extends AbstractPaginator
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
@@ -120,7 +122,7 @@ class Paginator extends AbstractPaginator
      * @param  int  $options
      * @return string
      */
-    public function toJson($options = 0)
+    public function toJson($options = 0): string
     {
         return json_encode($this->jsonSerialize(), $options);
     }

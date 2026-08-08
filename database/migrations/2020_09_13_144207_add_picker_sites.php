@@ -11,7 +11,7 @@ class AddPickerSites extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('sites', function(Blueprint $table) {
             $table->boolean('is_picker')
@@ -47,7 +47,7 @@ class AddPickerSites extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('sites', function (Blueprint $table) {
             $table->dropForeign(['parent_id']);

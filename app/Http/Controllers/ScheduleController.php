@@ -1,27 +1,43 @@
-<?php
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
 namespace App\Http\Controllers;
 
 use App\Models\Schedule;
-use Eluceo\iCal\Component\Timezone;
-use Eluceo\iCal\Component\TimezoneRule;
-use Eluceo\iCal\Property\Event\RecurrenceRule;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use Generator;
 use Illuminate\Http\Request;
-use Eluceo\iCal\Component\Calendar;
-use Eluceo\iCal\Component\Event;
+use Illuminate\View\View;
 
-use App\Http\Requests;
+use Eluceo\iCal\Domain\Entity\Calendar;
+use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\Entity\TimeZone;
+use Eluceo\iCal\Domain\ValueObject\Date;
+use Eluceo\iCal\Domain\ValueObject\DateTime as IcalDateTime;
+use Eluceo\iCal\Domain\ValueObject\Location;
+use Eluceo\iCal\Domain\ValueObject\MultiDay;
+use Eluceo\iCal\Domain\ValueObject\TimeSpan;
+use Eluceo\iCal\Domain\ValueObject\UniqueIdentifier;
+use Eluceo\iCal\Presentation\Component;
+use Eluceo\iCal\Presentation\Component\Property;
+use Eluceo\iCal\Presentation\Component\Property\Value\TextValue;
+use Eluceo\iCal\Presentation\Factory\CalendarFactory;
+use Eluceo\iCal\Presentation\Factory\EventFactory;
 
 class ScheduleController extends Controller
 {
-
+    /**
+     * Timezone used for all schedule times.
+     */
+    const string TIMEZONE = 'America/Detroit';
 
     /**
      * Gets the data for the schedule page
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $upcoming = Schedule::with('location')
             ->upcoming()
@@ -41,48 +57,51 @@ class ScheduleController extends Controller
     /**
      * Output the iCal file for the schedule
      *
+     * @param Request $request
      * @return mixed
      */
-    public function subscribe(Request $request)
+    public function subscribe(Request $request): mixed
     {
         $schedule = Schedule::with(['location', 'scheduled'])
             ->withCount(['album', 'updates', 'stats'])
             ->orderBy('start', 'asc')
             ->get();
 
-        $tz = $this->getTimezone();
-
-        $vCal = new Calendar('HudsonvilleWaterPolo.com');
-        $vCal
-            ->setName(trans('vcal.name'))
-            ->setDescription(trans('vcal.description'))
-            ->setCalId('HudsonvilleWaterPolo.com')
-            ->setTimezone($tz);
+        $events = [];
 
         foreach ($schedule as $item) {
-            $vEvent = new Event();
-            $vEvent
-                ->setDtStamp($item->start)
-                ->setDtStart($item->start)
-                ->setDtEnd($item->end)
-                ->setUseTimezone(true)
-                ->setSummary(trans('schedule.iCalSummary', [
-                    'team' => trans('misc.'.$item->team),
-                    'type' => $item->type,
-                    'title' => $item->type === Schedule::TOURNAMENT
-                        ? ' - ' . $item->scheduled->title
-                        : 'vs ' . $item->scheduled->opponent
-                ]))
+            $summary = trans('schedule.iCalSummary', [
+                'team' => trans('misc.'.$item->team),
+                'type' => $item->type,
+                'title' => $item->type === Schedule::TOURNAMENT
+                    ? ' - ' . $item->scheduled->title
+                    : 'vs ' . $item->scheduled->opponent,
+            ]);
+
+            // Stable UID so subscribers don't see the event "change" every refresh.
+            $uid = new UniqueIdentifier('HudsonvilleWaterPolo.com/schedule/' . $item->id);
+
+            $vEvent = new ScheduleEvent($uid)
+                ->setSummary($summary)
                 ->setCategories([$item->team, $item->type])
-                ->setLocation($item->location->title . "\n" . $item->location->full_address, $item->location->title);
+                ->setLocation(new Location(
+                    $item->location->title . "\n" . $item->location->full_address,
+                    $item->location->title
+                ));
 
             if ($item->type === Schedule::TOURNAMENT) {
-                // tournaments don't have start times
-                $vEvent->setNoTime(true);
-
-                // iCal end dates aren't inclusive, so to be able to get it to display on the end date add another day
-                $interval = new \DateInterval('P1D');
-                $vEvent->setDtEnd($item->end->add($interval));
+                // Tournaments don't have start times. MultiDay's $lastDay is
+                // inclusive, so - unlike the old library - we don't need to
+                // add an extra day to make it display through the end date.
+                $vEvent->setOccurrence(new MultiDay(
+                    new Date($this->toLocalDateTime($item->start)),
+                    new Date($this->toLocalDateTime($item->end))
+                ));
+            } else {
+                $vEvent->setOccurrence(new TimeSpan(
+                    new IcalDateTime($this->toLocalDateTime($item->start), false),
+                    new IcalDateTime($this->toLocalDateTime($item->end), false)
+                ));
             }
 
             // descriptions
@@ -108,13 +127,19 @@ class ScheduleController extends Controller
 
             if (count($desc)) {
                 $vEvent->setDescription(implode("\n", $desc));
-                $vEvent->setDescriptionHTML('<p>'.implode('<br>', $desc));
+                $vEvent->setDescriptionHtml('<p>' . implode('<br>', $desc));
             }
 
-            $vCal->addComponent($vEvent);
+            $events[] = $vEvent;
         }
 
-        $data = $vCal->render();
+        $calendar = new ScheduleCalendar($events)
+            ->setCalendarName(trans('vcal.name'))
+            ->setCalendarDescription(trans('vcal.description'))
+            ->addTimeZone(TimeZone::createFromPhpDateTimeZone(new DateTimeZone(self::TIMEZONE)));
+
+        $componentFactory = new ScheduleCalendarFactory(new ScheduleEventFactory());
+        $data = (string) $componentFactory->createCalendar($calendar);
 
         if ($request->has('text')) {
             return response($data)
@@ -126,39 +151,112 @@ class ScheduleController extends Controller
         }
     }
 
-    protected function getTimezone() {
-        $tz  = 'America/Detroit';
-        $dtz = new \DateTimeZone($tz);
+    /**
+     * Convert a Carbon/DateTime instance to an immutable DateTime in the
+     * schedule's timezone, since the presentation layer needs the timezone
+     * on the value itself to match it up with the calendar's VTIMEZONE.
+     *
+     * @param  DateTimeInterface  $date
+     * @return DateTimeImmutable
+     */
+    protected function toLocalDateTime(DateTimeInterface $date): DateTimeImmutable
+    {
+        return DateTimeImmutable::createFromInterface($date)
+            ->setTimezone(new DateTimeZone(self::TIMEZONE));
+    }
+}
 
-        // Create timezone rule object for Standard Time
-        $std = new TimezoneRule(TimezoneRule::TYPE_STANDARD);
-        $std->setTzName('US-Eastern-STD');
-        $std->setDtStart(new \DateTime('1967-10-29 2:00:00', $dtz));
-        $std->setTzOffsetFrom('-0400');
-        $std->setTzOffsetTo('-0500');
-        $stdRecurrenceRule = new RecurrenceRule();
-        $stdRecurrenceRule->setFreq(RecurrenceRule::FREQ_YEARLY);
-        $stdRecurrenceRule->setByDay('-1SU');
-        $stdRecurrenceRule->setByMonth(10);
-        $std->setRecurrenceRule($stdRecurrenceRule);
+/**
+ * Adds the properties eluceo/ical's core Event entity doesn't (yet) expose
+ * a first-class setter for: the HTML alternative description (X-ALT-DESC).
+ * See https://ical.poerschke.nrw/docs/custom-properties for the pattern.
+ */
+class ScheduleEvent extends Event
+{
+    protected ?string $descriptionHtml = null;
 
-        // Create timezone rule object for Daylight Saving Time
-        $dst = new TimezoneRule(TimezoneRule::TYPE_DAYLIGHT);
-        $dst->setTzName('US-Eastern-DST');
-        $dst->setDtStart(new \DateTime('1987-04-05 02:00:00', $dtz));
-        $dst->setTzOffsetFrom('-0500');
-        $dst->setTzOffsetTo('-0400');
-        $dstRecurrenceRule = new RecurrenceRule();
-        $dstRecurrenceRule->setFreq(RecurrenceRule::FREQ_YEARLY);
-        $dstRecurrenceRule->setByDay('-1SU');
-        $dstRecurrenceRule->setByMonth(4);
-        $dst->setRecurrenceRule($dstRecurrenceRule);
+    public function setDescriptionHtml(string $descriptionHtml): static
+    {
+        $this->descriptionHtml = $descriptionHtml;
 
-        // Create timezone definition and add rules
-        $vtz = new Timezone($tz);
-        $vtz->addComponent($std);
-        $vtz->addComponent($dst);
+        return $this;
+    }
 
-        return $vtz;
+    public function getDescriptionHtml(): ?string
+    {
+        return $this->descriptionHtml;
+    }
+}
+
+/**
+ * Adds calendar-level X-WR-CALNAME / X-WR-CALDESC properties.
+ */
+class ScheduleCalendar extends Calendar
+{
+    protected ?string $calendarName = null;
+    protected ?string $calendarDescription = null;
+
+    public function setCalendarName(string $name): static
+    {
+        $this->calendarName = $name;
+
+        return $this;
+    }
+
+    public function getCalendarName(): ?string
+    {
+        return $this->calendarName;
+    }
+
+    public function setCalendarDescription(string $description): static
+    {
+        $this->calendarDescription = $description;
+
+        return $this;
+    }
+
+    public function getCalendarDescription(): ?string
+    {
+        return $this->calendarDescription;
+    }
+}
+
+class ScheduleEventFactory extends EventFactory
+{
+    public function createComponent(Event $event): Component
+    {
+        $component = parent::createComponent($event);
+
+        if ($event instanceof ScheduleEvent && $event->getDescriptionHtml() !== null) {
+            // NOTE: Apple/Google clients look for FMTTYPE=text/html on this
+            // property to render it as HTML. Check the Property/Parameter
+            // API for the installed eluceo/ical version (composer show
+            // eluceo/ical) and add the parameter here if available, e.g.
+            // (new Property('X-ALT-DESC', new TextValue($event->getDescriptionHtml())))
+            //     ->withParameter(new Parameter('FMTTYPE', ['text/html']))
+            $component = $component->withProperty(
+                new Property('X-ALT-DESC', new TextValue($event->getDescriptionHtml()))
+            );
+        }
+
+        return $component;
+    }
+}
+
+class ScheduleCalendarFactory extends CalendarFactory
+{
+    protected function getProperties(Calendar $calendar): Generator
+    {
+        yield from parent::getProperties($calendar);
+
+        if ($calendar instanceof ScheduleCalendar) {
+            if ($calendar->getCalendarName() !== null) {
+                yield new Property('X-WR-CALNAME', new TextValue($calendar->getCalendarName()));
+            }
+
+            if ($calendar->getCalendarDescription() !== null) {
+                yield new Property('X-WR-CALDESC', new TextValue($calendar->getCalendarDescription()));
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@
 namespace App\Services\PlayerData\Providers;
 
 
+use App\Collections\CustomCollection;
 use App\Models\Article;
 use App\Models\Badge;
 use App\Models\Contracts\PhotoSource;
@@ -26,12 +27,12 @@ class CareerProvider implements DataProvider
     /**
      * @var Player
      */
-    protected $player;
+    protected Player $player;
 
     /**
      * @var PlayerSeason
      */
-    protected $latestSeason;
+    protected PlayerSeason $latestSeason;
 
     /**
      * CareerProvider constructor.
@@ -143,9 +144,9 @@ class CareerProvider implements DataProvider
      * Get the player's badges.
      * NOTE - this takes advantage of the fact that badges aren't tenanted to the season
      *
-     * @return Collection|Badge[]
+     * @return Collection<Badge>
      */
-    public function getBadges()
+    public function getBadges(): Collection
     {
         // we need to include the id from the glue to be able to do the markup
         return $this->player->badges()
@@ -182,9 +183,9 @@ class CareerProvider implements DataProvider
     /**
      * Gets all the player's seasons
      *
-     * @return Collection|PlayerSeason[]
+     * @return CustomCollection<PlayerSeason>
      */
-    public function getSeasons()
+    public function getSeasons(): CustomCollection
     {
         return $this->player->seasons;
     }

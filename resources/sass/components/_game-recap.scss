@@ -1,0 +1,130 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.page--game {
+  position: relative;
+  z-index: 1;
+}
+
+.recap-loader {
+  padding: variables.$gap-extra-extra-large;
+  text-align: center;
+
+  .loading {
+    @include mixins.box-shadow();
+    width: 200px;
+    padding: variables.$gap-extra-extra-large;
+    border-radius: variables.$border-radius;
+    margin: variables.$gap-extra-large auto;
+
+    .loader {
+      margin-bottom: variables.$gap-large;
+    }
+  }
+}
+
+.recap-quarter {
+  text-align: center;
+  // make padding bigger to account for the scores overlap
+  padding-top: variables.$gap-extra-extra-large;
+  padding-bottom: variables.$gap-extra-extra-large;
+
+  // except for the top of the first one
+  .page--game .recap > div:first-child .quarter-holder & {
+    padding-top: variables.$gap-large;
+  }
+
+  .update {
+    margin: variables.$gap-extra-large 0;
+
+    .msg {
+      margin: 0;
+      font-size: functions.em(18);
+      font-weight: bold;
+      letter-spacing: -.02em;
+    }
+
+    .meta {
+      span,
+      time {
+        vertical-align: middle;
+      }
+
+      .score {
+        color: functions.greyscale(47);
+      }
+
+      time {
+        display: inline-block;
+        font-size: functions.em(14);
+        color: functions.greyscale(71);
+      }
+
+      .share-btns {
+        display: block;
+
+        a {
+          font-size: 1.5em;
+          padding: .25em;
+          color: rgba(0,0,0,.2);
+          transition: all .25s ease;
+
+          &:hover {
+            color: rgba(0,0,0,.4);
+          }
+        }
+      }
+
+      @include mixins.responsive('md') {
+        time {
+          margin: 0 .25em;
+        }
+
+        .share-btns {
+          display: inline-block;
+
+          a {
+            font-size: 1em;
+            padding: 0;
+
+            & + a {
+              margin-left: .25em;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+.recap-quarter-score {
+  position: relative;
+
+  .card {
+    margin: -(variables.$gap-large) variables.$gap;
+
+    @include mixins.responsive(sm) {
+      margin: -(variables.$gap-large) 0;
+    }
+
+    .score h2 {
+      font-size: 1.2em;
+    }
+  }
+
+  .recap-quarter-status {
+    @include mixins.heading();
+    display: none;
+    font-size: functions.em(24);
+    color: colors.$color-white;
+    position: relative;
+    opacity: .5;
+
+    @include mixins.responsive(sm) {
+      display: block;
+    }
+  }
+}

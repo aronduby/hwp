@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\Collections\CustomCollection;
 use App\Collections\StatCollection;
 use App\Models\Traits\Event;
-use App\Models\Traits\UsesCustomCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Schedule
@@ -37,8 +38,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read PhotoAlbum|null $album
  * @property-read GameStatDump $boxStats
  * @property-read Location|null $location
- * @property-read Model|Eloquent $scheduled
- * @property-read StatCollection|Stat[] $stats
+ * @property-read Model $scheduled
+ * @property-read StatCollection<Stat> $stats
  * @property-read GameUpdateDump $updates
  * @method static Builder|Schedule results()
  * @method static Builder|Schedule team($team)
@@ -59,26 +60,28 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Schedule whereStart($value)
  * @method static Builder|Schedule whereTeam($value)
  * @method static Builder|Schedule whereType($value)
- * @mixin Eloquent
  */
+#[Table('schedule')]
+#[CollectedBy(CustomCollection::class)]
 class Schedule extends Model
 {
-    use BelongsToTenants, Event, UsesCustomCollection;
+    use BelongsToTenants, Event;
 
-    const GAME = 'game';
-    const TOURNAMENT = 'tournament';
-
-    protected $table = 'schedule';
+    const string GAME = 'game';
+    const string TOURNAMENT = 'tournament';
 
     /**
-     * Force start an end to be datetimes/carbon
+     * Force start an end to be datetime/carbon
      *
-     * @var array
+     * @return array<string,string>
      */
-    protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'start' => 'datetime',
+            'end' => 'datetime'
+        ];
+    }
 
     public function scheduled(): MorphTo
     {

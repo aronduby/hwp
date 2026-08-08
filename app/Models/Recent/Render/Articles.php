@@ -12,14 +12,14 @@ class Articles extends Renderer
      *
      * @var string
      */
-    protected $view = 'recent.article';
+    protected string $view = 'recent.article';
 
     /**
      * Process the content and save to $this->data
      *
      * @param $content string
      */
-    public function process($content)
+    public function process(string $content): void
     {
         $ids = json_decode($content);
         $article = Article::with('players')

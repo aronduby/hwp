@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\Contracts\Recent as RecentEvent;
 use App\Models\Recent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class RecentListener
 {
@@ -25,7 +23,7 @@ class RecentListener
      * @param  RecentEvent  $event
      * @return void
      */
-    public function handle(RecentEvent $event)
+    public function handle(RecentEvent $event): void
     {
         $recent = new Recent();
         $recent->site_id = $event->getSiteId();

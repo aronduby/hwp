@@ -1,0 +1,45 @@
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.subscribe-modal .body p {
+  margin-top: 0;
+}
+
+.subscribe-providers {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  position: relative;
+  top: variables.$gap;
+
+
+  li {
+    flex: 1;
+    text-align: center;
+    line-height: 1.1em;
+    margin-bottom: variables.$gap;
+
+    a {
+      display: inline-block;
+      padding: variables.$gap;
+      color: colors.$color-black-lighter;
+      transition: all .25s ease-in-out;
+
+      @include mixins.on-event() {
+        text-decoration: none;
+        color: colors.$color-bright-text;
+      }
+
+
+      i.fa {
+        display: block;
+        font-size: 2em;
+        margin-bottom: variables.$gap-small;
+      }
+    }
+  }
+
+}

@@ -1,0 +1,91 @@
+@use "sass:color";
+@use "sass:map";
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+@use "table-fancy-header";
+
+$_edge-padding: 20px;
+
+table.schedule {
+  table-layout: fixed;
+
+  & > thead .schedule-type {
+    width: 100px;
+  }
+
+  tr.in-tournament > td:first-child {
+    padding-left: $_edge-padding * 2;
+  }
+
+  .schedule-type,
+  .schedule-team,
+  .schedule-result,
+  .schedule-score {
+    text-align: center;
+  }
+
+  td.schedule-type {
+    color: color.adjust(grey, $lightness: 20%);
+
+    .fa-square {
+      font-size: .85em;
+    }
+  }
+
+  .schedule-date {
+    width: 15%;
+    white-space: nowrap;
+  }
+
+  .schedule-team {
+    width: 100px;
+  }
+
+  .schedule-title {
+    width: 25%;
+  }
+
+  .schedule-location {
+    white-space: nowrap;
+  }
+
+  .schedule--win {
+    color: colors.$color-win-text;
+  }
+  .schedule--loss {
+    color: colors.$color-loss-text;
+  }
+  .schedule--tie {
+    color: colors.$color-tie-text;
+  }
+
+  > tbody > .schedule-today td {
+    @include mixins.heading();
+    font-size: functions.em(22);
+    letter-spacing: .02em;
+    line-height: .8em;
+    padding: variables.$gap-small * 1.5 variables.$gap-small variables.$gap-small;
+    color: colors.$color-white;
+    background-color: colors.$color-bright-accent;
+    text-align: center;
+  }
+
+  // collapsible tweaks
+  @media (max-width: map.get(variables.$breakpoints, 'lg')) {
+    // redo strip handling
+    tbody > tr:nth-of-type(even) {
+      background-color: variables.$striped-other-color;
+
+      & > td {
+        background-color: transparent;
+      }
+    }
+
+    // make the button groups align start
+    .schedule-btns.action-btns .btn-group.btn-group--end {
+      justify-content: flex-start;
+    }
+  }
+}

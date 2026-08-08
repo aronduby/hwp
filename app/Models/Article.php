@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Traits\HasSiteAndSeason;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Article
@@ -37,24 +37,21 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Article whereTitle($value)
  * @method static Builder|Article whereUpdatedAt($value)
  * @method static Builder|Article whereUrl($value)
- * @mixin Eloquent
  */
+#[Fillable('title', 'url', 'photo', 'description', 'published')]
 class Article extends Model
 {
     use BelongsToTenants, HasSiteAndSeason;
 
-    protected $casts = [
-        'published' => 'datetime'
-    ];
-
-    protected $fillable = [
-        'title',
-        'url',
-        'photo',
-        'description',
-        'published'
-    ];
-
+    /**
+     * @return array[string, string]
+     */
+    protected function casts(): array
+    {
+        return [
+            'published' => 'datetime',
+        ];
+    }
 
     public function players(): BelongsToMany
     {

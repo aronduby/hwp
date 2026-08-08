@@ -17,11 +17,9 @@
     <meta name="msapplication-config" content="/icons/browserconfig.xml?v=69k3Ao4nqq">
     <meta name="theme-color" content="#f5d100">
 
-    <?php if (getenv('APP_ENV') == 'local'): ?>
-        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <?php else: ?>
-        <link rel="stylesheet" href="{{ mix('css/main.css') }}">
-    <?php endif ?>
+    @fonts
+    <!-- TODO -- not sure if this is right for sass -->
+    @vite(['resources/sass/main.scss'])
 
     <link rel="stylesheet" href="/css/scratch.css" />
 
@@ -54,8 +52,9 @@
     <script type="text/html" id="gallery-no-photos-found-tmpl">@include('partials.photos.no-photos-found')</script>
     <script type="text/html" id="load-more-btn">@include('partials.photos.load-more-btn')</script>
 
+    <!-- TODO -- not sure what to do with playerlist -->
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
-    <script src="{{ mix('js/main.js') }}"></script>
+    @vite(['resources/js/main.js'])
 
     @stack('scripts')
 

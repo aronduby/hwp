@@ -1,0 +1,79 @@
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+@use '~/vex-js/dist/css/vex.css';
+@use '~/vex-js/dist/css/vex-theme-default.css';
+
+.vex.vex-theme-note,
+.vex.vex-theme-jobSettings {
+  @extend .vex, .vex-theme-default;
+
+  padding-top: 3em;
+  padding-bottom: 3em;
+
+
+  .vex-content {
+    @include mixins.box-shadow();
+    font-family: variables.$text-font-stack;
+    padding: 0;
+    width: 95%;
+    max-width: 140ch;
+    background: colors.$color-white-bg;
+    border-radius: 0;
+    overflow: hidden;
+
+    @include mixins.responsive(sm) {
+      width: 80%;
+    }
+  }
+
+  header {
+    padding: variables.$gap-extra-large;
+
+    h1 {
+      font-size: 3em;
+      line-height: 1em;
+    }
+
+    time {
+      font-size: .9em;
+      color: colors.$color-white-darker;
+    }
+  }
+
+  .body {
+    padding: variables.$gap-extra-large;
+  }
+
+}
+
+.vex.vex-theme-jobSettings .vex-content {
+  max-width: 750px;
+
+  form {
+    margin-bottom: 0;
+  }
+}
+
+.vex.vex-download-notification {
+    top: 44px;
+    left: auto;
+    bottom: auto;
+    padding: 0;
+    font-size: .85rem;
+    overflow: visible;
+
+    .vex-overlay,
+    .vex-dialog-form .vex-dialog-input {
+        display: none;
+    }
+
+    .vex-content {
+        width: 100%;
+        max-width: 350px;
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.5);
+    }
+
+
+}

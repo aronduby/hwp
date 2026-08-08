@@ -14,16 +14,22 @@ use JsonSerializable;
 class Photo implements PhotoSource, JsonSerializable
 {
 
-    public $original;
-    public $photo;
-    public $thumb;
-    public $banner;
+    public string $original;
+    public string $photo;
+    public string $thumb;
+    public string $banner;
 
-    public $width;
-    public $height;
+    public string $width;
+    public string $height;
 
     /**
-     * @param array{ width: int, height: int, aspect_ratio: float} $data
+     * @param array{
+     *     width: int,
+     *     height: int,
+     *     aspect_ratio: float,
+     *     secure_url: string,
+     *     public_id: string
+     * } $data The data array describing an image in cloudinary
      * @param Cloudinary $cloudinary
      */
     public function __construct(array $data, Cloudinary $cloudinary)
@@ -75,6 +81,6 @@ class Photo implements PhotoSource, JsonSerializable
     /**
      * Used for figuring out the size of the photo after the `main` transformation is applied
      */
-    const MAIN_MAX_H = 2500;
-    const MAIN_MAX_W = 2500;
+    const int MAIN_MAX_H = 2500;
+    const int MAIN_MAX_W = 2500;
 }

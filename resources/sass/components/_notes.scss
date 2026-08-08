@@ -1,0 +1,40 @@
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.note {
+
+  .flex-middle,
+  .flex-top {
+    @include mixins.responsive(sm) {
+      display: flex;
+      align-items: center;
+      gap: variables.$gap-large;
+    }
+
+    & + .flex-middle,
+    & + .flex-top {
+      margin-top: 1em;
+    }
+
+    img + img {
+      margin-left: -2.5em;
+      transform: scale(.85);
+    }
+
+    $depth: 5;
+    @for $i from 1 through 4 {
+       img:nth-child(#{$i}n) {
+         z-index: $depth - $i;
+       }
+    }
+
+    .badgeHolder {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+
+  .flex-top {
+    align-items: flex-start;
+  }
+}

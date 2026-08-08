@@ -12,6 +12,7 @@ use App\Models\Season;
 use Cloudinary\Api\ApiResponse;
 use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,12 +21,12 @@ class CloudinaryMediaService implements MediaService
     /**
      * @var Cloudinary
      */
-    public $cloudinary;
+    public Cloudinary $cloudinary;
 
     /**
      * @var Season $season
      */
-    protected $season;
+    protected Season $season;
 
     /**
      * @var array{
@@ -33,7 +34,7 @@ class CloudinaryMediaService implements MediaService
      *     cloudName: string
      * }
      */
-    protected $service;
+    protected array $service;
 
     /**
      * @param Season $season
@@ -77,7 +78,7 @@ class CloudinaryMediaService implements MediaService
         });
 
         if (!empty($resources)) {
-            $randomItem = array_random($resources);
+            $randomItem = Arr::random($resources);
             return new Photo($randomItem, $this->cloudinary);
         } else {
             return null;
@@ -207,7 +208,7 @@ class CloudinaryMediaService implements MediaService
         });
 
         if (!empty($rsp['resources'])) {
-            $randomItem = array_random($rsp['resources']);
+            $randomItem = Arr::random($rsp['resources']);
             return new Photo($randomItem, $this->cloudinary);
         } else {
             return null;
@@ -229,7 +230,7 @@ class CloudinaryMediaService implements MediaService
         if ($playerSeason) {
             $playerTag = $this->getMetadataNameForPlayerSeason($playerSeason);
             $gamePhotos = $gamePhotos->filter(function($photo) use ($playerTag) {
-                return in_array($playerTag, array_get($photo, 'metadata.players') ?? []);
+                return in_array($playerTag, Arr::get($photo, 'metadata.players') ?? []);
             });
         }
 
@@ -293,7 +294,8 @@ class CloudinaryMediaService implements MediaService
      * @param $items
      * @return mixed
      */
-    protected function mergeServiceData($items) {
+    protected function mergeServiceData($items): mixed
+    {
         foreach ($items as &$item) {
             $item['__service'] = $this->service;
         }
@@ -305,11 +307,15 @@ class CloudinaryMediaService implements MediaService
     /**
      * These are the named transformations we have on cloudinary side, make sure the names match
      */
-    const T_MAIN = 'media_lib_main';
-    const T_THUMB = 'media_lib_thumb';
-    const T_BANNER = 'banner';
+    const string T_MAIN = 'media_lib_main';
+    const string T_THUMB = 'media_lib_thumb';
+    const string T_BANNER = 'banner';
 
-    const DEFAULT_TRANSFORMATIONS = [
+    /**
+     * TODO -- where did we land with this being moved into the creation of cloudinary?
+     * @noinspection PhpUnused
+     */
+    const array DEFAULT_TRANSFORMATIONS = [
         self::T_MAIN => 'c_limit,h_2500,w_2500/q_auto',
         self::T_THUMB => 'c_limit,h_200,w_200/q_auto',
         self::T_BANNER => 'ar_32:9,c_crop,g_faces,h_800/q_auto',
@@ -319,50 +325,50 @@ class CloudinaryMediaService implements MediaService
     /**
      * The maximum limit cloudinary supports, will be used as the default for non-paged items
      */
-    const CLOUDINARY_RESULTS_LIMIT = 500;
+    const int CLOUDINARY_RESULTS_LIMIT = 500;
 
     /**
      * The tag used in cloudinary to mark photos belonging to the homepage
      */
-    const TAG_FOR_HOME = 'home';
+    const string TAG_FOR_HOME = 'home';
 
     /**
      * The tag used in cloudinary to mark photos as the album's cover
      */
-    const TAG_FOR_COVER = 'cover';
+    const string TAG_FOR_COVER = 'cover';
 
     /**
      * The default amount of time to cache data for, in minutes
      */
-    const DEFAULT_CACHE_TIME = 60;
+    const int DEFAULT_CACHE_TIME = 60;
 
     /**
      * The cache key for the home photos cache - to be used with sprintf and the season id
      */
-    const CACHE_KEY_FOR_HOME = 'forHome.%d';
+    const string CACHE_KEY_FOR_HOME = 'forHome.%d';
 
     /**
      * The cache key for the album covers - to be used with sprintf for the season id
      */
-    const CACHE_KEY_FOR_COVERS = 'forCovers.%d';
+    const string CACHE_KEY_FOR_COVERS = 'forCovers.%d';
 
     /**
      * The cache key for the recent listings - to be used with sprint for the recent item id and the limit
      */
-    const CACHE_KEY_FOR_RECENT = 'forRecent.%d.%d';
+    const string CACHE_KEY_FOR_RECENT = 'forRecent.%d.%d';
 
     /**
      * The cache key for an album - to be used with sprintf for the album id
      */
-    const CACHE_KEY_FOR_ALBUM = 'forAlbum.%d';
+    const string CACHE_KEY_FOR_ALBUM = 'forAlbum.%d';
 
     /**
      * The cache key for a player season - to be used with sprintf for the player season id
      */
-    const CACHE_KEY_FOR_PLAYER_SEASON = 'forPlayerSeason.%d';
+    const string CACHE_KEY_FOR_PLAYER_SEASON = 'forPlayerSeason.%d';
 
     /**
      * The cache key for a player season header - to be used with sprintf for the player season id
      */
-    const CACHE_KEY_FOR_PLAYER_SEASON_HEADER = 'forPlayerSeasonHeader.%d';
+    const string CACHE_KEY_FOR_PLAYER_SEASON_HEADER = 'forPlayerSeasonHeader.%d';
 }

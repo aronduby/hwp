@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,13 +23,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|GameUpdateDump whereJson($value)
  * @method static Builder|GameUpdateDump whereSiteId($value)
  * @method static Builder|GameUpdateDump whereUpdatedAt($value)
- * @mixin Eloquent
  */
 class GameUpdateDump extends Model
 {
-    protected $casts = [
-        'json' => 'array'
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'json' => 'array'
+        ];
+    }
 
     public function game(): BelongsTo
     {

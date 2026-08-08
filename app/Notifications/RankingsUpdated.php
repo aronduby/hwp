@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php /** @noinspection PhpUnused */
+
+/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Notifications;
 
@@ -18,20 +20,20 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
     use Loggable, Queueable;
 
     /**
-     * @var Rank
+     * @var ?Rank
      */
-    public $newRank;
+    public ?Rank $newRank;
 
 
     /**
-     * @var Rank
+     * @var ?Rank
      */
-    public $lastRank;
+    public ?Rank $lastRank;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Rank $newRank = null, Rank $lastRank = null)
+    public function __construct(?Rank $newRank = null, ?Rank $lastRank = null)
     {
         $this->newRank = $newRank;
         $this->lastRank = $lastRank;
@@ -51,7 +53,7 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
      * @param  mixed $notifiable
      * @return array
      */
-    public function toLog($notifiable): array
+    public function toLog(mixed $notifiable): array
     {
         return [
             'message' => $this->getMessage(),
@@ -68,7 +70,7 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable): array
+    public function toArray(mixed $notifiable): array
     {
         return [
             //
@@ -78,7 +80,7 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
     public function toFCMTopic(): CloudMessage
     {
         // using withNotification results in fcm code triggering a less nice notification
-        // and data can only be a single level with string values, so json encode
+        // and data can only be a single level with string values, so JSON encode
         return CloudMessage::new()
             ->withData([
                 'notification' => json_encode([
@@ -88,7 +90,8 @@ class RankingsUpdated extends Notification implements ShouldQueue, SendsToFCMTop
             ]);
     }
 
-    public function getMessage() {
+    public function getMessage(): string
+    {
         $moved = '';
         $tied = '';
         $rank = '';

@@ -1,0 +1,96 @@
+@use "sass:color";
+@use "sass:map";
+
+$colors: (
+  primary: #32345d,
+  accent: #f5d100,
+  bright: #2a82c9,
+  bright-accent: #92db00,
+  bright-accent-alt: #f29800,
+  dark: #32345d,
+  win: #92db00,
+  loss: #ea4d0f,
+  tie: #f29800,
+  white: #fff,
+  smoke: #ececec,
+  grey: #bcbcbc,
+  doge: #bcbcbc,
+  black: #000,
+  dark-gray: color.adjust(#000, $lightness: 29%),
+  success: #92db00,
+  warn: #f5d100,
+  danger: #f20000,
+  error: #f20000,
+);
+
+
+$color-primary: map.get($colors, 'primary');
+$color-primary-lighter: color.adjust($color-primary, $lightness: 10%);
+$color-primary-darker: color.adjust($color-primary, $lightness: -5%);
+$color-primary-text: $color-primary;
+$color-primary-bg: $color-primary;
+
+$color-accent: map.get($colors, 'accent');
+$color-accent-lighter: color.adjust($color-accent, $lightness: 10%);
+$color-accent-darker: color.adjust($color-accent, $lightness: -10%);
+$color-accent-text: $color-accent;
+$color-accent-bg: $color-accent;
+
+$color-bright: map.get($colors, 'bright');
+$color-bright-lighter: color.adjust($color-bright, $lightness: 10%);
+$color-bright-darker: color.adjust($color-bright, $lightness: -10%);
+$color-bright-text: $color-bright;
+$color-bright-bg: $color-bright;
+$color-bright-muted: #6ba3d0;
+
+$color-bright-accent: map.get($colors, 'bright-accent');
+$color-bright-accent-lighter: color.adjust($color-bright-accent, $lightness: 10%);
+$color-bright-accent-darker: color.adjust($color-bright-accent, $lightness: -10%);
+$color-bright-accent-text: $color-bright-accent;
+$color-bright-accent-bg: $color-bright-accent;
+
+$color-bright-accent-alt: map.get($colors, 'bright-accent-alt');
+$color-bright-accent-alt-lighter: color.adjust($color-bright-accent-alt, $lightness: 10%);
+$color-bright-accent-alt-darker: color.adjust($color-bright-accent-alt, $lightness: -10%);
+$color-bright-accent-alt-text: $color-bright-accent-alt;
+$color-bright-accent-alt-bg: $color-bright-accent-alt;
+
+$color-dark: $color-primary;
+$color-dark-lighter: $color-primary-lighter;
+$color-dark-darker: $color-primary-darker;
+$color-dark-text: $color-primary-text;
+$color-dark-bg: $color-primary-bg;
+
+$color-win: map.get($colors, 'win');
+$color-win-lighter: color.adjust($color-win, $lightness: 10%);
+$color-win-darker: color.adjust($color-win, $lightness: -10%);
+$color-win-text: $color-win;
+$color-win-bg: $color-win;
+
+$color-loss: map.get($colors, 'loss');
+$color-loss-lighter: color.adjust($color-loss, $lightness: 10%);
+$color-loss-darker: color.adjust($color-loss, $lightness: -10%);
+$color-loss-text: $color-loss;
+$color-loss-bg: $color-loss;
+
+$color-tie: map.get($colors, 'tie');
+$color-tie-lighter: color.adjust($color-tie, $lightness: 10%);
+$color-tie-darker: color.adjust($color-tie, $lightness: -10%);
+$color-tie-text: $color-tie;
+$color-tie-bg: $color-tie;
+
+$color-white: #fff;
+$color-white-lighter: color.adjust($color-white, $lightness: 10%);
+$color-white-darker: color.adjust($color-white, $lightness: -25%);
+$color-white-text: $color-white;
+$color-white-bg: $color-white;
+$color-smoke: map.get($colors, 'smoke');
+
+$color-black: #000;
+$color-black-lighter: color.adjust($color-black, $lightness: 50%);
+$color-black-darker: color.adjust($color-black, $lightness: -10%);
+$color-black-text: #58585a;
+$color-black-bg: #333;
+
+$color-gradient-outside: #030745;
+$color-gradient-inside: #937d00;

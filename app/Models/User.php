@@ -2,84 +2,55 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Notifications\DatabaseNotificationCollection;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\Client;
-use Laravel\Passport\HasApiTokens;
-use Laravel\Passport\Token;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use NunoMazer\Samehouse\BelongsToTenants;
 
-/**
- * App\Models\User
- *
- * @property int $id
- * @property int $site_id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property int $root
- * @property string|null $remember_token
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Collection|Client[] $clients
- * @property-read bool $admin
- * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
- * @property-read Collection|Token[] $tokens
- * @method static Builder|User whereCreatedAt($value)
- * @method static Builder|User whereEmail($value)
- * @method static Builder|User whereId($value)
- * @method static Builder|User whereName($value)
- * @method static Builder|User wherePassword($value)
- * @method static Builder|User whereRememberToken($value)
- * @method static Builder|User whereRoot($value)
- * @method static Builder|User whereSiteId($value)
- * @method static Builder|User whereUpdatedAt($value)
- * @mixin Eloquent
- */
+#[Fillable(['name', 'email', 'password'])]
+#[Hidden(['password', 'remember_token', 'root'])]
 class User extends Authenticatable
 {
-    use BelongsToTenants, Notifiable, HasApiTokens;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable, HasApiTokens, BelongsToTenants;
 
     /**
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
     /**
-     * The attributes that are mass assignable.
+     * Get the attributes that should be cast.
      *
-     * @var array
+     * @return array<string, string>
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token', 'root'
-    ];
-
-    /**
-     * Used in token generation, if they have a login right now they are an admin
-     *
-     * @return bool
-     * @noinspection PhpUnused
-     */
-    public function getAdminAttribute(): bool
+    protected function casts(): array
     {
-        return true;
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    /**
+     * Used in token generation (which I'm not sure we're still doing)
+     * Currently, If you have a login you are considered an admin
+     *
+     * @return Attribute
+     */
+    protected function admin() : Attribute
+    {
+        return Attribute::make(
+            get: fn () => true,
+        );
     }
 }

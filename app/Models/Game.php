@@ -4,20 +4,22 @@ namespace App\Models;
 
 use App\Collections\AdvantagesCollection;
 use App\Collections\BoxscoresCollection;
+use App\Collections\CustomCollection;
 use App\Collections\StatCollection;
 use App\Models\Contracts\IPersistTo;
 use App\Models\Contracts\Shareable;
 use App\Models\Traits\Event;
 use App\Models\Traits\HasSiteAndSeason;
-use App\Models\Traits\UsesCustomCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Game
@@ -39,15 +41,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $score_them
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read AdvantagesCollection|Advantage[] $advantages
+ * @property-read AdvantagesCollection<Advantage> $advantages
  * @property-read PhotoAlbum|null $album
  * @property-read Badge|null $badge
  * @property-read GameStatDump $boxStats
- * @property-read BoxscoresCollection|Boxscore[] $boxscores
+ * @property-read BoxscoresCollection<Boxscore> $boxscores
  * @property-read mixed $result
  * @property-read mixed $title
  * @property-read Location|null $location
- * @property-read StatCollection|Stat[] $stats
+ * @property-read StatCollection<Stat> $stats
  * @property-read Tournament|null $tournament
  * @property-read GameUpdateDump $updates
  * @property-read Season $season
@@ -72,28 +74,29 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Game whereTitleAppend($value)
  * @method static Builder|Game whereTournamentId($value)
  * @method static Builder|Game whereUpdatedAt($value)
- * @mixin Eloquent
+ * @method static Builder|Game withCount($arr)
  */
+#[Table('game_with_album_fallback')]
+#[CollectedBy(CustomCollection::class)]
 class Game extends Model implements Shareable, IPersistTo
 {
 
-    use BelongsToTenants, Event, UsesCustomCollection, HasSiteAndSeason;
+    use BelongsToTenants, Event, HasSiteAndSeason;
 
-    const WIN = 'win';
-    const LOSS = 'loss';
-    const TIE = 'tie';
-
-    protected $table = 'game_with_album_fallback';
+    const string WIN = 'win';
+    const string LOSS = 'loss';
+    const string TIE = 'tie';
 
     /**
-     * Force start an end to be datetimes/carbon
-     *
-     * @var array
+     * Force start an end to be datetime/carbon
      */
-    protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'start' => 'datetime',
+            'end' => 'datetime'
+        ];
+    }
 
     /**
      * @return string - the name of the table to read from (should be the same as the default $table)
@@ -111,16 +114,18 @@ class Game extends Model implements Shareable, IPersistTo
         return 'games';
     }
 
-    /** @noinspection PhpUnused */
-    public function getResultAttribute()
+    protected function result(): Attribute
     {
-        return $this->status();
+        return Attribute::make(
+            get: fn () => $this->status(),
+        );
     }
 
-    /** @noinspection PhpUnused */
-    public function getTitleAttribute(): string
+    protected function title(): Attribute
     {
-        return trans('misc.'.$this->team) . ' vs ' . $this->opponent;
+        return Attribute::make(
+            get: fn () => trans('misc.'.$this->team) . ' vs ' . $this->opponent,
+        );
     }
 
     public function tournament(): BelongsTo
@@ -183,16 +188,11 @@ class Game extends Model implements Shareable, IPersistTo
      */
     public static function oppositeStatus($status): string
     {
-        switch ($status) {
-            case Game::WIN:
-                return Game::LOSS;
-
-            case Game::LOSS:
-                return Game::WIN;
-
-            default:
-                return Game::TIE;
-        }
+        return match ($status) {
+            Game::WIN => Game::LOSS,
+            Game::LOSS => Game::WIN,
+            default => Game::TIE,
+        };
     }
 
     /**

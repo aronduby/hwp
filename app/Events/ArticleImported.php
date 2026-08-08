@@ -16,17 +16,17 @@ class ArticleImported implements RecentEvent, ShouldQueue
     /**
      * @var Site
      */
-    public $site;
+    public Site $site;
 
     /**
      * @var Season
      */
-    public $season;
+    public Season $season;
 
     /**
      * @var int
      */
-    public $articleId;
+    public int $articleId;
 
     /**
      * Create a new event

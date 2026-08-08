@@ -1,6 +1,4 @@
-<?php /** @noinspection PhpUndefinedMethodInspection */
-
-/** @noinspection PhpUnused */
+<?php
 
 namespace App\Http\Controllers\FirebaseCloudMessaging;
 
@@ -16,12 +14,12 @@ class Subscription extends Controller
     /**
      * @var ActiveSite $site
      */
-    protected $site;
+    protected ActiveSite $site;
 
     /**
      * @var Messaging $messaging
      */
-    protected $messaging;
+    protected Messaging $messaging;
 
     /**
      * @param ActiveSite $site
@@ -39,7 +37,7 @@ class Subscription extends Controller
             'token' => 'required'
         ]);
 
-        $token = $request->get('token');
+        $token = $request->input('token');
 
         // if the token already exists don't bother
         $existing = PushSubscription::where('token', '=', $token)->first();
@@ -63,7 +61,7 @@ class Subscription extends Controller
             'token' => 'required'
         ]);
 
-        $token = $request->get('token');
+        $token = $request->input('token');
         $deletedRows = PushSubscription::where('token', '=', $token)->delete();
 
         $topic = $this->site->routeNotificationForFcmTopic();

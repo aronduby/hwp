@@ -1,10 +1,11 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\UsesCloudinary;
 use App\Models\ActiveSeason;
-use App\Services\MediaServices\CloudinaryMediaService;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 /**
@@ -13,31 +14,19 @@ use Illuminate\Console\Command;
  *
  * Probably want to use this with the {@see Tenanted} command to specify which domain/season
  */
+#[Signature('cloudinary:setup')]
+#[Description('Runs all the cloudinary tasks to setup a new env')]
 class CloudinarySetup extends Command
 {
 
     use UsesCloudinary;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'cloudinary:setup';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Runs all the cloudinary tasks to setup a new env';
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         /** @var ActiveSeason $season */
         $season = resolve(ActiveSeason::class);

@@ -23,7 +23,7 @@ trait Event
      * @param Builder $query
      * @return Builder $query
      */
-    public function scopeUpcoming(Builder $query)
+    public function scopeUpcoming(Builder $query): Builder
     {
         $today = Carbon::today();
         return $query->where('end', '>=', $today)
@@ -37,7 +37,7 @@ trait Event
      * @param string $team
      * @return Builder $query
      */
-    public function scopeTeam(Builder $query, $team)
+    public function scopeTeam(Builder $query, string $team): Builder
     {
         return $query->where('team', '=', strtoupper($team));
     }
@@ -48,18 +48,18 @@ trait Event
      * @param Builder $query
      * @return Builder $query
      */
-    public function scopeResults(Builder $query)
+    public function scopeResults(Builder $query): Builder
     {
         return $query->whereNotNull('score_us')
             ->orderBy('start', 'desc');
     }
 
     /**
-     * Get's the win/loss/tie status of the event, or false
+     * Get the win/loss/tie status of the event, or false
      *
      * @return bool|string
      */
-    public function status()
+    public function status(): bool|string
     {
         if ($this->score_us > $this->score_them) {
             return Game::WIN;

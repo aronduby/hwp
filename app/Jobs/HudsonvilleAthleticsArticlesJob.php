@@ -9,13 +9,13 @@ class HudsonvilleAthleticsArticlesJob extends Job implements IUsesJobInstance
 {
     use HasJobInstance;
 
-    const KEY = 'HAI';
+    const string KEY = 'HAI';
 
     /**
      * The command name to run, will be called with the instance
      *
      * @var string
      */
-    static $commandString = 'parsers:articles:hudsonvilleathletics';
+    static string $commandString = 'parsers:articles:hudsonvilleathletics';
 
 }

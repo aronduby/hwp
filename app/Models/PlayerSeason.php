@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Collections\CustomCollection;
 use App\Models\Traits\HasStats;
-use App\Models\Traits\UsesCustomCollection;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\PlayerSeason
@@ -45,14 +46,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|PlayerSeason whereTeam($value)
  * @method static Builder|PlayerSeason whereTitle($value)
  * @method static Builder|PlayerSeason whereUpdatedAt($value)
- * @mixin Eloquent
  */
+#[CollectedBy(CustomCollection::class)]
 class PlayerSeason extends Model
 {
-    use BelongsToTenants, UsesCustomCollection, HasStats;
+    use BelongsToTenants, HasStats;
 
-    const FIELD = 'FIELD';
-    const GOALIE = 'GOALIE';
+    const string FIELD = 'FIELD';
+    const string GOALIE = 'GOALIE';
 
     protected $table = 'player_season';
 
@@ -60,50 +61,47 @@ class PlayerSeason extends Model
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    protected $tenantColumns = ['site_id'];
+    protected array $tenantColumns = ['site_id'];
 
     /**
      * Casts the specific columns to specific types
      *
-     * @var string[]
+     * @return array<string, string>
      */
-    protected $casts = [
-        'other_numbers' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'other_numbers' => 'array',
+        ];
+    }
 
     /**
      * Shortcut to get the name for the attached player
-     *
-     * @return string
-     * @noinspection PhpUnused
      */
-    public function getNameAttribute(): ?string
+    protected function name(): Attribute
     {
-        return $this->player ?
-            $this->player->name :
-            null;
+        return Attribute::make(
+            get: fn() => $this->player ? $this->player->name : null,
+        );
     }
 
     /**
      * Shortcut to get the name_key for the attached player
-     *
-     * @return string
-     * @noinspection PhpUnused
      */
-    public function getNameKeyAttribute(): ?string
+    protected function nameKey(): Attribute
     {
-        return $this->player ?
-            $this->player->name_key :
-            null;
+        return Attribute::make(
+            get: fn() => $this->player ? $this->player->name_key : null,
+        );
     }
 
     /**
      * Gets the players number, optionally limited to a team in the other_numbers array
      *
      * @param string|null $team
-     * @return string
+     * @return ?string
      */
     public function getNumber(string $team = null): ?string
     {
@@ -130,7 +128,7 @@ class PlayerSeason extends Model
                 ],
                 ($this->other_numbers['other'] ?? [])
             );
-            $allNumbers = array_filter($allNumbers);;
+            $allNumbers = array_filter($allNumbers);
             return implode($separator, $allNumbers);
         } else {
             return $this->number;

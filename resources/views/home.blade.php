@@ -17,5 +17,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ mix('js/home.js') }}"></script>
+    @vite(['resources/js/home.js'])
 @endpush

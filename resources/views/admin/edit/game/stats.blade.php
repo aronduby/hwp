@@ -104,7 +104,7 @@
                 <h1><span class="text--muted">@lang('stats.goalie')</span> @lang('stats.stats')</h1>
             </header>
 
-            <table class="table table--condensed stats-table-edit">
+            <table class="table table--condensed table--striped stats-table-edit">
                 <thead>
                     <tr>
                         <th>@lang('stats.name')</th>
@@ -199,7 +199,7 @@
                 <h1><span class="text--muted">@lang('stats.field')</span> @lang('stats.stats')</h1>
             </header>
 
-            <table class="table table--condensed stats-table-edit stats-table--hasTotals">
+            <table class="table table--condensed table--striped stats-table--hasTotals stats-table-edit">
                 <thead>
                     <tr>
                         <th rowspan="2">@lang('stats.name')</th>
@@ -395,7 +395,7 @@
                 <h1><span class="text--muted">@lang('stats.opponent')</span> @lang('stats.goals')</h1>
             </header>
 
-            <table class="table table--condensed stats-table-edit">
+            <table class="table table--condensed table--striped stats-table-edit">
                 <thead>
                     <tr>
                         <th rowspan="2">@lang('stats.name')</th>
@@ -469,7 +469,7 @@
                 <h1><span class="text--muted">@lang('stats.advantages')</span> @lang('stats.converted')</h1>
             </header>
 
-            <table class="table table--condensed stats-table-edit">
+            <table class="table table--condensed table--striped stats-table-edit">
                 <thead>
                     <tr>
                         <th>@lang('stats.team')</th>

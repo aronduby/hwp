@@ -1,0 +1,47 @@
+@use "sass:color";
+@use "../abstracts/colors";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
+.full-gallery {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.full-gallery a {
+  display: flex;
+  flex: 1 1 30%;
+  // width: 200px;
+  // height: 200px;
+  border: 1px solid #eee;
+  padding: .5em;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  margin: variables.$gap;
+
+  @include mixins.responsive(md) {
+    flex: 1 1 20%;
+  }
+}
+
+.full-gallery a img {
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+}
+
+.full-gallery a:hover {
+  background: colors.$color-accent;
+  border-color: color.adjust(colors.$color-accent, $lightness: -5%);
+}
+
+.gallery-empty {
+  font-family: variables.$heading-font-stack;
+  font-weight: normal;
+  font-size: 2em;
+  padding: 3em;
+  opacity: .8;
+}

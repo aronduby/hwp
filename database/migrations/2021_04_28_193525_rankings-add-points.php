@@ -11,7 +11,7 @@ class RankingsAddPoints extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('ranks', function(Blueprint $table) {
             $table->integer('points')
@@ -24,7 +24,7 @@ class RankingsAddPoints extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('ranks', function(Blueprint $table) {
             $table->dropColumn('points');

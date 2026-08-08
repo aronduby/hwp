@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Duby
- * Date: 9/21/2016
- * Time: 10:18 PM
- */
 
 namespace App\Console\Commands\Traits;
 
+use Exception;
 use Fusonic\OpenGraph\Consumer AS OpenGraphConsumer;
 
 trait HasOGPhoto
 {
 
-    protected function getPhoto($url)
+    protected function getPhoto($url): string
     {
         $consumer = new OpenGraphConsumer();
         try {
@@ -26,8 +21,7 @@ trait HasOGPhoto
             } else {
                 return '';
             }
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logError($e->getMessage());
             return '';
         }

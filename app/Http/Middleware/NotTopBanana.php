@@ -7,8 +7,8 @@ use Closure;
 class NotTopBanana extends Grounded
 {
 
-    protected $configKey = 'not-top-banana';
-    protected $viewName = 'not-top-banana';
-    protected $requestKey = 'sorry';
+    protected string $configKey = 'not-top-banana';
+    protected string $viewName = 'not-top-banana';
+    protected string $requestKey = 'sorry';
 
 }

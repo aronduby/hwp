@@ -7,6 +7,7 @@ use App\Models\Season;
 use App\Services\MediaServices\CloudinaryMediaService;
 use App\Services\MediaServices\MediaService;
 use App\Services\MediaServices\ShutterflyMediaService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class MediaServiceProvider extends ServiceProvider
@@ -23,7 +24,7 @@ class MediaServiceProvider extends ServiceProvider
                 return new CloudinaryMediaService($season);
 
             default:
-                \Log::warning('Unknown media provider supplied, falling back to Shutterfly: ' . $season->media_service);
+                Log::warning('Unknown media provider supplied, falling back to Shutterfly: ' . $season->media_service);
                 return new ShutterflyMediaService();
         }
     }
@@ -31,11 +32,12 @@ class MediaServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      *
+     * @param ActiveSeason $activeSeason
      * @return void
      */
-    public function boot(ActiveSeason $activeSeason)
+    public function boot(ActiveSeason $activeSeason): void
     {
-        $this->app->bind('App\Services\MediaServices\MediaService', function ($app) use ($activeSeason) {
+        $this->app->bind('App\Services\MediaServices\MediaService', function () use ($activeSeason) {
             return self::getServiceForSeason($activeSeason);
         });
     }

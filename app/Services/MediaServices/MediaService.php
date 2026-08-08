@@ -18,7 +18,7 @@ interface MediaService
     /**
      * If it's doing pagination, how many per page
      */
-    const PER_PAGE = 48;
+    const int PER_PAGE = 48;
 
     /**
      * Get a single photo for display on the homepage
@@ -74,7 +74,7 @@ interface MediaService
      * Get a single photo to be used in the header for the supplied player season
      *
      * @param PlayerSeason $playerSeason
-     * @return PhotoSource
+     * @return ?PhotoSource
      */
     public function headerForPlayerSeason(PlayerSeason $playerSeason): ?PhotoSource;
 

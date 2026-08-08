@@ -10,7 +10,7 @@ class CreatePlayers extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('players', function (Blueprint $table) {
             $table->increments('id');
@@ -27,7 +27,7 @@ class CreatePlayers extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('players');
     }

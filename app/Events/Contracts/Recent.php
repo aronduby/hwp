@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Duby
- * Date: 9/21/2016
- * Time: 11:31 PM
- */
 
 namespace App\Events\Contracts;
-
 
 interface Recent
 {
@@ -16,34 +9,34 @@ interface Recent
      *
      * @return integer
      */
-    public function getSiteId();
+    public function getSiteId(): int;
 
     /**
      * Get the value for season_id
      *
      * @return integer
      */
-    public function getSeasonId();
+    public function getSeasonId(): int;
 
     /**
      * Get the value for renderer
      *
      * @return string
      */
-    public function getRenderer();
+    public function getRenderer(): string;
 
     /**
      * Get the value for content
      *
      * @return string
      */
-    public function getContent();
+    public function getContent(): string;
 
     /**
      * Get the value for sticky
      *
      * @return boolean
      */
-    public function getSticky();
+    public function getSticky(): bool;
 
 }

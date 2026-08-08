@@ -11,7 +11,7 @@ class RankingTitle extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('seasons', function(Blueprint $table) {
             $table->string('ranking_title')
@@ -25,7 +25,7 @@ class RankingTitle extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('seasons', function(Blueprint $table) {
             $table->dropColumn('ranking_title');

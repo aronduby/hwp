@@ -12,17 +12,16 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-
 class RankingScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param Builder $builder
+     * @param Model $model
      * @return Builder
      */
-    public function apply(Builder $builder, Model $model)
+    public function apply(Builder $builder, Model $model): Builder
     {
         return $builder->with(['ranks' => function($query) {
             $query->orderBy('rank', 'asc');

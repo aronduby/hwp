@@ -2,9 +2,6 @@
 
 namespace App\Notifications\Traits;
 
-
-use Illuminate\Support\Facades\App;
-
 trait Loggable
 {
 
@@ -13,7 +10,7 @@ trait Loggable
      *
      * @return bool
      */
-    public function sendToLog()
+    public function sendToLog(): bool
     {
         return env('LOG_NOTIFICATIONS');
     }

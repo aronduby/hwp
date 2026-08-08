@@ -6,21 +6,21 @@ use App\Services\MediaServices\MediaService;
 
 class Photos extends Renderer
 {
-    const BG_LIMIT = 20;
+    const int BG_LIMIT = 20;
 
     /**
      * The blade template to use
      *
      * @var string
      */
-    protected $view = 'recent.photos';
+    protected string $view = 'recent.photos';
 
     /**
      * Process the content and save to $this->data
      *
      * @param $content string
      */
-    public function process($content)
+    public function process(string $content): void
     {
         /**
          * @var MediaService $mediaService

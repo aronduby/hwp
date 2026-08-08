@@ -1,27 +1,18 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Models\Game;
 use App\Notifications\GameResults;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Landlord;
+use NunoMazer\Samehouse\Facades\Landlord;
 
+#[Signature('events:manual-game-results-notification {gameId : the ID of the game to notify about}')]
+#[Description('Manually triggers game results notification for the supplied game')]
 class ManualGameResultsNotificationCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'events:manual-game-results-notification {gameId : the ID of the game to notify about}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Manually triggers game results notification for the supplied game';
 
     /**
      * Create a new command instance.
@@ -36,7 +27,7 @@ class ManualGameResultsNotificationCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         Landlord::disable();
 

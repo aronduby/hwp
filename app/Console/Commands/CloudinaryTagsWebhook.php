@@ -1,11 +1,15 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\UsesCloudinary;
 use App\Models\ActiveSeason;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Message;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 
 /**
  * # Cloudinary - Tags Webhook
@@ -14,34 +18,23 @@ use GuzzleHttp\Psr7\Message;
  *
  * Probably want to use this with the {@see Tenanted} command to specify which domain/season
  */
+#[Signature('cloudinary:tags-webhook')]
+#[Description('Creates or updates the tagging webhook for the current season')]
 class CloudinaryTagsWebhook extends LoggedCommand
 {
 
     /**
-     * We're keeping this for the easy verification, we can't use the actual SDK for for these methods
+     * We're keeping this for the easy verification, we can't use the actual SDK for these methods
      */
     use UsesCloudinary;
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'cloudinary:tags-webhook';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Creates or updates the tagging webhook for the current season';
 
     /**
      * Execute the console command.
      *
      * @return int
+     * @throws GuzzleException
      */
-    public function handle()
+    public function handle(): int
     {
         /** @var ActiveSeason $season */
         $season = resolve(ActiveSeason::class);
@@ -53,7 +46,7 @@ class CloudinaryTagsWebhook extends LoggedCommand
         try {
             $settings = $season->settings->get('cloudinary');
             $eventType = 'resource_tags_changed';
-            $client = new \GuzzleHttp\Client([
+            $client = new Client([
                 'base_uri' => "https://api.cloudinary.com/api/v1_1/{$settings['cloud_name']}/",
                 'auth' => [$settings['api_key'], $settings['api_secret']],
             ]);
@@ -77,18 +70,15 @@ class CloudinaryTagsWebhook extends LoggedCommand
                     // vs create a totally new one
 
                     // remember that the site domain ignores the TLD
-                    $matchesDomainAndPath = starts_with($urlParts['host'], $domain.'.')
+                    $matchesDomainAndPath = str_starts_with($urlParts['host'], $domain.'.')
                         && $urlParts['path'] === $path;
 
                     if ($matchesDomainAndPath) {
-                        if ($urlParts['query'] === "season_id={$seasonId}") {
-                            // we have the same season, we can return true without any extra since the full thing exists
-                            return true;
-                        } else {
+                        if ($urlParts['query'] !== "season_id={$seasonId}") {
                             // different season, need to mark the id to update but still return true to stop searching
                             $idToUpdate = $trigger->id;
-                            return true;
                         }
+                        return true;
                     } else {
                         return false;
                     }

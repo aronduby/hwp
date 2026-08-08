@@ -19,7 +19,7 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
     /**
      * @var Article
      */
-    protected $article;
+    protected Article $article;
 
     /**
      * Create a new notification instance.
@@ -38,7 +38,7 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable): array
+    public function via(mixed $notifiable): array
     {
         return $this->sendToLog() ? [LogChannel::class] : [FCMTopicChannel::class];
     }
@@ -49,7 +49,7 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toLog($notifiable): array
+    public function toLog(mixed $notifiable): array
     {
         return [
             'message' => $this->getMessage(),
@@ -63,14 +63,15 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable): array
+    public function toArray(mixed $notifiable): array
     {
         return [
             //
         ];
     }
 
-    protected function getMessage() {
+    protected function getMessage(): string
+    {
         return trans('notifications.articleImported', [
             'title' => $this->article->title,
             'url' => $this->article->url
@@ -80,7 +81,7 @@ class ArticleImported extends Notification implements ShouldQueue, SendsToFCMTop
     public function toFCMTopic(): CloudMessage
     {
         // using withNotification results in fcm code triggering a less nice notification
-        // and data can only be a single level with string values, so json encode
+        // and data can only be a single level with string values, so JSON encode
         return CloudMessage::new()
             ->withData([
                 'notification' => json_encode([

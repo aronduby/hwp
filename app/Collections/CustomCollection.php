@@ -8,7 +8,7 @@
 
 namespace App\Collections;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class CustomCollection extends Collection
 {
@@ -17,11 +17,11 @@ class CustomCollection extends Collection
      * For use where the value you are grouping by is a comma separated list (like mysql set).
      * This will create clones for each of the csv so they are in the individual groups
      *
-     * @param $groupBy
+     * @param string $groupBy
      * @param bool $preserveKeys
      * @return static
      */
-    public function groupBySet($groupBy, $preserveKeys = false)
+    public function groupBySet(string $groupBy, bool $preserveKeys = false): Collection
     {
         $mapped = $this->flatMap(function($item) use ($groupBy) {
             $val = $item->$groupBy;
@@ -50,7 +50,7 @@ class CustomCollection extends Collection
      * @param bool $preserveKeys
      * @return static
      */
-    public function groupByDate($groupBy, $format, $preserveKeys = false)
+    public function groupByDate(string $groupBy, string $format, bool $preserveKeys = false): Collection
     {
         $groupKey = '__'.$groupBy;
 
@@ -65,7 +65,7 @@ class CustomCollection extends Collection
      * @param string|null $team
      * @return CustomCollection
      */
-    public function sortByNumber(string $team = null)
+    public function sortByNumber(string $team = null): Collection
     {
         return $this->sortBy(function($ps) use ($team) {
             return $ps->getNumber($team);

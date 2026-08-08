@@ -1,0 +1,30 @@
+@use "../abstracts/colors";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
+.card .player-articles-body {
+  padding: 0;
+
+  > article {
+    padding: variables.$gap-large;
+    background-color: variables.$striped-base-color;
+
+    h2 {
+      line-height: 1.2em;
+    }
+
+    time {
+      font-size: functions.em(14);
+      letter-spacing: -.02em;
+      color: colors.$color-white-darker;
+    }
+
+    p {
+      margin: variables.$gap 0 0 0;
+    }
+
+    &:nth-child(even) {
+      background-color: variables.$striped-other-color;
+    }
+  }
+}

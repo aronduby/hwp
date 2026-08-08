@@ -5,7 +5,7 @@ use App\Database\Migrations\Migration;
 
 class CreateStats extends Migration
 {
-    protected $fields = [
+    protected array $fields = [
         'goals',
         'shots',
         'assists',
@@ -37,7 +37,7 @@ class CreateStats extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         $this->schema->create('stats', function (Blueprint $table) {
             $table->increments('id');
@@ -66,7 +66,7 @@ class CreateStats extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->schema->drop('stats');
     }

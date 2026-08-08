@@ -4,19 +4,17 @@ namespace App\Models;
 
 use App\Models\Traits\HasSettings;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
- * Class JobSetting
+ * Class JobInstance
  *
  * @package App\Models
- * @mixin Eloquent
  * @property int id
  * @property int $site_id
  * @property string $job
@@ -45,17 +43,20 @@ class JobInstance extends Model
      * Specify the tenant columns to use for this model
      * This always ignores the season tenant check
      *
-     * @var array
+     * @var string[]
      */
-    public $tenantColumns = ['site_id'];
+    public array $tenantColumns = ['site_id'];
 
     /**
      * Cast the settings field to an array
-     * @var string[]
+     * @return array<string, string>
      */
-    protected $casts = [
-        'last_ran' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'last_ran' => 'datetime'
+        ];
+    }
 
     /**
      * Has related logs

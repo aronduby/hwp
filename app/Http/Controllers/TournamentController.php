@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Tournament;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\View\View;
 
 class TournamentController extends Controller
 {
-    public function tournament(Tournament $tournament)
+    public function tournament(Tournament $tournament): View
     {
         $games = $tournament->games()
             ->withCount(['album', 'stats', 'updates'])
@@ -25,7 +23,7 @@ class TournamentController extends Controller
         return view('partials.tournament.events', compact('tournament', 'games', 'upcoming', 'headerPhoto'));
     }
 
-    public function photos(Tournament $tournament)
+    public function photos(Tournament $tournament): View
     {
         $headerPhoto = $this->getCover($tournament);
 

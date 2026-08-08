@@ -1,0 +1,68 @@
+@use "colors";
+
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+/// Regular font family
+/// @type List
+$text-font-stack: 'Play', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
+
+$heading-font-stack: 'League Gothic', $text-font-stack;
+
+/// Code (monospace) font family
+/// @type List
+$code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Monaco', monospace !default;
+
+// sizing
+$gap-extra-small: .1em;
+$gap-small: .25em;
+$gap: .5em;
+$gap-bigger: .75em;
+$gap-large: 1em;
+$gap-extra-large: 1.25em;
+$gap-extra-extra-large: 2em;
+$gaps: (
+	'xs': $gap-extra-small,
+	'sm': $gap-small,
+	'md': $gap,
+	'plus': $gap-bigger,
+	'lg': $gap-large,
+	'xl': $gap-extra-large,
+	'xxl': $gap-extra-extra-large,
+);
+
+
+
+/// Breakpoints map
+/// @prop {String} keys - Keys are identifiers mapped to a given length
+/// @prop {Map} values - Values are actual breakpoints expressed in pixels
+$breakpoints: (
+  'sm': 48em,
+  'md': 64em,
+  'lg': 75em,
+) !default;
+
+
+$grid-sizes: (
+  'sm': 7px,
+  'md': 15px,
+  'lg': 30px
+);
+
+
+
+
+/// Relative or absolute URL where all assets are served from
+/// @type String
+/// @example scss - When using a CDN
+///   $base-url: 'http://cdn.example.com/assets/';
+$base-url: '/assets/' !default;
+
+
+
+// Striped Things
+$striped-base-color: none;
+$striped-other-color: rgba(0,0,0,.06);
+
+$border-radius: 4px;
