@@ -67,7 +67,7 @@ $id = $job['job'] . '-'.$instance['id'];
                             <h3>Logs</h3>
                         </header>
 
-                        <pre>@forelse($instance['logs'] as $log)<time datetime="{{$log['created_at']}}">@stamp(new \Carbon\Carbon($log['created_at']))</time>{{ trim($log['output'])}}<hr>@empty no log data yet @endforelse</pre>
+                        <pre>@forelse($instance['logs'] as $log)<time datetime="{{$log['created_at']}}">@stamp(new Illuminate\Support\Carbon($log['created_at']))</time>{{ trim($log['output'])}}<hr>@empty no log data yet @endforelse</pre>
                     </section>
                 </div>
 

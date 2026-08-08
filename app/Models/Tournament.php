@@ -5,12 +5,12 @@ namespace App\Models;
 use App\Collections\CustomCollection;
 use App\Models\Traits\Event;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Torzer\Awesome\Landlord\BelongsToTenants;
 use Illuminate\Database\Eloquent\Model;
+use NunoMazer\Samehouse\BelongsToTenants;
 
 /**
  * App\Models\Tournament
@@ -50,8 +50,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Tournament whereTitle($value)
  * @method static Builder|Tournament whereUpdatedAt($value)
  * @method static Builder|Tournament withCount($value)
- * @mixin Eloquent
  */
+
+#[CollectedBy(CustomCollection::class)]
 class Tournament extends Model
 {
     use BelongsToTenants, Event;
@@ -67,7 +68,7 @@ class Tournament extends Model
     ];
 
     /** @noinspection PhpUnused */
-    public function getResultAttribute($value)
+    public function getResultAttribute($value): array|string|null
     {
         if ($value && strlen($value)) {
             return $value;
@@ -92,7 +93,7 @@ class Tournament extends Model
     public function getRecentTitleAttribute(): string
     {
         $title = trans('misc.'.$this->team) . ' ' . trans('misc.finished') . ' ' . $this->result;
-        if (ends_with($this->title, 's')) {
+        if (str_ends_with($this->title, 's')) {
             $title .= ' ' . trans('misc.at');
         } else {
             $title .= ' ' . trans('misc.atThe');

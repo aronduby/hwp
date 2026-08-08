@@ -8,7 +8,8 @@
 
 namespace App\Collections;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 
 class CustomCollection extends Collection
 {
@@ -21,7 +22,7 @@ class CustomCollection extends Collection
      * @param bool $preserveKeys
      * @return static
      */
-    public function groupBySet(string $groupBy, bool $preserveKeys = false): Collection
+    public function groupBySet(string $groupBy, bool $preserveKeys = false): BaseCollection
     {
         $mapped = $this->flatMap(function($item) use ($groupBy) {
             $val = $item->$groupBy;

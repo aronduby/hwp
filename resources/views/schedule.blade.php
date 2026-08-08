@@ -38,7 +38,7 @@
                                             <div class="bg--bright"></div>
                                             <div class="bg--grid"></div>
                                         </div>
-                                        <h1>@day(new \Carbon\Carbon($date))</h1>
+                                        <h1>@day(new Illuminate\Support\Carbon($date))</h1>
                                     </header>
 
                                     <table class="body upcoming table table--striped">
