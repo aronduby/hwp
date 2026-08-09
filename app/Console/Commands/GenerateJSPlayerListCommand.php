@@ -69,8 +69,8 @@ class GenerateJSPlayerListCommand extends Command
         $byName = [];
         $byNameKey = [];
         $players->each(function($player) use (&$byName, &$byNameKey) {
-            $byName[$player->name] = route('players', ['nameKey' => $player->name_key], false);
-            $byNameKey[$player->name_key] = route('players', ['nameKey' => $player->name_key], false);
+            $byName[$player->name] = route('players', ['player' => $player], false);
+            $byNameKey[$player->name_key] = route('players', ['player' => $player], false);
         });
 
         $content = view($this->templatePath, compact('byName', 'byNameKey'));
