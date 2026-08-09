@@ -26,14 +26,14 @@
                         @foreach($seasons as $season)
                             <li class="{{$season->season->id == $activeSeasonId ? 'active' : ''}}">
                                 <a class="season"
-                                   href="@route('players', ['nameKey' => $player->name_key, 'season' => $season->season->id])"
+                                   href="@route('players', ['player' => $player, 'season' => $season->season->id])"
                                    title="@lang('players.viewSeason')"
                                 >{{ $season->season->short_title }}</a>
                             </li>
                         @endforeach
                         <li class="{{$activeSeasonId === 0 ? 'active' : ''}}">
                             <a class="all"
-                               href="@route('players', ['nameKey' => $player->name_key, 'season' => 0])"
+                               href="@route('players', ['player' => $player, 'season' => 0])"
                                title="@lang('players.viewSeason')"
                             >@lang('players.all')</a>
                         </li>

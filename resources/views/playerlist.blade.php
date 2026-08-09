@@ -32,11 +32,11 @@
                     </header>
 
                     <ul class="player-list team--varsity">
-                        @foreach($playerList->team('V')->sortByNumber('V') as $player)
+                        @foreach($playerList->team('V')->sortByNumber('V') as $playerSeason)
                             <li>
-                                <a href="@route('players', ['player' => $player])">
-                                    <span class="player--number">{{$player->getNumber('V')}}</span>
-                                    <span class="player--name">{{$player->name}}</span>
+                                <a href="@route('players', ['player' => $playerSeason->player])">
+                                    <span class="player--number">{{$playerSeason->getNumber('V')}}</span>
+                                    <span class="player--name">{{$playerSeason->name}}</span>
                                 </a>
                             </li>
                         @endforeach
@@ -53,11 +53,11 @@
                     </header>
 
                     <ul class="player-list team--jv">
-                        @foreach($playerList->team('JV')->sortByNumber('JV') as $player)
+                        @foreach($playerList->team('JV')->sortByNumber('JV') as $playerSeason)
                             <li>
-                                <a href="@route('players', ['player' => $player])">
-                                    <span class="player--number">{{$player->getNumber('JV')}}</span>
-                                    <span class="player--name">{{$player->name}}</span>
+                                <a href="@route('players', ['player' => $playerSeason->player])">
+                                    <span class="player--number">{{$playerSeason->getNumber('JV')}}</span>
+                                    <span class="player--name">{{$playerSeason->name}}</span>
                                 </a>
                             </li>
                         @endforeach
@@ -67,22 +67,22 @@
         @endif
 
         @if($playerList->team('STAFF'))
-        <section class="page-section container">
-            <header class="divider--bottom text-align--center">
-                <h1>@lang('misc.STAFF')</h1>
-            </header>
+            <section class="page-section container">
+                <header class="divider--bottom text-align--center">
+                    <h1>@lang('misc.STAFF')</h1>
+                </header>
 
-            <ul class="player-list team--staff">
-                @foreach($playerList->team('STAFF') as $player)
-                    <li>
-                        <a href="@route('players', ['player' => $player])">
-                            <span class="player--name">{{$player->name}}</span>
-                            <span class="player--title">{{$player->title}}</span>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </section>
+                <ul class="player-list team--staff">
+                    @foreach($playerList->team('STAFF') as $playerSeason)
+                        <li>
+                            <a href="@route('players', ['player' => $playerSeason->player])">
+                                <span class="player--name">{{$playerSeason->name}}</span>
+                                <span class="player--title">{{$playerSeason->title}}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </section>
         @endif
 
 

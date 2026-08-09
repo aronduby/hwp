@@ -6,13 +6,13 @@ use App\Collections\StatCollection;
 use App\Models\Contracts\Shareable;
 use App\Services\PlayerListService;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use NunoMazer\Samehouse\BelongsToTenants;
+use Throwable;
 
 /**
  * App\Models\Stat
@@ -396,7 +396,7 @@ class Stat extends Model implements Shareable
     {
         try {
             return ($part / $whole);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return 0;
         }
     }
