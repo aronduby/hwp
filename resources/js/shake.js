@@ -28,10 +28,8 @@
         };
 
         if (typeof options === 'object') {
-            for (var i in options) {
-                if (options.hasOwnProperty(i)) {
-                    this.options[i] = options[i];
-                }
+            for (const [key, value] of Object.entries(options)) {
+                this.options[key] = value;
             }
         }
 
@@ -95,12 +93,12 @@
 
     //calculates if shake did occur
     Shake.prototype.devicemotion = function (e) {
-        var current = e.accelerationIncludingGravity;
-        var currentTime;
-        var timeDifference;
-        var deltaX = 0;
-        var deltaY = 0;
-        var deltaZ = 0;
+        const current = e.accelerationIncludingGravity;
+        let currentTime;
+        let timeDifference;
+        let deltaX = 0;
+        let deltaY = 0;
+        let deltaZ = 0;
 
         if ((this.lastX === null) && (this.lastY === null) && (this.lastZ === null)) {
             this.lastX = current.x;
@@ -119,7 +117,7 @@
             timeDifference = currentTime.getTime() - this.lastTime.getTime();
 
             if (timeDifference > this.options.timeout) {
-                this.event.detail.strength = Math.sqrt(Math.pow((current.x), 2) + Math.pow((current.y), 2) + Math.pow((current.z), 2));
+                this.event.detail.strength = Math.sqrt(current.x ** 2 + current.y ** 2 + current.z ** 2);
                 window.dispatchEvent(this.event);
                 this.lastTime = new Date();
             }

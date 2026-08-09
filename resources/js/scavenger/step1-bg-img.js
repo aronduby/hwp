@@ -288,10 +288,10 @@ export function bgImg(imgSrc) {
     }
 
     const debounce = (callback, duration) => {
-        var timer;
-        return function (event) {
+        let timer;
+        return (event) => {
             clearTimeout(timer);
-            timer = setTimeout(function () {
+            timer = setTimeout(() => {
                 callback(event);
             }, duration);
         };

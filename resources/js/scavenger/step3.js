@@ -1,4 +1,4 @@
-import Shake from '../shake';
+import Shake from '@/shake';
 import * as scavenger from "./scavenger";
 
 scavenger.trackStep('3');

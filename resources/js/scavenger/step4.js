@@ -9,16 +9,16 @@ function rnd(min, max) {
 }
 
 function confetti(el) {
-    let count = (el.offsetWidth / 50) * 10;
-    for (var i = 0; i <= count; i++) {
-        let span = document.createElement('span');
+    const count = (el.offsetWidth / 50) * 10;
+    for (let i = 0; i <= count; i++) {
+        const span = document.createElement('span');
         span.classList.add(`particle`, `c${rnd(1, 2)}`);
         span.style = `top:${rnd(10, 50)}%; left:${rnd(0, 100)}%; width:${rnd(6, 8)}px; height:${rnd(3, 4)}px; animation-delay:${Math.random() / 1.5}s`;
         el.appendChild(span);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.forms.streaker;
     const btn = document.querySelector('button[type="submit"]');

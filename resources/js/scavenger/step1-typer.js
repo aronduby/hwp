@@ -1,7 +1,7 @@
 const typingSound = new Audio('audio/glitching.mp3');
 typingSound.loop = true;
 
-export var TxtType = function (el, lines, period) {
+export const TxtType = function (el, lines, period) {
     this.lines = lines;
     this.el = el;
     this.wrap = el.querySelectorAll('.glitcher-wrap')[0];
@@ -24,8 +24,8 @@ TxtType.prototype.reset = function () {
 };
 
 TxtType.prototype.tick = function () {
-    var i = this.loopNum % this.lines.length;
-    var fullTxt = this.lines[i];
+    const i = this.loopNum % this.lines.length;
+    const fullTxt = this.lines[i];
 
     typingSound.play();
     if (this.isDeleting) {
@@ -36,8 +36,7 @@ TxtType.prototype.tick = function () {
 
     this.wrap.textContent = this.txt;
 
-    var that = this;
-    var delta = 150 - Math.random() * 100;
+    let delta = 150 - Math.random() * 100;
 
     if (this.isDeleting) {
         delta /= 10;
@@ -54,8 +53,8 @@ TxtType.prototype.tick = function () {
     }
 
     if (this.loopNum < this.lines.length) {
-        setTimeout(function () {
-            that.tick();
+        setTimeout(() => {
+            this.tick();
         }, delta);
     } else {
         this.reset();

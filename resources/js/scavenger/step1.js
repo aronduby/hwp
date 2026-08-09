@@ -1,6 +1,6 @@
-import load from '../loader';
-import {bgImg} from "./step1-bg-img";
-import {TxtType as typer} from "./step1-typer";
+import load from '@/loader';
+import { bgImg } from "./step1-bg-img";
+import { TxtType as typer } from "./step1-typer";
 import * as hunt from './scavenger';
 
 
@@ -66,7 +66,7 @@ function init() {
             <canvas id="glitcher-canvas"></canvas>
             <div id="glitcher-typewriter">
                 <div>
-                    <span class="glitcher-wrap"></span>    
+                    <span class="glitcher-wrap"></span>
                 </div>
             </div>`;
 
