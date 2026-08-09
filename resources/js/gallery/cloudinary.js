@@ -1,4 +1,4 @@
-// noinspection SpellCheckingInspection
+// noinspection SpellCheckingInspection,JSUnusedGlobalSymbols
 
 /**
  * Cloudinary image URL format

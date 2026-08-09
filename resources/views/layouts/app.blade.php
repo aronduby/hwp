@@ -18,12 +18,10 @@
     <meta name="theme-color" content="#f5d100">
 
     @fonts
-    <!-- TODO -- not sure if this is right for sass -->
     @vite(['resources/sass/main.scss'])
 
     <link rel="stylesheet" href="/css/scratch.css" />
 
-    <script src="js/modernizr.custom.js"></script>
     <script src="https://kit.fontawesome.com/07e53d67dd.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -48,9 +46,9 @@
 
     @include('partials.photoswipe')
 
-    <script type="text/html" id="gallery-thumb-tmpl">@include('partials.photos.thumb-js')</script>
-    <script type="text/html" id="gallery-no-photos-found-tmpl">@include('partials.photos.no-photos-found')</script>
-    <script type="text/html" id="load-more-btn">@include('partials.photos.load-more-btn')</script>
+    <template id="gallery-thumb-tmpl">@include('partials.photos.thumb-js')</template>
+    <template id="gallery-no-photos-found-tmpl">@include('partials.photos.no-photos-found')</template>
+    <template id="load-more-btn">@include('partials.photos.load-more-btn')</template>
 
     <!-- TODO -- not sure what to do with playerlist -->
     <script src="js/playerlist/{{ app('App\Models\ActiveSite')->domain }}.js"></script>
