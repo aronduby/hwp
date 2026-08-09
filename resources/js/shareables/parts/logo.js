@@ -1,27 +1,19 @@
-(function () {
-  'use strict';
+import { fabric } from 'fabric';
+import Deferred from '@/deferred';
 
-  var fabric = require('fabric').fabric;
-  var Deferred = require('../../deferred');
+const path = '/images/shareables/';
 
-  var path = '/images/shareables/';
-
-  var logo = function logo(position, defs) {
-    var d = new Deferred();
+export function build(position, defs) {
+    const d = new Deferred();
     defs.promises.push(d.promise);
 
-    fabric.Image.fromURL(path + position, function(img) {
-      d.resolve(img);
+    fabric.Image.fromURL(`${path}${position}`, function (img) {
+        d.resolve(img);
     });
 
     return d.promise;
-  };
+};
 
-  logo.BOTTOM = 'logo-url-bottom.png';
-  logo.TOP = 'logo-url-top.png';
-  logo.STACKED = 'logo-url-stacked.png';
-
-
-  module.exports = logo;
-
-})();
+export const BOTTOM = 'logo-url-bottom.png';
+export const TOP = 'logo-url-top.png';
+export const STACKED = 'logo-url-stacked.png';

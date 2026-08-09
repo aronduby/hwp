@@ -1,26 +1,22 @@
-(function () {
-    'use strict';
+import Cookies from 'js-cookie';
 
-    const Cookies = require('js-cookie');
-    const keyName = 'season_id';
+const keyName = 'season_id';
 
-    window.addEventListener('DOMContentLoaded', function () {
-        [...document.querySelectorAll('a[data-season-id]')].forEach((node) => {
-            node.addEventListener('click', function (e) {
-                const data = e.currentTarget.dataset;
+window.addEventListener('DOMContentLoaded', () => {
+    [...document.querySelectorAll('a[data-season-id]')].forEach((node) => {
+        node.addEventListener('click', (e) => {
+            const data = e.currentTarget.dataset;
 
-                if (data.current) {
-                    Cookies.remove(keyName);
-                } else {
-                    const sid = data.seasonId;
-                    Cookies.set(keyName, sid);
-                }
+            if (data.current) {
+                Cookies.remove(keyName);
+            } else {
+                const sid = data.seasonId;
+                Cookies.set(keyName, sid);
+            }
 
-                window.location.reload(true);
-                e.stopPropagation();
-                e.preventDefault();
-            });
+            window.location.reload(true);
+            e.stopPropagation();
+            e.preventDefault();
         });
     });
-
-})();
+});

@@ -1,70 +1,57 @@
-(function () {
-  'use strict';
-  global.jQuery = require('jquery');
-  const $ = jQuery;
+import BackgroundWithStripe from './parts/backgroundWithStripe';
+import * as logo from './parts/logo';
+import message from './parts/updateMessage';
+import meta from './parts/updateMeta';
 
+export default function draw(data, defs, trigger) {
+    return new Promise(function (resolve, reject) {
 
-  var fabric = require('fabric').fabric;
+        const canvas = defs.canvas;
+        const padding = defs.padding;
+        const update = JSON.parse(
+            trigger.closest('.update').querySelector('.json').textContent
+        );
 
-  var BackgroundWithStripe = require('./parts/backgroundWithStripe');
-  var logo = require('./parts/logo');
-  var message = require('./parts/updateMessage');
-  var meta = require('./parts/updateMeta');
+        // Background
+        // bg and stripe height is relative to the update
+        const bg = new BackgroundWithStripe(data.photo, defs);
+        canvas.add(bg);
 
-  module.exports = function draw(data, defs, event) {
-    return new Promise(function(resolve, reject) {
+        // Logo
+        logo.build(logo.BOTTOM, defs)
+            .then(function (img) {
+                img.set({
+                    top: canvas.height - img.height
+                });
 
-      var canvas = defs.canvas;
-      var padding = defs.padding;
-      var update = JSON.parse(
-        $(event.currentTarget)
-          .parents('.update')
-          .find('.json')
-          .text()
-      );
+                canvas.add(img);
+            });
 
-      // Background
-      // bg and stripe height is relative to the update
-      var bg = new BackgroundWithStripe(data.photo, defs);
-      canvas.add(bg);
-
-      // Logo
-      logo(logo.BOTTOM, defs)
-        .then(function(img) {
-          img.set({
-            top: canvas.height - img.height
-          });
-
-          canvas.add(img);
+        // Message
+        const msg = message(update.msg, defs, 3.5);
+        msg.set({
+            fontSize: 129,
+            lineHeight: 1.1,
+            top: (canvas.height / 2) - 68,
+            left: canvas.width / 2
         });
+        canvas.add(msg);
 
-      // Message
-      var msg = message(update.msg, defs, 3.5);
-      msg.set({
-        fontSize: 129,
-        lineHeight: 1.1,
-        top: (canvas.height / 2) - 68,
-        left: canvas.width / 2
-      });
-      canvas.add(msg);
+        // bounds needed for stripe and the meta
+        const msgBounding = msg.getBoundingRect();
 
-      // bounds needed for stripe and the meta
-      var msgBounding = msg.getBoundingRect();
+        // update the stripe bg
+        const tbp = (padding / 2) * 3;
+        bg.stripe.height = msgBounding.height + tbp;
+        bg.stripe.top = msgBounding.top - (tbp / 2);
 
-      // update the stripe bg
-      var tbp = (padding / 2) * 3;
-      bg.stripe.height = msgBounding.height + tbp;
-      bg.stripe.top = msgBounding.top - (tbp / 2);
-
-      // Meta Info
-      var metaInfo = meta(update, defs);
-      metaInfo.set({
-        top: msgBounding.top + msgBounding.height + (tbp / 2) + metaInfo.height * 1.5,
-        left: canvas.width / 2
-      });
-      canvas.add(metaInfo);
+        // Meta Info
+        const metaInfo = meta(update, defs);
+        metaInfo.set({
+            top: msgBounding.top + msgBounding.height + (tbp / 2) + metaInfo.height * 1.5,
+            left: canvas.width / 2
+        });
+        canvas.add(metaInfo);
 
     });
-  }
-
-})();
+}

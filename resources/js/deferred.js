@@ -1,12 +1,15 @@
-(function () {
-  'use strict';
+export default class Deferred {
 
-  module.exports = function Deferred() {
-    var self = this;
-    self.promise = new Promise(function (resolve, reject) {
-      self.resolve = resolve;
-      self.reject = reject;
-    });
-  }
+    promise;
+    resolve;
+    reject;
 
-})();
+    constructor() {
+        const { promise, resolve, reject } = Promise.withResolvers();
+
+        this.promise = promise;
+        this.resolve = resolve;
+        this.reject = reject;
+    }
+
+}

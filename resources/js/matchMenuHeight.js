@@ -1,12 +1,6 @@
-(function () {
-    'use strict';
+export default function matchMenuHeight() {
+    const menu = document.getElementById('main-menu');
+    const body = document.querySelector('.scroller-inner');
 
-    var menu = document.getElementById('main-menu');
-    var body = document.querySelector('.scroller-inner');
-
-    module.exports = function() {
-        body.style.paddingTop = menu.offsetHeight;
-    }
-
-
-})();
+    body.style.paddingTop = menu.offsetHeight;
+}

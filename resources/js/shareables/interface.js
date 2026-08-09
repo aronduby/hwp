@@ -1,21 +1,15 @@
-(function () {
-  'use strict';
+import Signal from "signals";
 
-  global.jQuery = require('jquery');
-  const $ = jQuery;
-
-  const Signal = require('signals');
-
-  const markup = `
+const markup = `
     <div class="shareable-holder">
         <div class="backdrop close"></div>
         <div class="shareable-image-holder">
             <div class="loader"></div>
             <img class="shareable-image"/>
         </div>
-        <div class="shareable-sizer">          
+        <div class="shareable-sizer">
           <input id="shareable-size-square" type="radio" name="shareable-size" value="square">
-          <label for="shareable-size-square" class="instagram"><i class="fa fa-instagram"></i></label>          
+          <label for="shareable-size-square" class="instagram"><i class="fa fa-instagram"></i></label>
           <input id="shareable-size-rectangle" type="radio" name="shareable-size" value="rectangle">
           <label for="shareable-size-rectangle" class="snapchat"><i class="fa fa-snapchat-ghost"></i></label>
         </div>
@@ -23,62 +17,62 @@
     </div>
   `;
 
-  const el = $(markup);
-  const img = el.find('img');
-  const close = el.find('.close');
-  const sizes = el.find('input[name="shareable-size"]');
+const template = document.createElement('template');
+template.innerHTML = markup.trim();
+const el = template.content.firstElementChild;
 
-  const closed = new Signal();
-  const sizeChanged = new Signal();
+const img = el.querySelector('img');
+const closeEls = el.querySelectorAll('.close');
+const sizes = el.querySelectorAll('input[name="shareable-size"]');
 
-  let showing = false;
+export const closed = new Signal();
+export const sizeChanged = new Signal();
 
-  img.hide();
+let showing = false;
 
-  close.on('click', function(e) {
-    hide();
-    return false;
-  });
+img.style.display = 'none';
 
-  sizes.on('input, change', function() {
-    sizeChanged.dispatch($(this).val());
-    img.hide();
-  });
+closeEls.forEach((closeEl) => {
+    closeEl.addEventListener('click', () => {
+        hide();
+    });
+});
 
-  function show() {
-    el.appendTo(document.body);
+sizes.forEach((input) => {
+    ['input', 'change'].forEach((eventType) => {
+        input.addEventListener(eventType, function () {
+            sizeChanged.dispatch(this.value);
+            img.style.display = 'none';
+        });
+    });
+});
+
+export function show() {
+    document.body.appendChild(el);
     showing = true;
-  }
+}
 
-  function hide() {
-    el.detach();
-    img.hide();
+export function hide() {
+    el.remove();
+    img.style.display = 'none';
     showing = false;
     closed.dispatch();
-  }
+}
 
-  function load(src) {
-    img.attr('src', src)
-      .show();
-  }
+export function load(src) {
+    img.src = src;
+    img.style.display = '';
+}
 
-  function setSize(size) {
-    sizes.removeAttr('checked');
-    sizes.filter('[value="' + size + '"]').attr('checked', 'checked');
-  }
+export function setSize(size) {
+    sizes.forEach((input) => input.removeAttribute('checked'));
 
-  function isShowing() {
+    const match = [...sizes].find((input) => input.value === size);
+    if (match) {
+        match.setAttribute('checked', 'checked');
+    }
+}
+
+export function isShowing() {
     return showing;
-  }
-
-  module.exports = {
-    show: show,
-    hide: hide,
-    load: load,
-    setSize: setSize,
-    isShowing: isShowing,
-    closed: closed,
-    sizeChanged: sizeChanged
-  };
-
-})();
+}

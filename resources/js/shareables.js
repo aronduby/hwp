@@ -1,17 +1,15 @@
-const fabric = require('fabric').fabric;
-const gridPattern = require('./shareables/parts/gridPattern');
-const gradients = require('./shareables/parts/gradients');
-
-const gameSquare = require('./shareables/game.square');
-const gameRectangle = require('./shareables/game.rectangle');
-const gamePlayerSquare = require('./shareables/game-player.square');
-const gamePlayerRectangle = require('./shareables/game-player.rectangle');
-const playerSquare = require('./shareables/player.square');
-const playerRectangle = require('./shareables/player.rectangle');
-const updateSquare = require('./shareables/update.square');
-const updateRectangle = require('./shareables/update.rectangle');
-
-const holder = require('./shareables/interface');
+import { fabric } from 'fabric';
+import gridPattern from '@/shareables/parts/gridPattern';
+import gradients from '@/shareables/parts/gradients';
+import gameSquare from '@/shareables/game.square';
+import gameRectangle from '@/shareables/game.rectangle';
+import gamePlayerSquare from '@/shareables/game-player.square';
+import gamePlayerRectangle from '@/shareables/game-player.rectangle';
+import playerSquare from '@/shareables/player.square';
+import playerRectangle from '@/shareables/player.rectangle';
+import updateSquare from '@/shareables/update.square';
+import updateRectangle from '@/shareables/update.rectangle';
+import * as holder from '@/shareables/interface';
 
 let size = localStorage.getItem('shareableSize') || 'square';
 
@@ -59,7 +57,7 @@ function init() {
 }
 
 function fetchData(url) {
-    return $.getJSON(url);
+    return fetch(url).then(rsp => rsp.json());
 }
 
 function setSize(s) {
@@ -76,22 +74,22 @@ function dataUrlFromSVG(url) {
 
 const types = {
     game: {
-        getUrl: (e) => dataUrlFromSVG(e.currentTarget.href),
+        getUrl: (trigger) => dataUrlFromSVG(trigger.href),
         square: gameSquare,
         rectangle: gameRectangle
     },
     gamePlayer: {
-        getUrl: (e) => dataUrlFromSVG(e.currentTarget.href),
+        getUrl: (trigger) => dataUrlFromSVG(trigger.href),
         square: gamePlayerSquare,
         rectangle: gamePlayerRectangle
     },
     player: {
-        getUrl: (e) => dataUrlFromSVG(e.currentTarget.href),
+        getUrl: (trigger) => dataUrlFromSVG(trigger.href),
         square: playerSquare,
         rectangle: playerRectangle
     },
     update: {
-        getUrl: (e) => dataUrlFromSVG(e.currentTarget.href),
+        getUrl: (trigger) => dataUrlFromSVG(trigger.href),
         square: updateSquare,
         rectangle: updateRectangle
     }
@@ -112,31 +110,38 @@ holder.closed.add(() => {
     canvas = undefined;
 });
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', () => {
 
-    $('body').on('click', '.shareable', function (e) {
-        lastClicked = $(this);
+    document.body.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.shareable');
+        if (!trigger) {
+            return;
+        }
 
-        const type = $(this).data('shareable-type');
+        e.preventDefault();
+
+        lastClicked = trigger;
+
+        const type = trigger.dataset.shareableType;
         const timer = Date.now();
 
         holder.show();
 
         Promise.all([
             init(),
-            fetchData(types[type].getUrl(e))
+            fetchData(types[type].getUrl(trigger))
         ])
-            .then(function ([_, data]) {
+            .then(([_, data]) => {
                 canvas.setDimensions(data.dimensions);
                 canvas.setBackgroundColor('#ff0000');
 
-                types[type][size](data, defs, e);
+                types[type][size](data, defs, trigger);
 
                 Promise.all(defs.promises)
                     .then(() => {
                         canvas.renderAll();
 
-                        let dataUrl = canvas.toDataURL({multiplier: 1, format: 'png'});
+                        const dataUrl = canvas.toDataURL({multiplier: 1, format: 'png'});
                         holder.load(dataUrl);
 
                         ga('send', {
@@ -147,13 +152,11 @@ $(document).ready(function () {
                             eventValue: Date.now() - timer
                         });
                     })
-                    .catch((e) => {
-                        console.error(e);
+                    .catch((err) => {
+                        console.error(err);
                         alert('sorry, something went wrong');
                     });
             });
-
-        return false;
     });
 
 });

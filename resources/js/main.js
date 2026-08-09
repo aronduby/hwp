@@ -1,42 +1,44 @@
-// noinspection JSUnusedLocalSymbols
-
-import FullGallery from "./gallery/full";
-import PopupGallery from "./gallery/popup";
-import mediaServices from "./gallery/mediaServices";
-
-const _ = require('lodash');
-const mlPushMenu = require('./mlpushmenu');
-const matchMenuHeight = _.debounce(require('./matchMenuHeight'), 300);
-const Note = require('./note');
-const shareable = require('./shareables');
-const seasonSwitching = require('./seasonSwitching');
+import FullGallery from "@/gallery/full";
+import PopupGallery from "@/gallery/popup";
+import mediaServices from "@/gallery/mediaServices";
+import _matchMenuHeight from "@/matchMenuHeight";
+import { mlPushMenu }  from '@/mlpushmenu';
+import { debounce } from "lodash";
+import '@/note';
+import '@/shareables';
+import '@/seasonSwitching'
 
 // noinspection JSPotentiallyInvalidConstructorUsage
 new mlPushMenu(document.getElementById('mp-menu'), document.getElementById('trigger'));
 
+const matchMenuHeight = debounce(_matchMenuHeight, 300);
 window.onresize = matchMenuHeight;
 document.addEventListener('DOMContentLoaded', matchMenuHeight);
 
 // popup galleries
-$(document).ready(function () {
-    $('body').on('click', '.popup-gallery', function () {
-        const url = $(this).data('gallery-path');
-        const el = $(this);
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.popup-gallery');
+        if (!trigger) {
+            return;
+        }
+
+        e.preventDefault();
+
+        const url = trigger.dataset.galleryPath;
         const gallery = new PopupGallery(url, mediaServices);
 
-        el.addClass('loading');
+        trigger.classList.add('loading');
         gallery.load()
-            .always(function () {
-                el.removeClass('loading');
+            .finally(() => {
+                trigger.classList.remove('loading');
             });
-
-        return false;
     });
 });
 
 // full galleries
-$(document).ready(function () {
-    $('.full-gallery').each(function (el) {
-        $(this).data.gallery = new FullGallery(this, mediaServices);
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.full-gallery').forEach((el) => {
+        el.fullGallery = new FullGallery(el, mediaServices);
     });
 });
