@@ -1,15 +1,18 @@
-import 'jquery.loadtemplate';
 import { engine } from "./live/engine";
-import { linker, matcher } from "./nameLinker";
-import _ from 'lodash';
+import { linker, matcher } from "@/nameLinker";
+import { template } from "lodash";
 
-var game = engine.game(recap.game_id);
+// noinspection JSUnresolvedReference
+/** @type {{game_id: int, updates: {}[]}} */
+const recap = window.recap;
+
+const game = engine.game(recap.game_id);
 game.quarterStarted.add(quarterStarted);
 game.quarterEnded.add(quarterEnded);
 game.updated.add(updated);
 game.ended.add(gameEnded);
 
-var quarterTitles = {
+const quarterTitles = {
     '1st': 'First Quarter',
     '2nd': 'Second Quarter',
     '3rd': 'Third Quarter',
@@ -18,37 +21,38 @@ var quarterTitles = {
     '2nd OT': 'Second Overtime',
     'Shootout': 'Shootout'
 };
-var started = false;
-var score = [0, 0];
-var recapHolder;
-var loader;
-var currentQuarter;
-var currentQuarterTitle;
-var quarterTmpl;
-var updateTmpl;
+let started = false;
+let recapHolder;
+let loader;
+let currentQuarter;
+let currentQuarterTitle;
+let quarterTmpl;
+let updateTmpl;
 
-window.addEventListener('DOMContentLoaded', function () {
-    recapHolder = $('.recap').first();
-    quarterTmpl = $('#quarter-tmpl');
-    updateTmpl = $('#update-tmpl');
-    loader = $('.recap-loader');
+window.addEventListener('DOMContentLoaded', () => {
+    // actual elements we will be using later
+    recapHolder = document.querySelector('.recap');
+    loader = document.querySelector('.recap-loader');
 
+    // template functions/elements
+    quarterTmpl = template(document.getElementById('quarter-tmpl').innerHTML);
+    updateTmpl = template(document.getElementById('update-tmpl').innerHTML);
+
+    // kick everything off
     processUpdates();
 });
 
 function processUpdates() {
-    _.forEach(recap.updates, function (update) {
+    recap.updates.forEach((update) => {
         engine.process(update);
     });
 }
 
 function createNewQuarter(data, titleKey) {
-    var newQuarter, titleSplit, scope, title;
+    const title = quarterTitles[titleKey];
+    const titleSplit = title.split(' ');
 
-    title = quarterTitles[titleKey];
-    titleSplit = title.split(' ');
-
-    scope = {
+    const scope = {
         quarterNameFirst: titleSplit[0],
         quarterNameRemaining: titleSplit[1],
         status: '',
@@ -57,15 +61,15 @@ function createNewQuarter(data, titleKey) {
         opponent: data.opponent
     };
 
-    newQuarter = $('<div></div>');
-    newQuarter.loadTemplate(quarterTmpl, scope);
+    const newQuarter = document.createElement('div');
+    newQuarter.innerHTML = quarterTmpl(scope);
     recapHolder.append(newQuarter);
     currentQuarter = newQuarter;
     currentQuarterTitle = title;
 }
 
 function updateScore(score) {
-    var classUs, classThem;
+    let classUs, classThem;
 
     if (score[0] > score[1]) {
         classUs = 'result--win';
@@ -77,20 +81,16 @@ function updateScore(score) {
         classUs = classThem = 'result--tie';
     }
 
-    currentQuarter
-        .find('.score--us')
-        .removeClass('result--win result--loss result--tie')
-        .addClass(classUs)
-        .find('h2')
-        .text(score[0])
-        .end()
-        .end()
-        .find('.score--them')
-        .removeClass('result--win result--loss result--tie')
-        .addClass(classThem)
-        .find('h2')
-        .text(score[1])
-        .end()
+    const parts = [
+        ['us', classUs, score[0]],
+        ['them', classThem, score[1]]
+    ];
+    parts.forEach(([selector, classes, score]) => {
+        const scoreEl = currentQuarter.querySelector(`.score--${selector}`);
+        scoreEl.classList.remove('result--win', 'result--loss', 'result--tie');
+        scoreEl.classList.add(classes);
+        scoreEl.querySelector('h2').textContent = score;
+    });
 }
 
 function isQuarterStarted(data) {
@@ -118,22 +118,20 @@ function updated(data) {
     data.quarterTitle = currentQuarterTitle;
     data.mentions = matcher(data.msg);
 
-    var newUpdate = $('<div></div>');
-    var scope = {
+    const scope = {
         msg: linker(data.msg || ''),
-        score: data.score[0] + '-' + data.score[1],
+        score: `${data.score[0]}-${data.score[1]}`,
         timestampFormatted: data.moment.format('LT'),
         json: JSON.stringify(data),
-        shareable: '/shareables/square/update?game_id=' + data.game_id + '&mentions=' + JSON.stringify(data.mentions)
+        shareable: `/shareables/square/update?game_id=${data.game_id}&mentions=${JSON.stringify(data.mentions)}`
     };
 
     // retweet?
     if (data.twitter_id) {
-        scope.retweet = 'https://twitter.com/intent/retweet?tweet_id=' + data.twitter_id;
+        scope.retweet = `https://twitter.com/intent/retweet?tweet_id=${data.twitter_id}`;
     }
 
-    newUpdate.loadTemplate(updateTmpl, scope);
-    currentQuarter.find('.body.container').append(newUpdate);
+    currentQuarter.querySelector('.body.container').insertAdjacentHTML('beforeend', updateTmpl(scope));
     updateScore(data.score);
 }
 
@@ -147,11 +145,11 @@ function updateQuarterStatus(data, title) {
 }
 
 function quarterEnded(data) {
-    var title = 'End of the ' + currentQuarterTitle.replace('Quarter', '');
+    const title = `End of the ${currentQuarterTitle.replace('Quarter', '')}`;
     updateQuarterStatus(data, title);
 }
 
 function gameEnded(data) {
-    var title = 'Final Result';
+    const title = 'Final Result';
     updateQuarterStatus(data, title);
 }

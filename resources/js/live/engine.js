@@ -1,15 +1,14 @@
 import Game from "./game";
-import _ from 'lodash';
 import moment from 'moment';
 
-var games = {};
+const games = {};
 
-export var engine = {
-    process: process,
+export const engine = {
+    process,
     game: getOrCreateGame,
-    getGame: getGame,
-    createGame: createGame,
-    hasGame: hasGame
+    getGame,
+    createGame,
+    hasGame
 };
 
 /**
@@ -17,8 +16,8 @@ export var engine = {
  * @param data
  */
 function process(data) {
-    var game = getOrCreateGame(data.game_id);
-    var quarterRegex = /Start of the (\d\w+( .+)?) --/i;
+    const game = getOrCreateGame(data.game_id);
+    const quarterRegex = /Start of the (\d\w+( .+)?) --/i;
 
     data.moment = moment.unix(data.ts);
 
@@ -29,30 +28,30 @@ function process(data) {
     // TODO - this should eventually be based on control messages from the live scoring panel
 
     // start of game
-    if (_.startsWith(data.msg, 'Start of Hudsonville')) {
+    if (data.msg.startsWith('Start of Hudsonville')) {
         game.started.dispatch(data);
         game.quarterStarted.dispatch(data, '1st');
     }
 
     // end of quarter
-    if (_.startsWith(data.msg, 'At the end of the')) {
+    if (data.msg.startsWith('At the end of the')) {
         game.quarterEnded.dispatch(data);
     }
 
     // start of quarter
-    if (_.startsWith(data.msg, 'Start of the')) {
-        var matched = data.msg.match(quarterRegex);
+    if (data.msg.startsWith('Start of the')) {
+        const matched = data.msg.match(quarterRegex);
         game.quarterStarted.dispatch(data, matched[1]);
     }
 
     // end of the game
-    if (_.startsWith(data.msg, 'Final Result')) {
+    if (data.msg.startsWith('Final Result')) {
         game.quarterEnded.dispatch(data);
         game.ended.dispatch(data);
     }
 
     // start of shoot-out
-    if (_.endsWith(data.msg, 'Shoot-Out!')) {
+    if (data.msg.endsWith('Shoot-Out!')) {
         game.shootOutStarted.dispatch(data);
     }
 
@@ -61,7 +60,7 @@ function process(data) {
 
 /**
  * Gets or creates a Game with the supplied id
- * @param gameId
+ * @param {int} gameId
  * @returns {Game}
  */
 function getOrCreateGame(gameId) {
@@ -74,7 +73,7 @@ function getOrCreateGame(gameId) {
  * @returns {Game|undefined}
  */
 function getGame(gameId) {
-    return _.get(games, gameId, undefined);
+    return games?.[gameId];
 }
 
 /**
@@ -83,8 +82,8 @@ function getGame(gameId) {
  * @returns {Game}
  */
 function createGame(gameId) {
-    var game = new Game(gameId);
-    _.set(games, gameId, game);
+    const game = new Game(gameId);
+    games[gameId] = game;
 
     return game;
 }
@@ -95,5 +94,5 @@ function createGame(gameId) {
  * @returns {boolean}
  */
 function hasGame(gameId) {
-    return _.has(games, gameId);
+    return games.hasOwnProperty(gameId);
 }

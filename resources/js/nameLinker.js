@@ -1,10 +1,14 @@
-import _ from 'lodash';
+import { template } from 'lodash';
 
 
-var playerlist = window.playerlist;
+// noinspection JSUnresolvedReference
+/**
+ * @type { byName: Object<string, string>, byNameKey: Object<string, string> }
+ */
+const playerlist = window.playerlist;
 
-var tmpl = _.template('<a href="<%= url %>" title="view player"><%= title %></a>');
-
+// the template for making the name into a link
+const tmpl = template('<a href="<%= url %>" title="view player"><%= title %></a>');
 
 /**
  * Matches cap number (and it's variants) plus name
@@ -12,31 +16,28 @@ var tmpl = _.template('<a href="<%= url %>" title="view player"><%= title %></a>
  * $2 = Name
  * @type {RegExp}
  */
-var regex = /(#\d{1,2}(?:(?:[a-zA-Z]|\/)?\d{0,2})?) ((?:\b\w+) (?:\b\w+))/g;
+const regex = /(#\d{1,2}(?:(?:[a-zA-Z]|\/)?\d{0,2})?) ((?:\b\w+) (?:\b\w+))/g;
 
 export function linker(str) {
     return str.replace(regex, replace);
 }
 
 function replace(match, cap, name, offset, string) {
-    var url = _.get(playerlist.byName, name, false);
+    const url = playerlist.byName?.[name] ?? false;
     if (url) {
-        return tmpl({
-            url: url,
-            title: match
-        });
+        return tmpl({ url, title: match });
     } else {
         return match;
     }
 }
 
 export function matcher(str) {
-    var matched;
-    var nameKeys = [];
+    let matched;
+    const nameKeys = [];
 
     while ((matched = regex.exec(str)) !== null) {
-        var name = matched[2];
-        var url = _.get(playerlist.byName, name, false);
+        const name = matched[2];
+        const url = playerlist?.byName?.[name] ?? false;
         if (url) {
             nameKeys.push(url.replace('/players/', ''));
         }
@@ -46,8 +47,8 @@ export function matcher(str) {
 }
 
 export function finder(str) {
-    var matched;
-    var found = [];
+    let matched;
+    const found = [];
 
     while ((matched = regex.exec(str)) !== null) {
         found.push(matched);

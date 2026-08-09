@@ -22,13 +22,8 @@
         }
     </script>
 
-    <script id="quarter-tmpl" type="text/html">
-        @include('partials.game.recap.quarter')
-    </script>
-
-    <script id="update-tmpl" type="text/html">
-        @include('partials.game.recap.update')
-    </script>
+    <template id="quarter-tmpl">@include('partials.game.recap.quarter')</template>
+    <template id="update-tmpl">@include('partials.game.recap.update')</template>
 @endsection
 
 @push('scripts')

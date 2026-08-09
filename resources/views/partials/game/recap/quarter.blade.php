@@ -1,11 +1,12 @@
+{{-- used as a JS template --}}
 <div class="quarter-holder">
     <section class="recap-quarter page-section bg--inner-shadow">
         <header class="divider divider--bottom">
-            <h1><span class="text--muted" data-content="quarterNameFirst"></span> <span data-content="quarterNameRemaining"></span></h1>
+            <h1><span class="text--muted">${quarterNameFirst}</span> <span>${quarterNameRemaining}</span></h1>
         </header>
 
         <div class="body container">
-
+            <!-- updates will go here -->
         </div>
     </section>
 
@@ -27,7 +28,7 @@
                         </header>
                         <div class="body">
                             <div class="score">
-                                <h2 data-content="scoreUs"></h2>
+                                <h2>${scoreUs}</h2>
                             </div>
                         </div>
                     </div>
@@ -36,11 +37,11 @@
                 <div class="col-sm-3 col-md-2">
                     <div class="card result score score--them">
                         <header class="bg--grid">
-                            <h1 data-content="opponent"></h1>
+                            <h1>${opponent}</h1>
                         </header>
                         <div class="body">
                             <div class="score">
-                                <h2 data-content="scoreThem"></h2>
+                                <h2>${scoreThem}</h2>
                             </div>
                         </div>
                     </div>
