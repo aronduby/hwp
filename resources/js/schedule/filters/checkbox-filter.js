@@ -1,4 +1,4 @@
-import {Filter} from "./filter";
+import { Filter } from "./filter";
 
 class CheckboxFilter extends Filter {
 
@@ -71,5 +71,5 @@ class CheckboxFilter extends Filter {
 	}
 }
 
-export {CheckboxFilter};
+export { CheckboxFilter };
 export default CheckboxFilter;

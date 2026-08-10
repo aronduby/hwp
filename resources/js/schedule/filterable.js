@@ -1,15 +1,14 @@
 import TableFilter from './filters/table-filter';
 import Filter from './filters/filter';
-import SelectFilter from './filters/select-filter';
 import CheckboxFilter from './filters/checkbox-filter';
 import RadioFilter from './filters/radio-filter';
 import DateFilter from './filters/date-filter';
 
 export default function filterableInit() {
-	window.addEventListener('DOMContentLoaded', function () {
+	window.addEventListener('DOMContentLoaded', () => {
 
-		var table = document.querySelector('table.schedule');
-		var tableFilter = new TableFilter(table);
+		const table = document.querySelector('table.schedule');
+		const tableFilter = new TableFilter(table);
 
 		tableFilter.add(0, new CheckboxFilter([
 			{value: 'tournament', label: 'Tournament'},

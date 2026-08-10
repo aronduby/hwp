@@ -2,11 +2,11 @@ import vex from 'vex-js';
 
 export default function subscribeModalInit() {
 
-	window.addEventListener('DOMContentLoaded', function () {
+	window.addEventListener('DOMContentLoaded', () => {
 
-		var subscribeModelContent = document.getElementById('subscribe-modal').textContent;
-		var subscribeBtn = document.querySelector('button.subscribe');
-		subscribeBtn.addEventListener('click', function() {
+		const subscribeModelContent = document.getElementById('subscribe-modal').textContent;
+		const subscribeBtn = document.querySelector('button.subscribe');
+		subscribeBtn.addEventListener('click', () => {
 			vex.open({
 				unsafeContent: subscribeModelContent,
 				className: 'vex-theme-note'

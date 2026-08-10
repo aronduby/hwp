@@ -14,7 +14,7 @@ const classes = {
 		open: 'filter-panel--open',
 		closed: 'filter-panel--closed'
 	},
-	clear: 'filter-clear btn text--loss'
+	clear: 'filter-clear'
 };
 
 class Filter {
@@ -138,7 +138,7 @@ class Filter {
 			classes.button.base
 		].join(' ');
 
-		trigger.addEventListener('click', this.toggle.bind(this));
+		trigger.addEventListener('click', (e) => this.toggle(e));
 
 		return trigger;
 	}
@@ -150,7 +150,7 @@ class Filter {
 			<div class="${classes.panel.content}">
 				${content}
 			</div>
-			<button class="${classes.clear}">clear</button>
+			<button class="btn text--loss ${classes.clear}">clear</button>
 		`;
 
 		panel.classList.add(classes.panel.base);
@@ -165,7 +165,7 @@ class Filter {
 
 	initClear(panel) {
 		let btn = panel.querySelector('button.'+classes.clear);
-		btn.addEventListener('click', this.clear.bind(this));
+		btn.addEventListener('click', (e) => this.clear(e));
 	}
 
 	static getCellValue(cell) {
@@ -175,5 +175,5 @@ class Filter {
 	}
 }
 
-export {Filter, classes};
+export { Filter, classes };
 export default Filter;

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 class TableFilter {
 
 	constructor(table) {
@@ -12,12 +10,13 @@ class TableFilter {
 		this.heads = this.table.querySelectorAll('thead > tr > th');
 		this.rows = [].slice.call(this.table.querySelectorAll('tbody > tr'));
 
-		$(document).on('click', (event) => {
+		document.addEventListener('click', (event) => {
 			let toClose = this.filters.slice();
 
-			if ($(event.target).closest('.filter').length) {
-				let exclude = $(event.target).closest('.filter').data('filterIndex');
-				let removeIdx = toClose.findIndex((filter) => filter.index === exclude);
+			const filterEl = event.target.closest('.filter');
+			if (filterEl) {
+				const exclude = Number(filterEl.dataset.filterIndex);
+				const removeIdx = toClose.findIndex((filter) => filter.index === exclude);
 
 				toClose.splice(removeIdx, 1);
 			}
@@ -27,7 +26,7 @@ class TableFilter {
 	}
 
 	add(idx, filter) {
-		var th = this.heads[idx];
+		const th = this.heads[idx];
 		th.dataset.filterIndex = idx;
 		filter.attach(idx, th, this.update.bind(this));
 		this.filters.push(filter);
@@ -72,5 +71,5 @@ class TableFilter {
 	}
 }
 
-export {TableFilter};
+export { TableFilter };
 export default TableFilter;

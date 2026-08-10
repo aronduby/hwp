@@ -1,6 +1,6 @@
-import {Filter} from "./filter";
+import { Filter } from "./filter";
 
-var FlatPickr = require('flatpickr');
+import Flatpickr from 'flatpickr';
 
 class DateFilter extends Filter {
 
@@ -21,8 +21,8 @@ class DateFilter extends Filter {
 
 		this.options.inline = true;
 		this.options.mode = 'range';
-		this.options.onChange = (selectedDates, dateStr, instance) => {
-			if (selectedDates.length == 2) {
+		this.options.onChange = (selectedDates, _dateStr, _instance) => {
+			if (selectedDates.length === 2) {
 				this.enable();
 			} else {
 				this.disable();
@@ -31,7 +31,7 @@ class DateFilter extends Filter {
 			this.triggerUpdate();
 		};
 
-		this.picker = new FlatPickr(input, this.options);
+		this.picker = new Flatpickr(input, this.options);
 	}
 
 	// clear the filter
@@ -65,5 +65,5 @@ class DateFilter extends Filter {
 	}
 }
 
-export {DateFilter};
+export { DateFilter };
 export default DateFilter;

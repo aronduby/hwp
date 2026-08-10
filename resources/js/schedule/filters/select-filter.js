@@ -1,4 +1,4 @@
-import {Filter} from "./filter";
+import { Filter } from "./filter";
 
 class SelectFilter extends Filter {
 
@@ -45,9 +45,9 @@ class SelectFilter extends Filter {
 	filter(cell) {
 		let val = Filter.getCellValue(cell);
 
-		return val.toUpperCase() == this.val.toUpperCase();
+		return val.toUpperCase() === this.val.toUpperCase();
 	}
 }
 
-export {SelectFilter};
+export { SelectFilter };
 export default SelectFilter;

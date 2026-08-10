@@ -1,4 +1,4 @@
-import {CheckboxFilter} from "./checkbox-filter";
+import { CheckboxFilter } from "./checkbox-filter";
 
 class RadioFilter extends CheckboxFilter {
 
@@ -7,5 +7,5 @@ class RadioFilter extends CheckboxFilter {
 	}
 }
 
-export {RadioFilter};
+export { RadioFilter };
 export default RadioFilter;
