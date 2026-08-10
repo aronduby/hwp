@@ -61,7 +61,7 @@ export function drawCharts(stats) {
         const chartName = el.dataset.chart;
         const chart = _charts[el.id];
 
-        const data = methods[chartName](stats);
+        const data = chartMethods[chartName](stats);
         const chartOptions = Object.assign({}, defaultOptions);
 
         if (data.options) {
@@ -336,4 +336,17 @@ export function shirtsDelivered(stats) {
             ['Forgotten', data.whole - data.part]
         ]
     };
+}
+
+const chartMethods = {
+    fiveMeterSaves,
+    assists,
+    kickouts,
+    saves,
+    shootOutSaves,
+    shooting,
+    sprints,
+    stealsToTurnovers,
+    thirstsQuenched,
+    shirtsDelivered,
 }
