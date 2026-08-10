@@ -1,88 +1,89 @@
 import moment from "moment";
 import * as formatter from './dateFormats';
 
-const $ = jQuery;
-
-function Rankings(el) {
-    this.el = $(el);
-    this.attachEvents();
-}
-
-Rankings.prototype.attachEvents = function () {
-    var self = this;
-
-    this.el.find('.pager a').on('click', function () {
-        self.load($(this).attr('href'));
-        $(this).parent().addClass('disabled');
-        return false;
-    });
-};
-
-Rankings.prototype.load = function (url) {
-    var self = this;
-
-    self.el.addClass('loading');
-
-    $.getJSON(url)
-        .done(this.loaded.bind(self))
-        .fail(this.error.bind(self))
-        .always(function () {
-            self.el.removeClass('loading');
-        })
-};
-
-Rankings.prototype.loaded = function (rsp) {
-    var rankings = rsp.data[0];
-    rankings.start = moment(rankings.start);
-    rankings.end = moment(rankings.end);
-
-    // update the pager
-    if (rsp.next_page_url) {
-        this.el.find('.pager .next').removeClass('disabled')
-            .find('a').attr('href', rsp.next_page_url);
+class Rankings {
+    constructor(el) {
+        this.el = el;
+        this.attachEvents();
     }
 
-    if (rsp.prev_page_url) {
-        this.el.find('.pager .prev').removeClass('disabled')
-            .find('a').attr('href', rsp.prev_page_url);
+    attachEvents() {
+        this.el.querySelectorAll('.pager a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.load(a.getAttribute('href'));
+                a.parentElement.classList.add('disabled');
+            });
+        });
     }
 
-    // redraw the table body
-    var body = this.el.find('tbody');
-    body.empty();
-    rankings.ranks.forEach(function (rank) {
-        var tr = $('<tr></tr>').addClass('rank');
-        if (rank.self) {
-            tr.addClass('rank--self');
+    load(url) {
+        this.el.classList.add('loading');
+
+        fetch(url)
+            .then(rsp => rsp.json())
+            .then(this.loaded.bind(this))
+            .catch(this.error.bind(this))
+            .finally(() => {
+                this.el.classList.remove('loading');
+            });
+    }
+
+    loaded(rsp) {
+        const rankings = rsp.data[0];
+        rankings.start = moment(rankings.start);
+        rankings.end = moment(rankings.end);
+
+        // update the pager
+        if (rsp.next_page_url) {
+            const next = this.el.querySelector('.pager .next');
+            next.classList.remove('disabled');
+            next.querySelector('a').setAttribute('href', rsp.next_page_url);
         }
 
-        $('<th></th>')
-            .addClass('rank-rank')
-            .text(rank.rank)
-            .appendTo(tr);
+        if (rsp.prev_page_url) {
+            const prev = this.el.querySelector('.pager .prev');
+            prev.classList.remove('disabled');
+            prev.querySelector('a').setAttribute('href', rsp.prev_page_url);
+        }
 
-        $('<td></td>')
-            .addClass('rank-team')
-            .text(rank.team + (rank.tied ? '(tied)' : ''))
-            .appendTo(tr);
+        // redraw the table body
+        const body = this.el.querySelector('tbody');
+        body.innerHTML = '';
+        rankings.ranks.forEach(rank => {
+            const tr = document.createElement('tr');
+            tr.classList.add('rank');
+            if (rank.self) {
+                tr.classList.add('rank--self');
+            }
 
-        $('<td></td>')
-            .addClass('rank-points')
-            .text(rank.points ? rank.points.toLocaleString() : '')
-            .appendTo(tr);
+            const rankTh = document.createElement('th');
+            rankTh.classList.add('rank-rank');
+            rankTh.textContent = rank.rank;
+            tr.appendChild(rankTh);
 
-        body.append(tr);
-    });
+            const teamTd = document.createElement('td');
+            teamTd.classList.add('rank-team');
+            teamTd.textContent = `${rank.team}${rank.tied ? '(tied)' : ''}`;
+            tr.appendChild(teamTd);
 
-    // redraw the table footer
-    this.el.find('tfoot td')
-        .html(formatter.dateSpan(rankings.start, rankings.end));
-};
+            const pointsTd = document.createElement('td');
+            pointsTd.classList.add('rank-points');
+            pointsTd.textContent = rank.points ? rank.points.toLocaleString() : '';
+            tr.appendChild(pointsTd);
 
-Rankings.prototype.error = function (err) {
-    console.error(err);
-    alert('Error loading rankings.');
-};
+            body.appendChild(tr);
+        });
+
+        // redraw the table footer
+        this.el.querySelector('tfoot td')
+            .innerHTML = formatter.dateSpan(rankings.start, rankings.end);
+    }
+
+    error(err) {
+        console.error(err);
+        alert('Error loading rankings.');
+    }
+}
 
 export default Rankings;
-

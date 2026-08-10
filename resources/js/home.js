@@ -1,8 +1,8 @@
-import Rankings from './rankings';
-import Recent from "./recent";
-import { ghostNav } from "./ghostNav";
-import './scavenger/step1';
-import './notifications';
+import Rankings from '@/rankings';
+import Recent from "@/recent";
+import { ghostNav } from "@/ghostNav";
+import '@/scavenger/step1';
+import '@/notifications';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     new Rankings(document.querySelector('.rankings'));
 
     // recent
-    var recent = new Recent(document.querySelector('.recent-content'));
+    const recent = new Recent(document.querySelector('.recent-content'));
     recent.load();
 
 });

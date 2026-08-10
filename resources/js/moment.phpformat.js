@@ -1,13 +1,13 @@
 import moment from "moment";
 
-var formatMap = {
+const formatMap = {
         d: 'DD',
         D: 'ddd',
         j: 'D',
         l: 'dddd',
         N: 'E',
         S: function () {
-            return '[' + this.format('Do').replace(/\d*/g, '') + ']';
+            return `[${this.format('Do').replace(/\d*/g, '')}]`;
         },
         w: 'd',
         z: function () {
@@ -30,9 +30,9 @@ var formatMap = {
         a: 'a',
         A: 'A',
         B: function () {
-            var thisUTC = this.clone().utc(),
-                // Shamelessly stolen from http://javascript.about.com/library/blswatch.htm
-                swatch = ((thisUTC.hours() + 1) % 24) + (thisUTC.minutes() / 60) + (thisUTC.seconds() / 3600);
+            const thisUTC = this.clone().utc();
+            // Shamelessly stolen from http://javascript.about.com/library/blswatch.htm
+            const swatch = ((thisUTC.hours() + 1) % 24) + (thisUTC.minutes() / 60) + (thisUTC.seconds() / 3600);
             return Math.floor(swatch * 1000 / 24);
         },
         g: 'h',
@@ -55,13 +55,14 @@ var formatMap = {
         c: 'YYYY-MM-DD[T]HH:mm:ssZ',
         r: 'ddd, DD MMM YYYY HH:mm:ss ZZ',
         U: 'X'
-    },
-    formatEx = /[dDjlNSwzWFmMntLoYyaABgGhHisueIOPTZcrU]/g;
+    };
+
+const formatEx = /[dDjlNSwzWFmMntLoYyaABgGhHisueIOPTZcrU]/g;
 
 moment.fn.formatPHP = function (format) {
-    var that = this;
+    const that = this;
 
-    return this.format(format.replace(formatEx, function (phpStr) {
+    return this.format(format.replace(formatEx, (phpStr) => {
         return typeof formatMap[phpStr] === 'function' ? formatMap[phpStr].call(that) : formatMap[phpStr];
     }));
 };

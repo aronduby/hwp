@@ -27,7 +27,7 @@ onBackgroundMessage(messaging, (payload) => {
     self.registration.showNotification(title, options);
 });
 
-self.addEventListener('notificationclick', function(event){
+self.addEventListener('notificationclick', (event) => {
 
     // console.log('notification clicked', event.notification.tag);
 
@@ -38,14 +38,13 @@ self.addEventListener('notificationclick', function(event){
     // Looks to see if the current window is already open and focuses if it is
     event.waitUntil(
         self.clients.matchAll({ type: "window" })
-            .then(function(clientList){
-                for(let i=0; i<clientList.length; i++){
-                    const client = clientList[i];
-                    if(client.url === '/' && 'focus' in client)
-                        return client.focus();
+            .then((clientList) => {
+                const openClient = clientList.find((client) => client.url === '/' && 'focus' in client);
+                if (openClient) {
+                    return openClient.focus();
                 }
 
-                if(self.clients.openWindow){
+                if (self.clients.openWindow) {
                     return self.clients.openWindow('/');
                 }
             })

@@ -16,8 +16,8 @@ export const formats = {
 };
 
 export function day(m, full) {
-    var today = moment().startOf('date');
-    var diff = m.startOf('date').diff(today, 'days');
+    const today = moment().startOf('date');
+    const diff = m.startOf('date').diff(today, 'days');
 
     if (diff === 0) {
         return 'today';
@@ -33,26 +33,26 @@ export function date(m) {
 }
 
 export function dayWithDate(m) {
-    var format = (full === false ? formats.DAY_SHORT : formats.DAY) + ' ' + formats.DATE;
+    const format = `${full === false ? formats.DAY_SHORT : formats.DAY} ${formats.DATE}`;
     return m.formatPHP(format);
 }
 
 export function dayWithDateTime(m) {
-    var day = dayWithDate(m, false);
-    var midnight = day.startOf('date');
-    var time;
+    const day = dayWithDate(m, false);
+    const midnight = day.startOf('date');
+    let dayTime;
 
     if (day.diff(midnight) > 0) {
-        time = ' @ ' + time(m);
+        dayTime = ` @ ${time(m)}`;
     } else {
-        time = ' all day';
+        dayTime = ' all day';
     }
 
-    return day + time;
+    return day + dayTime;
 }
 
 export function dateSpan(from, to) {
-    return from.formatPHP(formats.DATE_SPAN) + ' &ndash; ' + to.formatPHP(formats.DATE_SPAN);
+    return `${from.formatPHP(formats.DATE_SPAN)} &ndash; ${to.formatPHP(formats.DATE_SPAN)}`;
 }
 
 export function time(m) {

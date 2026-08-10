@@ -1,18 +1,18 @@
-import _ from 'lodash';
+import { debounce } from 'lodash';
 
-var el;
-var container;
-var className = 'ghosted';
-var scroller = document.getElementsByClassName('scroller')[0];
-var delay = 100;
+let el;
+let container;
+const className = 'ghosted';
+const scroller = document.getElementsByClassName('scroller')[0];
+const delay = 100;
 
 export function ghostNav(element, context) {
     el = element;
     container = context;
 
     window.addEventListener('DOMContentLoaded', check);
-    window.addEventListener('resize', _.debounce(check, delay));
-    scroller.addEventListener('scroll', _.debounce(check, delay));
+    window.addEventListener('resize', debounce(check, delay));
+    scroller.addEventListener('scroll', debounce(check, delay));
 }
 
 function ghost() {

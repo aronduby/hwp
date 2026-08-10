@@ -1,113 +1,109 @@
-import _ from 'lodash';
-
-const $ = jQuery;
-
-function Recent(container) {
-    this.grid = $(container.querySelector('.recent-grid'));
-    this.btn = $(container.querySelector('.btn.load-more'));
-
-    this.loadCount = 0;
-    this.templates = [];
-
-    this.getTemplates();
-    this.attachEvents();
+function parseHTML(html) {
+    const template = document.createElement('template');
+    template.innerHTML = html.trim();
+    return template.content.firstElementChild;
 }
 
-Recent.prototype.pageIDs = ['page-even', 'page-odd'];
+function fadeOut(el) {
+    const animation = el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400 });
+    animation.onfinish = () => {
+        el.style.display = 'none';
+    };
+}
 
-Recent.prototype.getTemplates = function () {
-    var self = this;
+class Recent {
 
-    _.forEach(this.pageIDs, function (val, idx) {
-        self.templates[idx] = $($('#' + val).text());
-    });
-};
+    constructor(container) {
+        this.grid = container.querySelector('.recent-grid');
+        this.btn = container.querySelector('.btn.load-more');
 
-Recent.prototype.attachEvents = function () {
-    var self = this;
+        this.loadCount = 0;
 
-    this.btn.on('click', this.load.bind(self));
-};
-
-Recent.prototype.load = function () {
-    var self = this;
-    var url = this.btn.data('url');
-    var tmpl;
-
-    this.grid.addClass('loading');
-    this.btn.attr('disabled', 'disabled');
-
-    this.loadCount++;
-
-    if (this.loadCount > 1) {
-        tmpl = this.templates[this.loadCount % 2].clone();
-        tmpl.appendTo(this.grid);
+        this.attachEvents();
     }
 
-    $.getJSON(url)
-        .done(this.done.bind(self))
-        .fail(this.error.bind(self))
-        .always(function () {
-            self.grid.removeClass('loading');
-        });
-};
-
-Recent.prototype.done = function (rsp) {
-    var self = this;
-    var next = rsp.next_page_url;
-    var loading = this.grid.find('.recent--loading');
-    var i = 0;
-    var max = Math.min(rsp.per_page, rsp.data.length);
-    var pageClass = "";
-
-    if (this.loadCount > 1) {
-        pageClass = 'recent-page--' + this.loadCount % 2;
+    attachEvents() {
+        this.btn.addEventListener('click', this.load.bind(this));
     }
 
-    for (i; i < max; i++) {
-        var item = rsp.data[i];
-        var newEl = $(item.rendered);
-        var loadingEl = loading.eq(i);
+    load() {
+        const url = this.btn.dataset.url;
 
-        newEl.addClass(pageClass);
+        this.grid.classList.add('loading');
+        this.btn.disabled = true;
 
-        if (item.sticky) {
-            newEl.addClass('recent--sticky')
-                .append('<i class="recent-stickyIcon fa-solid fa-thumbtack"></i>');
+        this.loadCount++;
+
+        fetch(url)
+            .then(rsp => rsp.json())
+            .then(rsp => this.done(rsp))
+            .catch(err => this.error(err))
+            .finally(() => {
+                this.grid.classList.remove('loading');
+            });
+    }
+
+    done(rsp) {
+        const next = rsp.next_page_url;
+        const loading = this.grid.querySelectorAll('.recent--loading');
+        const max = Math.min(rsp.per_page, rsp.data.length);
+        let pageClass = "";
+
+        if (this.loadCount > 1) {
+            pageClass = `recent-page--${this.loadCount % 2}`;
         }
 
-        if (loadingEl.length) {
-            newEl.attr('class', newEl.attr('class') + ' ' + loadingEl.attr('class'))
-                .removeClass('recent--loading');
+        for (let i = 0; i < max; i++) {
+            const item = rsp.data[i];
+            const newEl = parseHTML(item.rendered);
+            const loadingEl = loading[i];
 
-            loadingEl.replaceWith(newEl);
+            if (pageClass) {
+                newEl.classList.add(pageClass);
+            }
+
+            if (item.sticky) {
+                newEl.classList.add('recent--sticky');
+                newEl.insertAdjacentHTML('beforeend', '<i class="recent-stickyIcon fa-solid fa-thumbtack"></i>');
+            }
+
+            if (loadingEl) {
+                newEl.className = `${newEl.className} ${loadingEl.className}`;
+                newEl.classList.remove('recent--loading');
+
+                loadingEl.replaceWith(newEl);
+            } else {
+                this.grid.appendChild(newEl);
+            }
+        }
+
+        // hide and remove anything still set as loading
+        const empty = this.grid.querySelectorAll('.recent--loading');
+        if (this.loadCount > 1) {
+            empty.forEach(fadeOut);
         } else {
-            newEl.appendTo(self.grid);
+            empty.forEach(el => {
+                el.classList.remove('recent--loading');
+                el.classList.add('bg--smoke');
+                el.innerHTML = '';
+            });
+        }
+
+
+        if (next) {
+            this.btn.dataset.url = next;
+            this.btn.removeAttribute('disabled');
+        } else {
+            this.btn.remove();
         }
     }
 
-    // hide and remove anything still set as loading
-    var empty = this.grid.find('.recent--loading');
-    if (this.loadCount > 1) {
-        empty.fadeOut();
-    } else {
-        empty.removeClass('recent--loading').addClass('bg--smoke').empty();
+    error(err) {
+        console.error(err);
+        // alert('Error loading the recent content');
+        this.grid.querySelectorAll('.recent--loading').forEach(el => el.remove());
+        this.loadCount--;
     }
-
-
-    if (next) {
-        this.btn.data('url', next)
-            .removeAttr('disabled');
-    } else {
-        this.btn.remove();
-    }
-};
-
-Recent.prototype.error = function (err) {
-    console.error(err);
-    alert('Error loading the recent content');
-    this.grid.find('.recent--loading').remove();
-    this.loadCount--;
-};
+}
 
 export default Recent;
