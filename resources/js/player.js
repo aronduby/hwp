@@ -1,8 +1,4 @@
-(function() {
-	'use strict';
+import * as charting from './charting';
 
-	const charting = require('./charting');
-
-	charting.initCharts()
-		.then(() => charting.drawCharts(stats));
-})();
+charting.initCharts()
+    .then(() => charting.drawCharts(window.stats ?? {}));

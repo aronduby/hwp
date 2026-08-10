@@ -1,176 +1,182 @@
-(function () {
-	'use strict';
+function delegate(root, eventType, selector, handler) {
+    root.addEventListener(eventType, (e) => {
+        const target = e.target.closest(selector);
+        if (target && root.contains(target)) {
+            handler.call(target, e);
+        }
+    });
+}
 
-	global.jQuery = require('jquery');
-	var $ = jQuery;
-	var _ = require('lodash');
+/**
+ * ADD/REMOVE STAT ROWS
+ */
+document.addEventListener('DOMContentLoaded', () => {
 
-	/**
-	 * ADD/REMOVE STAT ROWS
- 	 */
-	(function($, document) {
-		$(document).ready(function() {
+    delegate(document, 'click', 'button.add-row', function () {
+        const section = this.closest('section');
+        const tbody = section.querySelector('tbody');
+        const rows = tbody.querySelectorAll('tr');
+        const lastRow = rows[rows.length - 1];
+        const newRow = lastRow.cloneNode(true);
+        const oldI = lastRow.dataset.i;
+        const newI = Number(oldI) + 1;
 
-			$('button.add-row').on('click', function() {
-				var tbody = $(this).parents('section').find('tbody');
-				var newRow = tbody.find('tr:last-child').clone();
-				var oldI = newRow.data('i');
-				var newI = oldI + 1;
+        newRow.dataset.i = newI;
 
-				newRow.attr('data-i', newI);
+        newRow.querySelectorAll('input, select').forEach((field) => {
+            const name = field.getAttribute('name').replace(oldI, newI);
+            field.setAttribute('name', name);
 
-				newRow.find('input, select').each(function() {
-					var name = $(this).attr('name');
-					name = name.replace(oldI, newI);
-					$(this).attr('name', name);
+            field.value = '';
+        });
 
-					$(this).val('');
-				});
+        tbody.appendChild(newRow);
 
-				newRow.appendTo(tbody);
+        return false;
+    });
 
-				return false;
-			});
+    delegate(document, 'click', 'button.remove-row', function () {
+        const row = this.closest('tr');
+        removeRow(row);
 
-			$(document).on('click', 'button.remove-row', function() {
-				var row = $(this).parents('tr');
-				removeRow(row);
+        return false;
+    });
 
-				return false;
-			});
+    function emptyInputs(parent) {
+        parent.querySelectorAll('input, select').forEach((field) => {
+            field.value = '';
+        });
+    }
 
-		});
+    function removeRow(row) {
+        // trigger input to update the totals row
+        row.querySelectorAll('input[type="number"]').forEach((field) => {
+            field.value = '';
+            field.dispatchEvent(new Event('input', {bubbles: true}));
+        });
 
-		function emptyInputs(parent) {
-			parent.find('input, select').each(function() {
-				$(this).val('');
-			});
-		}
+        if (row.parentElement.children.length === 1) {
+            emptyInputs(row);
 
-		function removeRow(row) {
-			// trigger change to update the totals row
-			row.find('input[type="number"]').each(function() {
-				$(this).val('').trigger('input');
+        } else {
+            row.remove();
+        }
+    }
+});
+
+/**
+ * Autogenerate Scores
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    let autogenerateScore = true;
+    const keys = ['score_us', 'score_them'];
+    const values = {};
+
+    function setAutogenerateScore(enabled) {
+        autogenerateScore = enabled;
+
+        document.querySelectorAll('[data-autogenerate-score-status]').forEach((el) => {
+            el.dataset.autogenerateScoreStatus = autogenerateScore ? 'on' : 'off';
+        });
+
+        // turning on should update everything
+        if (autogenerateScore) {
+            keys.forEach((key) => {
+                updateValuesForKey(key);
+                updateDisplayForKey(key);
             });
 
-			if (row.is(':only-child')) {
-				emptyInputs(row);
+            updateScoreHeaders();
+        }
+    }
 
-			} else {
-				row.remove();
-			}
-		}
-	})($, document);
+    document.querySelectorAll('input.autogenerate-score-toggle').forEach((toggle) => {
+        toggle.addEventListener('change', function () {
+            setAutogenerateScore(this.checked);
+        });
 
-	/**
-	 * Autogenerate Scores
-	 */
-	(function($, document, _) {
-		var autogenerateScore = true;
-		var keys = ['score_us', 'score_them'];
-		var values = {};
+        setAutogenerateScore(toggle.checked);
+    });
 
-		$('input.autogenerate-score-toggle').on('change', function() {
-			autogenerateScore = this.checked;
+    delegate(document, 'input', 'input[data-autogenerate-score-source]', function () {
+        if (autogenerateScore) {
+            const key = this.dataset.autogenerateScoreSource;
 
-			$('[data-autogenerate-score-status]')
-				.attr('data-autogenerate-score-status', autogenerateScore ? 'on' : 'off');
+            updateValuesForKey(key);
+            updateDisplayForKey(key);
+            updateScoreHeaders();
+        }
+    });
 
-			// turning on should update everything
-			if (autogenerateScore) {
-				_.forEach(keys, function(key) {
-					updateValuesForKey(key);
-					updateDisplayForKey(key);
-				});
+    document.querySelectorAll('input.game-score').forEach((input) => {
+        input.addEventListener('input', function () {
+            const key = this.dataset.autogenerateScoreValue;
 
-				updateScoreHeaders();
-			}
-		}).change();
+            values[key] = this.value;
 
-		$(document).on('input', 'input[data-autogenerate-score-source]', function() {
-			if (autogenerateScore) {
-				var key = $(this).attr('data-autogenerate-score-source');
+            updateScoreHeaders();
+        });
+    });
 
-				updateValuesForKey(key);
-				updateDisplayForKey(key);
-				updateScoreHeaders();
-			}
-		});
+    function updateValuesForKey(key) {
+        values[key] = [...document.querySelectorAll(`input[data-autogenerate-score-source="${key}"]`)]
+            .map((field) => Number(field.value))
+            .reduce((acc, val) => acc + val, 0);
+    }
 
-		$('input.game-score').on('input', function() {
-			var key = $(this).attr('data-autogenerate-score-value');
+    function updateDisplayForKey(key) {
+        const val = values[key];
+        document.querySelectorAll(`[data-autogenerate-score-value="${key}"]`)
+            .forEach((field) => {
+                if (field.matches('input, select')) {
+                    field.value = val;
+                } else {
+                    field.textContent = val;
+                }
+            });
+    }
 
-			values[key] = $(this).val();
+    function updateScoreHeaders() {
+        let us, them;
 
-			updateScoreHeaders();
-		});
+        if (values.score_us > values.score_them) {
+            us = "win";
+            them = "loss";
+        } else if (values.score_us < values.score_them) {
+            us = "loss";
+            them = "win";
+        } else {
+            us = them = "tie";
+        }
 
-		function updateValuesForKey(key) {
-			values[key] = $('input[data-autogenerate-score-source="' + key + '"]')
-				.map(function() {
-					return Number($(this).val());
-				})
-				.toArray()
-				.reduce(function(acc, val) {
-					return acc + val;
-				}, 0);
-		}
+        document.querySelectorAll('.result--us').forEach((el) => el.dataset.result = us);
+        document.querySelectorAll('.result--them').forEach((el) => el.dataset.result = them);
+    }
+});
 
-		function updateDisplayForKey(key) {
-			var val = values[key];
-			$('[data-autogenerate-score-value="' + key + '"]')
-				.each(function() {
-					if ($(this).is('input, select')) {
-						$(this).val(val)
-					} else {
-						$(this).text(val);
-					}
-				});
-		}
+/**
+ * Autogenerate totals at the bottom of the table
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    delegate(document, 'input', '.stats-table--hasTotals td input[type="number"]', function () {
+        const td = this.parentElement;
+        const tdIdx = [...td.parentElement.children].indexOf(td);
 
-		function updateScoreHeaders() {
-			var us, them;
+        const table = this.closest('table');
+        let sum = 0;
+        table.querySelectorAll(`tbody td:nth-child(${tdIdx + 1}) input`)
+            .forEach((field) => {
+                const val = parseInt(field.value, 10);
+                if (!isNaN(val)) {
+                    sum += val;
+                }
+            });
 
-			if (values.score_us > values.score_them) {
-				us = "win";
-				them = "loss";
-			} else if (values.score_us < values.score_them) {
-				us = "loss";
-				them = "win";
-			} else {
-				us = them = "tie";
-			}
+        table.querySelector(`tfoot td:nth-child(${tdIdx + 1})`)
+            .textContent = sum ? sum : '';
+    });
 
-			$('.result--us').attr('data-result', us);
-			$('.result--them').attr('data-result', them);
-		}
-
-	})($, document, _);
-
-    /**
-	 * Autogenerate totals at the bottom of the table
-     */
-	(function($, document, _) {
-		$('.stats-table--hasTotals').on('input', 'td input[type="number"]', function() {
-			var td = this.parentElement;
-			var tdIdx = [...td.parentElement.children].indexOf(td);
-
-			var $table = $(this).parents('table').eq(0);
-			var sum = 0;
-            $table.find('tbody td:nth-child('+ (tdIdx + 1) +') input')
-				.each(function() {
-					var val = parseInt($(this).val(), 10);
-            		if (!isNaN(val)) {
-            			sum += val;
-					}
-				});
-
-            $table.find('tfoot td:nth-child('+ (tdIdx + 1) +')')
-				.text(sum ? sum : '');
-		});
-
-		// trigger the handler to catch prefilled forms
-        jQuery('.stats-table--hasTotals tr:first-child td input[type="number"]').trigger('input');
-	})($, document, _);
-
-})();
+    // trigger the handler to catch prefilled forms
+    document.querySelectorAll('.stats-table--hasTotals tr:first-child td input[type="number"]')
+        .forEach((field) => field.dispatchEvent(new Event('input', {bubbles: true})));
+});
