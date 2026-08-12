@@ -87,7 +87,6 @@ Route::get('files', function() {
 Route::redirect('/parents', '/files');
 
 Route::controller(ShareableController::class)
-    ->middleware(['cors'])
     ->prefix('shareables/{shape}')
     ->name('shareables.')
     ->group(function() {

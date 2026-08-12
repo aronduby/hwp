@@ -7,10 +7,10 @@
         <div class="bg--bottom-third-primary"></div>
     </div>
 
-    <a href="@route('notes', ['id' => $note->id])" title="@lang('recent.viewNote')" target="_blank">
+    <a href="@route('notes', ['note' => $note->id])" title="@lang('recent.viewNote')" target="_blank">
         <div class="tag"><span><em>@lang('recent.note')</em></span></div>
 
-        <h1>{{str_limit($note->title, \App\Models\Recent::TITLE_LIMIT)}}</h1>
+        <h1>{{Str::limit($note->title, \App\Models\Recent::TITLE_LIMIT)}}</h1>
 
         <time datetime="@iso($note->created_at)">@stamp($note->created_at)</time>
     </a>

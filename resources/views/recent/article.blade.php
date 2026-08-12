@@ -13,7 +13,7 @@
     <a href="{{$article->url}}" title="@lang('recent.viewArticle')" target="_blank">
         <div class="tag"><span><em>@lang('recent.article')</em></span></div>
 
-        <h1>{{str_limit($article->title, \App\Models\Recent::TITLE_LIMIT)}}</h1>
+        <h1>{{Str::limit($article->title, \App\Models\Recent::TITLE_LIMIT)}}</h1>
 
         <time datetime="@iso($article->published)">@stamp($article->published)</time>
     </a>
@@ -23,7 +23,7 @@
         @if($article->players->count())
             <p class="mentions">@lang('recent.mentions'):
                 @foreach($article->players as $player)
-                    <a href="@route('players', ['nameKey' => $player->name_key])" title="{{$player->name}}">{{$player->name}}</a>
+                    <a href="@route('players', ['player' => $player->name_key])" title="{{$player->name}}">{{$player->name}}</a>
                 @endforeach
             </p>
         @endif

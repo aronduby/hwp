@@ -95,17 +95,17 @@
                     <td class="schedule-btns action-btns">
                         <div class="btn-group btn-group--end">
                             @if($game->stats_count)
-                                <a class="btn" href="@route('game.stats', ['id'=>$game->id])" title="@lang('misc.stats')">
+                                <a class="btn" href="@route('game.stats', ['game'=>$game->id])" title="@lang('misc.stats')">
                                     <i class="fa fa-line-chart"></i>
                                 </a>
                             @endif
                             @if($game->album_count)
-                                <a class="btn" href="@route('game.photos', ['id'=>$game->id])" title="@lang('misc.photos')">
+                                <a class="btn" href="@route('game.photos', ['game'=>$game->id])" title="@lang('misc.photos')">
                                     <i class="fa fa-picture-o"></i>
                                 </a>
                             @endif
                             @if($game->updates_count)
-                                <a class="btn" href="@route('game.recap', ['id'=>$game->id])" title="@lang('misc.recap')">
+                                <a class="btn" href="@route('game.recap', ['game'=>$game->id])" title="@lang('misc.recap')">
                                     <i class="fa fa-ticket"></i>
                                 </a>
                             @endif
@@ -116,7 +116,7 @@
                                 </a>
                             @endif
                             @if(auth()->check())
-                                <a class="btn" href="@route('game.stats.edit', ['id'=>$game->id])" title="@lang('misc.edit')">
+                                <a class="btn" href="@route('game.stats.edit', ['game'=>$game->id])" title="@lang('misc.edit')">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                             @endif

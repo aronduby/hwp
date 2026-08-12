@@ -21,17 +21,17 @@
     @if($result->stats_count > 0 || $result->album_count > 0 || $result->updates_count > 0 || ($result instanceof \App\Models\Contracts\Shareable && $result->isShareable()))
         <footer class="btn-group btn-group--full">
             @if($result->stats_count > 0)
-                <a class="btn" href="@route('game.stats', ['id'=>$result->id])" title="@lang('misc.stats')">
+                <a class="btn" href="@route('game.stats', ['game'=>$result->id])" title="@lang('misc.stats')">
                     <i class="fa fa-line-chart"></i>
                 </a>
             @endif
             @if($result->album_count > 0)
-                <a class="btn" href="@route('game.photos', ['id'=>$result->id])" title="@lang('misc.photos')">
+                <a class="btn" href="@route('game.photos', ['game'=>$result->id])" title="@lang('misc.photos')">
                     <i class="fa fa-picture-o"></i>
                 </a>
             @endif
             @if($result->updates_count > 0)
-                <a class="btn" href="@route('game.recap', ['id'=>$result->id])" title="@lang('misc.recap')">
+                <a class="btn" href="@route('game.recap', ['game'=>$result->id])" title="@lang('misc.recap')">
                     <i class="fa fa-ticket"></i>
                 </a>
             @endif

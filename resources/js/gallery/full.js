@@ -50,6 +50,7 @@ export default class FullGallery {
             const target = e.target.closest('a.gallery-photo--thumb');
             if (target) {
                 this.imageClick(target);
+                e.preventDefault();
             }
         });
 
@@ -64,7 +65,7 @@ export default class FullGallery {
      */
     imageClick(target) {
         const item = target.closest('[data-offset]');
-        const offset = parseInt(item.attr('data-offset'), 10);
+        const offset = parseInt(item.dataset.offset, 10);
         const self = this;
 
         const photoSwipeElement = document.querySelectorAll('.pswp')[0];
@@ -93,7 +94,6 @@ export default class FullGallery {
         });
 
         this.gallery.init();
-        return false;
     }
 
     /**
@@ -151,7 +151,7 @@ export default class FullGallery {
                 // noinspection JSUnusedAssignment
                 return acc += thumbnailTemplate({
                     ...item,
-                    offset: this.offset
+                    offset: this.offset++
                 });
             }, '');
 

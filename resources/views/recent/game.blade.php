@@ -6,7 +6,7 @@
         <div class="bg--bottom-third-primary"></div>
     </div>
 
-    <a href="@route($route, ['id' => $game->id])" title="@lang('recent.viewGame')">
+    <a href="@route($route, ['game' => $game->id])" title="@lang('recent.viewGame')">
         <div class="tag"><span><em>@lang('recent.game')</em></span></div>
 
         <h1>@lang('misc.'.$game->team) <span class="text--{{$game->status()}}">@lang('recent.game-'.$game->status())</span> {{$game->opponent}} {{$game->score_us}} to {{$game->score_them}}</h1>

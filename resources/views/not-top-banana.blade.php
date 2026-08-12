@@ -21,7 +21,7 @@
                     <h1 class="text--muted">That was <span class="text--loss">not</span> very top banana of you <span class="text--black">{{$player->first_name}}</span></h1>
                 </header>
 
-                <p><a href="@route('players', ['nameKey' => $player->name_key])?sorry">Uhm&hellip; sorry?</a></p>
+                <p><a href="@route('players', ['player' => $player->name_key])?sorry">Uhm&hellip; sorry?</a></p>
             </div>
         </section>
 

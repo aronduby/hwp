@@ -428,9 +428,9 @@ class Stat extends Model implements Shareable
 
     private function _getPlayer(): PlayerSeason
     {
-        if (!$this->_player) {
-            $this->player = $this->playerListService->getPlayerById($this->player_id);
-            if (!$this->_player) {
+        if (! isset($this->_player) ) {
+            $this->_player = $this->playerListService->getPlayerById($this->player_id);
+            if (! isset($this->_player)) {
                 $this->_player = new PlayerSeason();
             }
         }

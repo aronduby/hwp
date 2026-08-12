@@ -149,22 +149,22 @@
                             <td class="schedule-btns action-btns">
                                 <div class="btn-group btn-group--end">
                                     @if($event->scheduled instanceof App\Models\Tournament && $event->scheduled->start <= Carbon\Carbon::today())
-                                        <a class="btn" href="@route('tournament', ['id'=>$event->scheduled->id])" title="@lang('tournament.games')">
+                                        <a class="btn" href="@route('tournament', ['tournament'=>$event->scheduled->id])" title="@lang('tournament.games')">
                                             <i class="fa fa-sitemap fa-rotate-90"></i>
                                         </a>
                                     @endif
                                     @if($event->stats_count)
-                                        <a class="btn" href="@route($event->type.'.stats', ['id'=>$event->scheduled->id])" title="@lang('misc.stats')">
+                                        <a class="btn" href="@route($event->type.'.stats', [ $event->type => $event->scheduled->id])" title="@lang('misc.stats')">
                                             <i class="fa fa-line-chart"></i>
                                         </a>
                                     @endif
                                     @if($event->album_count)
-                                        <a class="btn" href="@route($event->type.'.photos', ['id'=>$event->scheduled->id])" title="@lang('misc.photos')">
+                                        <a class="btn" href="@route($event->type.'.photos', [ $event->type => $event->scheduled->id])" title="@lang('misc.photos')">
                                             <i class="fa fa-picture-o"></i>
                                         </a>
                                     @endif
                                     @if($event->updates_count)
-                                        <a class="btn" href="@route($event->type.'.recap', ['id'=>$event->scheduled->id])" title="@lang('misc.recap')">
+                                        <a class="btn" href="@route($event->type.'.recap', [ $event->type => $event->scheduled->id])" title="@lang('misc.recap')">
                                             <i class="fa fa-ticket"></i>
                                         </a>
                                     @endif
@@ -175,7 +175,7 @@
                                         </a>
                                     @endif
                                     @if(auth()->check() && $event->scheduled instanceof App\Models\Game)
-                                        <a class="btn" href="@route('game.stats.edit', ['id'=>$event->scheduled->id])" title="@lang('misc.edit')">
+                                        <a class="btn" href="@route('game.stats.edit', ['game' => $event->scheduled->id])" title="@lang('misc.edit')">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                     @endif

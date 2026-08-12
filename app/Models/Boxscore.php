@@ -48,9 +48,9 @@ class Boxscore extends Model
     protected PlayerListService $playerListService;
 
     /**
-     * @var Player
+     * @var PlayerSeason
      */
-    protected Player $player;
+    protected PlayerSeason $player;
 
     /**
      * Specify the tenant columns to use for this model
@@ -90,7 +90,7 @@ class Boxscore extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->_getPlayer()->name
+            get: fn () => $this->_getPlayer()?->name
         );
     }
 
@@ -104,12 +104,12 @@ class Boxscore extends Model
         return new BoxscoresCollection($models);
     }
 
-    private function _getPlayer(): Player
+    private function _getPlayer(): ?PlayerSeason
     {
-        if (!$this->player && $this->player_id) {
+        if (!isset($this->player) && $this->player_id) {
             $this->player = $this->playerListService->getPlayerById($this->player_id);
         }
 
-        return $this->player;
+        return $this->player ?? null;
     }
 }
