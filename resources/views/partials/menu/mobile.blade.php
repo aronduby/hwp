@@ -28,25 +28,25 @@
                     <ul>
                         @foreach(['V', 'JV', 'STAFF'] as $team)
                             @if($playerList->team($team))
-                            <li class="mp-has-subs">
-                                <a href="#"><i class="fa-solid fa-angle-left"></i>@lang('misc.'.$team)</a>
-                                <div class="mp-level">
-                                    <header>
-                                        <h2>@lang('misc.'.$team)</h2>
-                                    </header>
-                                    <a class="mp-back" href="#"><i class="fa-solid fa-angle-right"></i>back</a>
-                                    <ul class="team team--{{$team}}">
-                                        @foreach($playerList->team($team) as $player)
-                                            <li>
-                                                <a href="@route('players', ['player' => $player])">
-                                                    <span class="player--number">{{$player->getNumber($team)}}</span>
-                                                    <span class="player--name">{{$player->name}}</span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
+                                <li class="mp-has-subs">
+                                    <a href="#"><i class="fa-solid fa-angle-left"></i>@lang('misc.'.$team)</a>
+                                    <div class="mp-level">
+                                        <header>
+                                            <h2>@lang('misc.'.$team)</h2>
+                                        </header>
+                                        <a class="mp-back" href="#"><i class="fa-solid fa-angle-right"></i>back</a>
+                                        <ul class="team team--{{$team}}">
+                                            @foreach($playerList->team($team) as $playerSeason)
+                                                <li>
+                                                    <a href="@route('players', ['player' => $playerSeason->player])">
+                                                        <span class="player--number">{{$playerSeason->getNumber($team)}}</span>
+                                                        <span class="player--name">{{$playerSeason->name}}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </li>
                             @endif
                         @endforeach
                     </ul>
