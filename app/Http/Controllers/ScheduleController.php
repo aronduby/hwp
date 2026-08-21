@@ -12,7 +12,6 @@ use Illuminate\View\View;
 
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
-use Eluceo\iCal\Domain\Entity\TimeZone;
 use Eluceo\iCal\Domain\ValueObject\Date;
 use Eluceo\iCal\Domain\ValueObject\DateTime as IcalDateTime;
 use Eluceo\iCal\Domain\ValueObject\Location;
@@ -98,9 +97,14 @@ class ScheduleController extends Controller
                     new Date($this->toLocalDateTime($item->end))
                 ));
             } else {
+                // Emitted as absolute UTC instants (rather than TZID-tagged
+                // local time against a VTIMEZONE) because Google Calendar's
+                // "From URL" subscription importer doesn't reliably resolve
+                // custom VTIMEZONE/TZID; a "Z" timestamp needs no timezone
+                // lookup on the client's part and displays correctly everywhere.
                 $vEvent->setOccurrence(new TimeSpan(
-                    new IcalDateTime($this->toLocalDateTime($item->start), false),
-                    new IcalDateTime($this->toLocalDateTime($item->end), false)
+                    new IcalDateTime($this->toUtcDateTime($item->start), true),
+                    new IcalDateTime($this->toUtcDateTime($item->end), true)
                 ));
             }
 
@@ -115,13 +119,13 @@ class ScheduleController extends Controller
             }
             if ($item->type === Schedule::GAME) {
                 if ($item->stats_count) {
-                    $desc[] = trans('vcal.stats') . ' ' . route('game.stats', ['id' => $item->scheduled->id]);
+                    $desc[] = trans('vcal.stats') . ' ' . route('game.stats', ['game' => $item->scheduled->id]);
                 }
                 if ($item->album_count) {
-                    $desc[] = trans('vcal.photos') . ' ' . route('game.photos', ['id' => $item->scheduled->id]);
+                    $desc[] = trans('vcal.photos') . ' ' . route('game.photos', ['game' => $item->scheduled->id]);
                 }
                 if ($item->updates_count) {
-                    $desc[] = trans('vcal.recap') . ' ' . route('game.recap', ['id' => $item->scheduled->id]);
+                    $desc[] = trans('vcal.recap') . ' ' . route('game.recap', ['game' => $item->scheduled->id]);
                 }
             }
 
@@ -135,8 +139,7 @@ class ScheduleController extends Controller
 
         $calendar = new ScheduleCalendar($events)
             ->setCalendarName(trans('vcal.name'))
-            ->setCalendarDescription(trans('vcal.description'))
-            ->addTimeZone(TimeZone::createFromPhpDateTimeZone(new DateTimeZone(self::TIMEZONE)));
+            ->setCalendarDescription(trans('vcal.description'));
 
         $componentFactory = new ScheduleCalendarFactory(new ScheduleEventFactory());
         $data = (string) $componentFactory->createCalendar($calendar);
@@ -163,6 +166,20 @@ class ScheduleController extends Controller
     {
         return DateTimeImmutable::createFromInterface($date)
             ->setTimezone(new DateTimeZone(self::TIMEZONE));
+    }
+
+    /**
+     * Convert a Carbon/DateTime instance to an immutable UTC DateTime, so
+     * timed events render as absolute "Z" instants instead of TZID-tagged
+     * local times.
+     *
+     * @param  DateTimeInterface  $date
+     * @return DateTimeImmutable
+     */
+    protected function toUtcDateTime(DateTimeInterface $date): DateTimeImmutable
+    {
+        return $this->toLocalDateTime($date)
+            ->setTimezone(new DateTimeZone('UTC'));
     }
 }
 

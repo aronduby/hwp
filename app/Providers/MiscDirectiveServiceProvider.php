@@ -88,13 +88,13 @@ class MiscDirectiveServiceProvider extends ServiceProvider
     /**
      * Shortcut for number format
      *
-     * @param float|int $number
+     * @param float|int|null $number
      * @param int $decimals = 0
      * @param string $decimalPoint = .
      * @param string $thousandsSeperator = ,
      * @return string
      */
-    static public function number(float|int $number, int $decimals = 0, string $decimalPoint = '.', string $thousandsSeperator = ','): string
+    static public function number(float|int|null $number, int $decimals = 0, string $decimalPoint = '.', string $thousandsSeperator = ','): string
     {
         return number_format($number, $decimals, $decimalPoint, $thousandsSeperator);
     }

@@ -60,12 +60,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. The timezone
-    | is set to "UTC" by default as it is suitable for most use cases.
+    | will be used by the PHP date and date-time functions. Schedule/game
+    | times are stored as naive local wall-clock strings (no UTC offset),
+    | so this must match that convention - not the server's PHP ini setting,
+    | which mislabels those values as UTC without actually converting them.
     |
     */
 
-    'timezone' => ini_get('date.timezone'),
+    'timezone' => env('APP_TIMEZONE', 'America/Detroit'),
 
     /*
     |--------------------------------------------------------------------------
