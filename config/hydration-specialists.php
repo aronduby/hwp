@@ -2,5 +2,6 @@
 
 return [
     'ParkerMolewyk',
-    'BreckSarber'
+    'BreckSarber',
+    'LawsonDewitte',
 ];
