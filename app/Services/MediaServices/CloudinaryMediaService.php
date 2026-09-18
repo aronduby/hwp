@@ -283,7 +283,7 @@ class CloudinaryMediaService implements MediaService
         if (!empty($playerSeason->media_tag)) {
             return $playerSeason->media_tag;
         } else {
-            return strtolower(str_replace('_', ' ', $playerSeason->player->first_name.' '.$playerSeason->player->last_name));
+            return strtolower(str_replace(' ', '_', $playerSeason->player->first_name.' '.$playerSeason->player->last_name));
         }
     }
 
